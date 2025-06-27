@@ -26,11 +26,11 @@ yarn-error.log*
 
 # env vars
 .env
-.env.local
 
 # misc
 .rest
 
 .idea
 .vscode
-.DS_Store
+
+_mongo_data

@@ -12,14 +12,14 @@ services:
       - LOG_LEVEL=info
       - NODE_ENV=production
     ports:
-      - '3000:80'
+      - '3117:80'
     restart: always
     depends_on:
       - db
     networks:
       - internal
   db:
-    image: mongo:6
+    image: mongo:8
     restart: always
     networks:
       - internal
