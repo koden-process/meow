@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20
 
 # Install Nginx
 RUN apt-get update && apt-get install -y nginx
