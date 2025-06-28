@@ -215,6 +215,9 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
         <Picker
           defaultSelectedKey={mode}
           onSelectionChange={(key) => {
+            if (key === null) {
+              return;
+            }
             setMode(key.toString() as 'achieved' | 'predicted');
           }}
         >

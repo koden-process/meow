@@ -152,7 +152,7 @@ export const Lane = (props: LaneProps) => {
                     <Picker
                       width={100}
                       aria-label={Translations.HideAfterDaysLabel[DEFAULT_LANGUAGE]}
-                      onSelectionChange={(value) => updateTags(value.toString())}
+                      onSelectionChange={(value) => updateTags(value ? value.toString() : '')}
                       defaultSelectedKey={
                         laneData.tags['hideAfterDays']
                           ? laneData.tags['hideAfterDays'].toString()

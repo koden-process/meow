@@ -38,7 +38,7 @@ export const SelectAttribute = ({
           label={name}
           selectedKey={value}
           isDisabled={isDisabled}
-          onSelectionChange={(key) => updateValue(key.toString())}
+          onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
         >
           {options?.map((option) => {
             return <Item key={option}>{option}</Item>;

@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux';
 import { selectCurrency } from '../store/Store';
 import { DEFAULT_CURRENCY } from '../Constants';
 import { getBrowserLocale } from '../helpers/Helper';
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 export interface CurrencyProps {
     value: number;
@@ -26,6 +28,6 @@ export const Currency = ({ value }: CurrencyProps) => {
     const currency = useSelector(selectCurrency);
 
     return (
-        <>{currency === "MT2" ? formatValue(value, currency) + "²" : formatValue(value, currency)}</>
+        <>{currency ? currency === "MT2" ? formatValue(value, currency) + "²" : formatValue(value, currency) : "undefine"}</>
     );
 };

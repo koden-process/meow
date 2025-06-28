@@ -217,6 +217,7 @@ export const StatisticPage = () => {
             <Picker
               defaultSelectedKey={userId}
               onSelectionChange={(key) => {
+                if (key === null) return;
                 setUserId(key.toString());
               }}
             >

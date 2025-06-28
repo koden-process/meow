@@ -65,7 +65,11 @@ export const CurrencyCanvas = () => {
             <Picker
                 selectedKey={currency}
                 aria-label={Translations.CurrencyTitle[DEFAULT_LANGUAGE]}
-                onSelectionChange={(key) => updateCurrencyCode(key)}
+                onSelectionChange={(key) => {
+                    if (key === null) {
+                        return;
+                    }
+                    updateCurrencyCode(key)}}
                 marginTop="10px"
             >
                 <Item key="USD">{Translations.USDollarOption[DEFAULT_LANGUAGE]}</Item>
