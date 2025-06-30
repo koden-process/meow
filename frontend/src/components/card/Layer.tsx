@@ -1,4 +1,4 @@
-import {Button, TabList, Item, TabPanels} from '@adobe/react-spectrum';
+import {Button} from '@adobe/react-spectrum';
 import {Tabs} from '@chakra-ui/react'
 import {useSelector} from 'react-redux';
 import {
@@ -136,7 +136,7 @@ export const Layer = () => {
                 </div>
             )}
             <div className="body">
-                <Tabs.Root height="100%">
+                <Tabs.Root defaultValue="opportunity" height="100%">
                     {(id && (
                         <Tabs.List>
                             <Tabs.Trigger key="opportunity">

@@ -127,7 +127,7 @@ export const Layer = () => {
                 </div>
             </div>
             <div className="body">
-                <Tabs.Root>
+                <Tabs.Root defaultValue="account">
                     <Tabs.List>
                         {getItems(id, references)}
                     </Tabs.List>
