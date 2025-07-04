@@ -107,6 +107,7 @@ export const StatisticPage = () => {
     setStart(range.start);
   };
 
+
   const ref = useRef(null);
 
   const [payload, setPayload] = useState<Array<TimeSeries>>([]);

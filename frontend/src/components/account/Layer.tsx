@@ -67,21 +67,21 @@ export const Layer = () => {
 
     const getItems = (id?: string, references?: SchemaReferenceAttribute[]) => {
         const list = [
-            <Tabs.Trigger key="account">
+            <Tabs.Trigger value="account">
                 <span className="tab-title">{Translations.AccountTab[DEFAULT_LANGUAGE]}</span>
             </Tabs.Trigger>,
         ];
 
         if (id) {
             list.push(
-                <Tabs.Trigger key="events">
+                <Tabs.Trigger value="events">
                     <span className="tab-title">{Translations.HistoryTab[DEFAULT_LANGUAGE]}</span>
                 </Tabs.Trigger>
             );
 
             references?.map((attribute) => {
                 list.push(
-                    <Tabs.Trigger key={attribute.name}>
+                    <Tabs.Trigger value={attribute.name}>
                         <span className="tab-title">{attribute.reverseName}</span>
                     </Tabs.Trigger>
                 );
@@ -93,21 +93,21 @@ export const Layer = () => {
 
     const getPanelItems = (id?: string, references?: SchemaReferenceAttribute[]) => {
         const list = [
-            <Tabs.Content key="account">
+            <Tabs.Content value="account">
                 <Form update={update} id={id}/>
             </Tabs.Content>,
         ];
 
         if (id) {
             list.push(
-                <Tabs.Content key="events">
+                <Tabs.Content value="events">
                     <Events id={id}/>
                 </Tabs.Content>
             );
 
             references?.map((attribute) => {
                 list.push(
-                    <Tabs.Content key={attribute.name}>
+                    <Tabs.Content value={attribute.name}>
                         <Reference attribute={attribute} account={account}/>
                     </Tabs.Content>
                 );

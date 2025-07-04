@@ -139,24 +139,24 @@ export const Layer = () => {
                 <Tabs.Root defaultValue="opportunity" height="100%">
                     {(id && (
                         <Tabs.List>
-                            <Tabs.Trigger key="opportunity">
+                            <Tabs.Trigger value="opportunity">
                                 <span className="tab-title">{Translations.OpportunityTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
-                            <Tabs.Trigger key="events">
+                            <Tabs.Trigger value="events">
                                 <span className="tab-title">{Translations.HistoryTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
                         <Tabs.List>
-                            <Tabs.Trigger key="opportunity">
+                            <Tabs.Trigger value="opportunity">
                                 <span className="tab-title">{Translations.OpportunityTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
                         </Tabs.List>
                     )}
-                    <Tabs.Content key="opportunity">
+                    <Tabs.Content value="opportunity">
                         <Form update={update} id={id}/>
                     </Tabs.Content>
-                    <Tabs.Content key="events">
+                    <Tabs.Content value="events">
                         <Events entity="card" id={id}/>
                     </Tabs.Content>
                 </Tabs.Root>
