@@ -91,6 +91,7 @@ export const ForecastPage = () => {
     }
   };
 
+
   return (
     <>
       {state === 'card-detail' && <CardLayer />}
@@ -139,6 +140,7 @@ export const ForecastPage = () => {
               }}
               maxVisibleMonths={2}
               hourCycle={24}
+              //@ts-ignore
               onChange={setRange}
               minValue={min}
               maxValue={max}

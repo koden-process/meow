@@ -210,6 +210,7 @@ export const StatisticPage = () => {
     setLanesWithSelection([...list]);
   };
 
+  // @ts-ignore
   return (
     <>
       <div className="forecast">
@@ -237,6 +238,7 @@ export const StatisticPage = () => {
               }}
               maxVisibleMonths={2}
               hourCycle={24}
+              //@ts-ignore
               onChange={setRange}
               minValue={min}
               maxValue={max}
