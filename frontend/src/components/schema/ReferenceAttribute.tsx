@@ -58,7 +58,7 @@ export const ReferenceAttribute = ({
         label={name}
         selectedKey={value}
         isDisabled={isDisabled}
-        onSelectionChange={(key) => updateValue(key.toString())}
+        onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
       >
         {getOptions(accounts)}
       </Picker>

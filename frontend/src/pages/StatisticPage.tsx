@@ -107,6 +107,7 @@ export const StatisticPage = () => {
     setStart(range.start);
   };
 
+
   const ref = useRef(null);
 
   const [payload, setPayload] = useState<Array<TimeSeries>>([]);
@@ -209,6 +210,7 @@ export const StatisticPage = () => {
     setLanesWithSelection([...list]);
   };
 
+  // @ts-ignore
   return (
     <>
       <div className="forecast">
@@ -217,6 +219,7 @@ export const StatisticPage = () => {
             <Picker
               defaultSelectedKey={userId}
               onSelectionChange={(key) => {
+                if (key === null) return;
                 setUserId(key.toString());
               }}
             >
@@ -235,6 +238,7 @@ export const StatisticPage = () => {
               }}
               maxVisibleMonths={2}
               hourCycle={24}
+              //@ts-ignore
               onChange={setRange}
               minValue={min}
               maxValue={max}

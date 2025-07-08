@@ -103,7 +103,7 @@ export const ActivityPage = () => {
         <Picker
           aria-label={Translations.RangeLabel[DEFAULT_LANGUAGE]}
           defaultSelectedKey={range}
-          onSelectionChange={(value) => setRange(value.toString())}
+          onSelectionChange={(value) => setRange(value ? value.toString() : '')}
         >
           <Item key="today">{Translations.TodayOption[DEFAULT_LANGUAGE]}</Item>
           <Item key="week">{Translations.ThisWeekOption[DEFAULT_LANGUAGE]}</Item>

@@ -91,6 +91,7 @@ export const ForecastPage = () => {
     }
   };
 
+
   return (
     <>
       {state === 'card-detail' && <CardLayer />}
@@ -102,6 +103,7 @@ export const ForecastPage = () => {
               label={Translations.ReportLabel[DEFAULT_LANGUAGE]}
               defaultSelectedKey={view}
               onSelectionChange={(key) => {
+                if (key === null) return;
                 setView(key.toString());
               }}
             >
@@ -118,6 +120,7 @@ export const ForecastPage = () => {
               defaultSelectedKey={userId}
               selectedKey={userId}
               onSelectionChange={(key) => {
+                if (key === null) return;
                 setUserId(key.toString());
               }}
             >
@@ -137,6 +140,7 @@ export const ForecastPage = () => {
               }}
               maxVisibleMonths={2}
               hourCycle={24}
+              //@ts-ignore
               onChange={setRange}
               minValue={min}
               maxValue={max}

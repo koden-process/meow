@@ -9,9 +9,10 @@ import { SchemaReferenceAttribute, SchemaType } from '../interfaces/Schema';
 import { UserStatus } from '../interfaces/User';
 import { SchemaHelper } from '../helpers/SchemaHelper';
 
+// @ts-ignore
 export const store = configureStore({
   reducer: application,
-  middleware: [
+  middleware: [//@ts-ignore
     logger,
     cardLaneListener.middleware,
     cardUpdateListener.middleware,
