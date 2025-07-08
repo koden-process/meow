@@ -23,5 +23,20 @@ services:
     restart: always
     networks:
       - internal
+  apprc:
+    image: meow:1.2
+    environment:
+      - MONGODB_URI=mongodb://db:27017/meow
+      - SESSION_SECRET=$(bash -c 'echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)')
+      - PORT=9000
+      - LOG_LEVEL=info
+      - NODE_ENV=production
+    ports:
+      - '3118:80'
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - internal
 networks:
   internal:
