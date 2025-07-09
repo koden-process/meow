@@ -231,6 +231,15 @@ export const HomePage = () => {
                         </div>
 
                         <div>
+                            <input
+                                onChange={(event) => setText(event.target.value)}
+                                placeholder={Translations.SearchPlaceholderWithAccount[DEFAULT_LANGUAGE]}
+                                aria-label="account name"
+                                type="text"
+                            />
+                        </div>
+
+                        <div>
                             <button
                                 className={`filter ${
                                     filters.mode.has(FilterMode.RecentlyUpdated)

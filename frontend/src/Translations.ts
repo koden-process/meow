@@ -206,6 +206,11 @@ export const Translations = {
     fr: 'Rechercher par nom ou étape',
   },
 
+  SearchPlaceholderWithAccount: {
+    en: 'Search by account',
+    fr: 'Rechercher par compte',
+  },
+
   // Tab titles
   OpportunityTab: {
     en: 'Opportunity',
