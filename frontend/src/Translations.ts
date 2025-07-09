@@ -70,13 +70,13 @@ export const Translations = {
   },
 
   OpportunityAmount: {
-    en: 'Amount',
-    fr: 'Montant',
+    en: 'Value',
+    fr: 'Valeur',
   },
 
   OpportunityAmountInvalid: {
-    en: 'Invalid Amount',
-    fr: 'Montant invalide',
+    en: 'Invalid Value',
+    fr: 'Valeur invalide',
   },
 
   // Login page translations
