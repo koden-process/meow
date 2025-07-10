@@ -227,10 +227,9 @@ export const HomePage = () => {
                                 placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
                                 aria-label="Name or Stage"
                                 type="text"
+                                className="input-spacing"
                             />
-                        </div>
 
-                        <div>
                             <input
                                 onChange={(event) => setText(event.target.value)}
                                 placeholder={Translations.SearchPlaceholderWithAccount[DEFAULT_LANGUAGE]}
