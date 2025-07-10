@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { ActionType, showModalError } from './actions/Actions';
@@ -18,8 +18,13 @@ import { useSelector } from 'react-redux';
 import { getRequestClient } from './helpers/RequestHelper';
 import { AllowTeamRegistrationModal } from './components/modal/AllowTeamRegistrationModal';
 import { ActivityPage } from './pages/ActivityPage';
+import HelloWorldMobile from './HelloWorldMobile';
+import AddOpportunityMobile from './AddOpportunityMobile';
 
 function Application() {
+  // Mobile screen detection (less than 9 inches, ~900px width as a proxy)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900 && window.innerHeight < 900);
+
   const token = useSelector(selectToken);
   const team = useSelector(selectTeam);
 
@@ -72,6 +77,25 @@ function Application() {
       client.destroy();
     };
   }, [token]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 900 && window.innerHeight < 900);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/ajouter-opportunite" element={<AddOpportunityMobile />} />
+          <Route path="*" element={<HelloWorldMobile />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 
   return (
     <BrowserRouter>
