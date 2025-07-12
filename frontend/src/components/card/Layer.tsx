@@ -99,7 +99,7 @@ export const Layer = () => {
     });
 
     const save = () => {
-        update(id, {...preview, amount: parseInt(preview.amount)});
+        update(id, {...preview, amount: parseInt(preview.amount, 10)});
     };
 
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
@@ -114,7 +114,7 @@ export const Layer = () => {
         [preview]
     );
 
-    let isValidNextFollowUp = useMemo(() => preview.nextFollowUpAt, [preview]);
+    let isValidNextFollowUp = useMemo(() => !!preview.nextFollowUpAt, [preview]);
 
 
     let isValidForm = useMemo(() => {
