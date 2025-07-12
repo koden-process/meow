@@ -53,12 +53,10 @@ export const Translations = {
     en: 'Opportunity created...',
     fr: 'Opportunité créée...',
   },
-
   CardUpdatedConfirmation: {
     en: 'Opportunity updated...',
     fr: 'Opportunité mise à jour...',
   },
-
   AccountCreatedConfirmation: {
     en: 'Account created...',
     fr: 'Compte créé...',
@@ -975,5 +973,14 @@ export const Translations = {
   ErrorMessage: {
     en: 'An error occurred, please try again later.',
     fr: 'Une erreur s\'est produite, veuillez réessayer plus tard.',
+  },
+
+  CommentAddedSuccessMessage: {
+    en: 'Comment added successfully.',
+    fr: 'Commentaire ajouté avec succès.'
+  },
+  CommentAddedErrorMessage: {
+    en: 'An error occurred while adding the comment.',
+    fr: 'Erreur lors de l\'ajout du commentaire.'
   }
 };
