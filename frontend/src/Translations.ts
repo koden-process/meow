@@ -965,5 +965,15 @@ export const Translations = {
   LogoutButton: {
     en: 'Logout',
     fr: 'Déconnexion',
+  },
+
+  BackToHome: {
+    en: 'Back to Home',
+    fr: 'Retour à l\'accueil',
+  },
+
+  ErrorMessage: {
+    en: 'An error occurred, please try again later.',
+    fr: 'Une erreur s\'est produite, veuillez réessayer plus tard.',
   }
 };
