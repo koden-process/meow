@@ -81,8 +81,8 @@ export const Translations = {
 
   // Login page translations
   ScreenResolutionWarning: {
-    en: 'This application is built for desktops, small screens are not supported.',
-    fr: 'Cette application est conçue pour les ordinateurs de bureau, les petits écrans ne sont pas pris en charge.',
+    en: 'This application is built for desktops, all features may not be available on mobile.',
+    fr: 'Cette application est conçue pour les ordinateurs de bureau, toutes les fonctionnalités ne sont pas disponibles sur mobile.',
   },
 
   // Login and Register form translations

@@ -18,8 +18,9 @@ import { useSelector } from 'react-redux';
 import { getRequestClient } from './helpers/RequestHelper';
 import { AllowTeamRegistrationModal } from './components/modal/AllowTeamRegistrationModal';
 import { ActivityPage } from './pages/ActivityPage';
-import HelloWorldMobile from './HelloWorldMobile';
+import MobileMain from './MobileMain';
 import AddOpportunityMobile from './AddOpportunityMobile';
+import AddCommentMobile from './AddCommentMobile';
 
 function Application() {
   // Mobile screen detection (less than 9 inches, ~900px width as a proxy)
@@ -91,7 +92,8 @@ function Application() {
       <BrowserRouter>
         <Routes>
           <Route path="/ajouter-opportunite" element={<AddOpportunityMobile />} />
-          <Route path="*" element={<HelloWorldMobile />} />
+          <Route path="/ajouter-commentaire" element={<AddCommentMobile />} />
+          <Route path="*" element={<MobileMain />} />
         </Routes>
       </BrowserRouter>
     );
