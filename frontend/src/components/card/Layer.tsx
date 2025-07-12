@@ -12,22 +12,23 @@ import {
 import {
     selectActiveUsers,
     selectCard,
-    selectInterfaceStateId,
+    selectInterfaceStateId, selectLane,
     selectLanes,
-    selectToken,
+    selectToken, selectUserId,
     store,
 } from '../../store/Store';
 import {Form} from './Form';
 import {Events} from './Events';
-import {Card, CardPreview} from '../../interfaces/Card';
-import {useEffect, useState} from 'react';
+import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
+import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
 import {User} from '../../interfaces/User';
 import {Translations} from '../../Translations';
-import {DEFAULT_LANGUAGE} from '../../Constants';
+import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
 import {getRequestClient} from '../../helpers/RequestHelper';
+import {IconLock} from "./IconLock";
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -76,6 +77,54 @@ export const Layer = () => {
         }
     };
 
+    const getBannerColorClassName = (color: string | undefined) => {
+        if (color === LANE_COLOR.NEGATIVE) {
+            return 'negative';
+        }
+
+        if (color === LANE_COLOR.POSITIVE) {
+            return 'positive';
+        }
+
+        return '';
+    };
+
+    const userId = useSelector(selectUserId);
+    const [preview, setPreview] = useState<CardFormPreview>({
+        name: '',
+        amount: '',
+        laneId: '',
+        attributes: undefined,
+        userId: userId!,
+    });
+
+    const save = () => {
+        update(id, {...preview, amount: parseInt(preview.amount, 10)});
+    };
+
+    const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
+    const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
+    }, [lane]);
+
+    let isValidAmount = useMemo(
+        () => /^[\d]{1,10}$/.test(preview.amount) && parseInt(preview.amount) > 0,
+        [preview]
+    );
+
+    let isValidNextFollowUp = useMemo(() => !!preview.nextFollowUpAt, [preview]);
+
+
+    let isValidForm = useMemo(() => {
+        if (preview.name && isValidAmount && isValidNextFollowUp) {
+            return true;
+        }
+
+        return false;
+    }, [preview]);
+
     useEffect(() => {
         const execute = async () => {
             const updated = await client.getCard(id!);
@@ -104,9 +153,26 @@ export const Layer = () => {
                 </div>
 
                 <div>
-                    <Button variant="primary" onPress={() => hideCardDetail()}>
-                        {Translations.CloseButton[DEFAULT_LANGUAGE]}
-                    </Button>
+                    {isDisabled && (
+                        <div className={`lock ${getBannerColorClassName(lane?.color)}`}>
+                            <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
+                            <div className="button" onClick={() => setIsDisabled(!isDisabled)}>
+                                <IconLock/>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="card-submit">
+                        {!isDisabled ? (
+                            <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
+                                {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                            </Button>
+                        ) : null}
+
+                        <Button variant="primary" onPress={() => hideCardDetail()}>
+                            {Translations.CloseButton[DEFAULT_LANGUAGE]}
+                        </Button>
+                    </div>
                 </div>
             </div>
             {isUserLayerVisible && (
@@ -154,7 +220,7 @@ export const Layer = () => {
                         </Tabs.List>
                     )}
                     <Tabs.Content value="opportunity">
-                        <Form update={update} id={id}/>
+                        <Form update={update} id={id} onPreviewChange={setPreview}/>
                     </Tabs.Content>
                     <Tabs.Content value="events">
                         <Events entity="card" id={id}/>

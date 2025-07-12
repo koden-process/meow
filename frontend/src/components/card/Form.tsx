@@ -27,10 +27,11 @@ const getBannerColorClassName = (color: string | undefined) => {
 export interface FormProps {
   id: string | undefined;
   update: (id: Card['_id'] | undefined, card: CardPreview) => void;
+  onPreviewChange?: (preview: CardFormPreview) => void;
 }
 
 // TODO rename component
-export const Form = ({ update, id }: FormProps) => {
+export const Form = ({ update, id, onPreviewChange }: FormProps) => {
   const userId = useSelector(selectUserId);
   const [attributes, setAttributes] = useState<Attribute>({});
   const [preview, setPreview] = useState<CardFormPreview>({
@@ -46,10 +47,14 @@ export const Form = ({ update, id }: FormProps) => {
   }, [preview.attributes]);
 
   const handlePreviewUpdate = (key: string, value: string | number) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       [key]: value,
-    });
+    };
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
   };
 
   const schema = useSelector((store: ApplicationStore) =>
@@ -80,39 +85,48 @@ export const Form = ({ update, id }: FormProps) => {
   }, [lane]);
 
   useEffect(() => {
+    let newPreview;
     if (card) {
-      setPreview({
+      newPreview = {
         ...card,
         attributes: { ...card.attributes },
         amount: card.amount ? card.amount.toString() : '',
-      });
+      };
     } else {
-      setPreview({
+      newPreview = {
         name: '',
         amount: '',
         laneId: '',
         attributes: undefined,
         userId: userId!,
-      });
+      };
     }
-  }, [card]);
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
+  }, [card, userId, onPreviewChange]);
 
   const save = () => {
     update(id, { ...preview, amount: parseInt(preview.amount) });
   };
 
   const validate = (values: Attribute) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       attributes: {
         ...values,
       },
-    });
+    };
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
   };
 
   return (
     <>
-      {isDisabled && (
+{/*      {isDisabled && (
         <div className={`lock ${getBannerColorClassName(lane?.color)}`}>
           <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
           <div className="button" onClick={() => setIsDisabled(!isDisabled)}>
@@ -127,7 +141,7 @@ export const Form = ({ update, id }: FormProps) => {
             {Translations.SaveButton[DEFAULT_LANGUAGE]}
           </Button>
         </div>
-      ) : null}
+      ) : null}*/}
 
       <div className="card">
         <TextField
