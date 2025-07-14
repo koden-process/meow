@@ -48,7 +48,7 @@ export const Lane = ({ lane, numberOfLanes }: LaneProps) => {
   };
 
   useEffect(() => {
-    setFiltered([...CardHelper.filterByLane(lane, cards, filters)]);
+    setFiltered([...CardHelper.filterByLane(lane, cards, filters, store.getState())]);
   }, [lane, cards, filters]);
 
   return (

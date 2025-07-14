@@ -12,7 +12,7 @@ export default defineConfig({
   build: {
     outDir: './build',
   },
-  define: {
-    'process.env': {}
-  }
+  // define: {
+  //   'process.env': {}
+  // }
 });

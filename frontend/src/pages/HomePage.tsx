@@ -113,7 +113,7 @@ export const HomePage = () => {
         const lanesWithForecast = lanes.filter((lane) => lane.inForecast === true);
 
         setAmount(
-            CardHelper.filterAll(lanesWithForecast, cards, filters).reduce((acc, card) => {
+            CardHelper.filterAll(lanesWithForecast, cards, filters, store.getState()).reduce((acc, card) => {
                 return card.amount ? acc + card.amount : acc;
             }, 0)
         );
