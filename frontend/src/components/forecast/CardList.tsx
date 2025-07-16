@@ -24,6 +24,8 @@ import { Row } from '../view/table/Row';
 import { TableCanvas } from '../view/table/TableCanvas';
 import useMobileLayout from '../../hooks/useMobileLayout';
 import { getRequestClient } from '../../helpers/RequestHelper';
+import { SelectMappingContext } from '../../helpers/SelectMappingContext';
+import { useContext } from 'react';
 
 interface CardListProps {
   userId: string;
@@ -76,6 +78,7 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
   const [list, setList] = useState<Array<any>>([]); // TODO remove any
   const columns = useSelector((store: ApplicationStore) => selectViewColumns(store, 'forecast'));
   const isMobileLayout = useMobileLayout();
+  const selectMappings = useContext(SelectMappingContext);
 
   const view = useSelector(
     (store: ApplicationStore) => selectView(store, 'forecast') // TODO use enum

@@ -21,9 +21,10 @@ function isOverDue(card: Card) {
 function filterAll(
   lanes: LaneInterface[],
   cards: Card[],
-  filters: { mode: Set<FilterMode>; userId: string; text?: string }
+  filters: { mode: Set<FilterMode>; userId: string; text?: string },
+  selectMappings: { [key: string]: { [id: string]: string } } = {}
 ) {
-  const filtered = lanes.map((lane) => filterByLane(lane, cards, filters));
+  const filtered = lanes.map((lane) => filterByLane(lane, cards, filters, selectMappings));
 
   return filtered.reduce((previous, current) => {
     return previous.concat(current);
@@ -33,7 +34,8 @@ function filterAll(
 function filterByLane(
   lane: LaneInterface,
   cards: Card[],
-  filters: { mode: Set<FilterMode>; userId: string; text?: string }
+  filters: { mode: Set<FilterMode>; userId: string; text?: string },
+  selectMappings: { [key: string]: { [id: string]: string } } = {}
 ) {
   console.log(cards);
   return cards
@@ -72,9 +74,36 @@ function filterByLane(
           return card;
         }
 
-        if (!regex.test(card.name)) {
-          return;
+        if (regex.test(card.name)) {
+          return card;
         }
+
+        // Recherche dans les attributs de la carte
+        if (card.attributes && typeof card.attributes === 'object') {
+          // Liste des rôles à prendre en compte
+          const roleKeys = ['architecte', 'moe', 'tiger', 'langue', 'account'];
+          for (const key in card.attributes) {
+            let value = card.attributes[key];
+            // Utilisation du mapping par UUID d'attribut
+            if (
+              typeof key === 'string' &&
+              selectMappings[key] &&
+              typeof value === 'string' &&
+              selectMappings[key][value]
+            ) {
+              value = selectMappings[key][value];
+            }
+            if (typeof value === 'string' && regex.test(value)) {
+              return card;
+            }
+            if (typeof value === 'number' && regex.test(value.toString())) {
+              return card;
+            }
+          }
+        }
+
+        // Si aucun match, on exclut la carte
+        return;
       }
 
       return card;
