@@ -287,14 +287,6 @@ export const application = (state = Default, action: ApplicationAction) => {
       return {
         ...state,
         accounts: [...state.accounts, action.payload],
-
-        ui: {
-          ...state.ui,
-          state: Default.ui.state,
-          _id: undefined,
-          modal: undefined,
-          text: undefined,
-        },
       };
 
     case ActionType.TEAM_UPDATE:
@@ -342,16 +334,47 @@ export const application = (state = Default, action: ApplicationAction) => {
         browser: { ...state.browser, state: action.payload },
       };
     case ActionType.USER_INTERFACE_STATE:
-      return {
-        ...state,
-        ui: {
-          ...state.ui,
-          state: action.payload.state,
-          _id: action.payload._id,
-          modal: state.ui.modal,
-          text: undefined,
-        },
-      };
+      // If we're showing the account layer and coming from card-detail, store the previous state
+      if (action.payload.state === 'account-detail' && state.ui.state === 'card-detail') {
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            previousState: state.ui.state,
+            previousId: state.ui._id,
+            state: action.payload.state,
+            _id: action.payload._id,
+            modal: state.ui.modal,
+            text: undefined,
+          },
+        };
+      } else if (action.payload.state === 'default' && state.ui.state === 'account-detail' && state.ui.previousState) {
+        // If we're hiding the account layer and have a previous state, return to it
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            state: state.ui.previousState,
+            _id: state.ui.previousId,
+            previousState: undefined,
+            previousId: undefined,
+            modal: state.ui.modal,
+            text: undefined,
+          },
+        };
+      } else {
+        // Otherwise, just update the state normally
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            state: action.payload.state,
+            _id: action.payload._id,
+            modal: state.ui.modal,
+            text: undefined,
+          },
+        };
+      }
 
     case ActionType.USER_INTERFACE_MODAL:
       return {
