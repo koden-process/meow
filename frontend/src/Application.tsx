@@ -87,7 +87,7 @@ function Application() {
   }, [token]);
 
   return (
-    <SelectMappingContext.Provider value={selectMappings}>
+    
       <BrowserRouter>
         {team!.isFirstTeam === true ? <AllowTeamRegistrationModal /> : null}
         <Layout>
@@ -104,7 +104,7 @@ function Application() {
         <SuccessModal />
         <ErrorModal />
       </BrowserRouter>
-    </SelectMappingContext.Provider>
+    
   );
 }
 
