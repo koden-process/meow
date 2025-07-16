@@ -78,21 +78,11 @@ function filterByLane(
           return card;
         }
 
-        // Recherche dans les attributs de la carte
-        if (card.attributes && typeof card.attributes === 'object') {
-          // Liste des rôles à prendre en compte
-          const roleKeys = ['architecte', 'moe', 'tiger', 'langue', 'account'];
-          for (const key in card.attributes) {
-            let value = card.attributes[key];
-            // Utilisation du mapping par UUID d'attribut
-            if (
-              typeof key === 'string' &&
-              selectMappings[key] &&
-              typeof value === 'string' &&
-              selectMappings[key][value]
-            ) {
-              value = selectMappings[key][value];
-            }
+        // Recherche dans les attributs enrichis (attributesReadable)
+        const attributes = card.attributesReadable || card.attributes;
+        if (attributes && typeof attributes === 'object') {
+          for (const key in attributes) {
+            const value = attributes[key];
             if (typeof value === 'string' && regex.test(value)) {
               return card;
             }
@@ -101,7 +91,6 @@ function filterByLane(
             }
           }
         }
-
         // Si aucun match, on exclut la carte
         return;
       }

@@ -10,6 +10,8 @@ import {
     selectActiveUsers,
     store,
     selectToken,
+    selectAccounts,
+    selectSchemaByType,
 } from '../store/Store';
 import {
     ActionType,
@@ -33,6 +35,8 @@ import {CardHelper} from '../helpers/CardHelper';
 import useMobileLayout from '../hooks/useMobileLayout';
 import {getErrorMessage} from '../helpers/ErrorHelper';
 import {getRequestClient} from '../helpers/RequestHelper';
+import { SchemaType, SchemaAttributeType } from '../interfaces/Schema';
+import { useMemo } from 'react';
 
 export const enum FilterMode {
     OwnedByMe = 'owned-by-me',
@@ -46,10 +50,30 @@ export const HomePage = () => {
     const users = useSelector(selectActiveUsers);
     const state = useSelector(selectInterfaceState);
     const filters = useSelector(selectFilters);
+    const accounts = useSelector(selectAccounts);
+    const schema = useSelector((store: any) => selectSchemaByType(store, SchemaType.Card));
+
+    // Création du mapping id -> nom pour les accounts
+    const accountMapping = Object.fromEntries(accounts.map(acc => [acc._id, acc.name]));
+
+    // Création du mapping global pour les attributs de type référence
+    const selectMappings: { [key: string]: { [id: string]: string } } = {};
+    if (schema && schema.attributes) {
+        schema.attributes.forEach(attr => {
+            if (
+                attr.type === SchemaAttributeType.Reference &&
+                (attr as any).entity === 'contact'
+            ) {
+                selectMappings[attr.key] = accountMapping;
+            }
+            // Ici tu pourras ajouter architect/moe si tu as les mappings
+        });
+    }
 
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
     const [text, setText] = useState<string>('');
     const [userId, setUserId] = useState(FILTER_BY_NONE.key);
+    const [selectedAccountId, setSelectedAccountId] = useState<string>('');
 
     const isMobileLayout = useMobileLayout();
 
@@ -79,7 +103,29 @@ export const HomePage = () => {
             try {
                 let cards = await client.getCards();
 
-                store.dispatch(updateCards([...cards]));
+                // Enrichissement des cards avec attributesReadable
+                let enrichedCards = cards.map(card => {
+                    const attributesReadable: Record<string, any> = {};
+                    if (card.attributes && schema && schema.attributes) {
+                        schema.attributes.forEach(attr => {
+                            if (card.attributes && attr.key in card.attributes) {
+                                const value = card.attributes[attr.key];
+                                if (
+                                    attr.type === SchemaAttributeType.Reference &&
+                                    (attr as any).entity === 'contact' &&
+                                    typeof value === 'string'
+                                ) {
+                                    attributesReadable[attr.key] = accountMapping[value] || value;
+                                } else {
+                                    attributesReadable[attr.key] = value;
+                                }
+                            }
+                        });
+                    }
+                    return { ...card, attributesReadable };
+                });
+
+                store.dispatch(updateCards([...enrichedCards]));
             } catch (error) {
                 console.error(error);
 
@@ -88,7 +134,7 @@ export const HomePage = () => {
         };
 
         execute();
-    }, []);
+    }, [accounts, schema]);
 
     const openCard = (id?: string) => {
         store.dispatch(showCardLayer(id));
@@ -104,8 +150,18 @@ export const HomePage = () => {
             : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
     };
 
+    // Nouveau filtrage par account sélectionné
+    const filteredCardsByAccount = useMemo(() => {
+        if (!selectedAccountId) return cards;
+        // On cherche les cards qui ont l'ID de l'account dans leurs attributs (clé de type référence)
+        return cards.filter(card => {
+            if (!card.attributes) return false;
+            return Object.values(card.attributes).includes(selectedAccountId);
+        });
+    }, [cards, selectedAccountId]);
+
     useEffect(() => {
-        if (!lanes || !cards) {
+        if (!lanes || !filteredCardsByAccount) {
             setAmount(0);
             return;
         }
@@ -113,11 +169,11 @@ export const HomePage = () => {
         const lanesWithForecast = lanes.filter((lane) => lane.inForecast === true);
 
         setAmount(
-            CardHelper.filterAll(lanesWithForecast, cards, filters).reduce((acc, card) => {
+            CardHelper.filterAll(lanesWithForecast, filteredCardsByAccount, filters, selectMappings).reduce((acc, card) => {
                 return card.amount ? acc + card.amount : acc;
             }, 0)
         );
-    }, [cards, lanes, filters]);
+    }, [filteredCardsByAccount, lanes, filters, accounts, schema]);
 
     const onDragEnd = async (result: DropResult) => {
         const trash = document.getElementById('trash');
@@ -208,7 +264,7 @@ export const HomePage = () => {
                                 ></button>
                             )}
                             <h2>
-                                {getTitle(cards)} -
+                                {getTitle(filteredCardsByAccount)} -
                                 <Currency value={amount}/>
                             </h2>
 
@@ -229,7 +285,19 @@ export const HomePage = () => {
                                 type="text"
                             />
                         </div>
-
+                        {/* Nouveau champ select pour filtrer par account/contact */}
+                        <div style={{marginTop: 8}}>
+                            <select
+                                value={selectedAccountId}
+                                onChange={e => setSelectedAccountId(e.target.value)}
+                                style={{ minWidth: 200 }}
+                            >
+                                <option value="">-- Filtrer par contact --</option>
+                                {accounts.map(acc => (
+                                    <option key={acc._id} value={acc._id}>{acc.name}</option>
+                                ))}
+                            </select>
+                        </div>
                         <div>
                             <button
                                 className={`filter ${
@@ -285,8 +353,8 @@ export const HomePage = () => {
                     )}
 
                     <div className="lanes">
-                        {mode === 'board' && <Board lanes={lanes}/>}
-                        {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>}
+                        {mode === 'board' && <Board lanes={lanes} cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
+                        {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
                     </div>
                 </DragDropContext>
             </div>
