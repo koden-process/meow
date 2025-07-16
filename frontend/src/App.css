@@ -640,7 +640,23 @@ h3 {
 .board .lane .card .content .edit {
   float: right;
 }
+.input-spacing {
+  margin-right: 10px;
+}
 
+@media (max-width: 768px) {
+  .input-spacing {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1440px) {
+  .input-spacing {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+}
 .board .lanes .card .content .edit button {
   background: inherit;
   padding: 0;

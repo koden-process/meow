@@ -278,16 +278,17 @@ export const HomePage = () => {
 
                     <div className="filters-canvas">
                         <div>
-                            <input
+                            <input className="inputSpacing"
                                 onChange={(event) => setText(event.target.value)}
                                 placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
                                 aria-label="Name or Stage"
                                 type="text"
                             />
-                        </div>
+                        
                         {/* Nouveau champ select pour filtrer par account/contact */}
-                        <div style={{marginTop: 8}}>
-                            <select
+                        
+                            <select 
+                                className="inputSpacing"
                                 value={selectedAccountId}
                                 onChange={e => setSelectedAccountId(e.target.value)}
                                 style={{ minWidth: 200 }}
