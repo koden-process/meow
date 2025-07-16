@@ -1,22 +1,35 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../src/App.css';
+import { Button } from '@adobe/react-spectrum';
+
+const IconOpportunity = () => (
+  <span role="img" aria-label="opportunité" style={{ marginRight: 8 }}>💼</span>
+);
+const IconComment = () => (
+  <span role="img" aria-label="commentaire" style={{ marginRight: 8 }}>💬</span>
+);
 
 const MobileMain: React.FC = () => {
   const navigate = useNavigate();
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      <button
-        style={{ margin: '10px', padding: '12px 24px', fontSize: '16px' }}
-        onClick={() => navigate('/ajouter-opportunite')}
+    <div className="canvas mobile-menu" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <h2 style={{ marginBottom: 24, textAlign: 'center', fontWeight: 700 }}>Menu principal</h2>
+      <Button
+        variant="primary"
+        UNSAFE_style={{ margin: '16px 0', minWidth: 220, fontSize: '1.1em', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        onPress={() => navigate('/ajouter-opportunite')}
       >
-        Ajouter une opportunité
-      </button>
-      <button
-        style={{ margin: '10px', padding: '12px 24px', fontSize: '16px' }}
-        onClick={() => navigate('/ajouter-commentaire')}
+        <IconOpportunity /> Ajouter une opportunité
+      </Button>
+      <Button
+        variant="primary"
+        UNSAFE_style={{ margin: '16px 0', minWidth: 220, fontSize: '1.1em', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        onPress={() => navigate('/ajouter-commentaire')}
       >
-        Ajouter un commentaire
-      </button>
+        <IconComment /> Ajouter un commentaire
+      </Button>
     </div>
   );
 };

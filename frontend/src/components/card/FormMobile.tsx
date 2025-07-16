@@ -6,6 +6,7 @@ import { selectUserId } from '../../store/Store';
 import { CardFormPreview } from '../../interfaces/Card';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { useNavigate } from 'react-router-dom';
 
 export interface FormMobileProps {
   onSubmit: (card: CardFormPreview) => void;
@@ -20,6 +21,7 @@ export const FormMobile = ({ onSubmit }: FormMobileProps) => {
     attributes: undefined,
     userId: userId!,
   });
+  const navigate = useNavigate();
 
   const handlePreviewUpdate = (key: string, value: string | number) => {
     setPreview({
@@ -71,9 +73,12 @@ export const FormMobile = ({ onSubmit }: FormMobileProps) => {
           />
         </div>
       </div>
-      <div className="card-submit" style={{ marginTop: 24 }}>
-        <Button type="submit" variant="primary" isDisabled={!preview.name || !isValidAmount}>
-          {Translations.AddButton[DEFAULT_LANGUAGE]}
+      <div className="card-submit" style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Button type="submit" variant="primary" isDisabled={!preview.name || !isValidAmount} UNSAFE_style={{ minWidth: 180 }}>
+          Enregistrer
+        </Button>
+        <Button type="button" variant="secondary" UNSAFE_style={{ marginTop: 12, minWidth: 180 }} onPress={() => navigate('/mobile')}>
+          Annuler
         </Button>
       </div>
     </form>

@@ -6,7 +6,8 @@ import { getRequestClient } from './helpers/RequestHelper';
 import { Translations } from './Translations';
 import { DEFAULT_LANGUAGE } from './Constants';
 import { FormMobile } from './components/card/FormMobile';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import './App.css';
 
 const AddCardMobile: React.FC = () => {
   const token = useSelector(selectToken);
@@ -14,10 +15,13 @@ const AddCardMobile: React.FC = () => {
   const client = getRequestClient(token);
   const [success, setSuccess] = useState<boolean | null>(null);
   const [message, setMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const lang = DEFAULT_LANGUAGE;
+  const navigate = useNavigate();
 
   // @ts-ignore
   const handleSubmit = async (card) => {
+    setIsLoading(true);
     try {
       if (!card.laneId && lanes && lanes.length > 0) {
         card.laneId = lanes[0]._id;
@@ -27,28 +31,35 @@ const AddCardMobile: React.FC = () => {
       store.dispatch(addCard({ ...updated }));
       setSuccess(true);
       setMessage(Translations.CardCreatedConfirmation[lang]);
+      setTimeout(() => navigate('/mobile'), 1800);
     } catch (e) {
       setSuccess(false);
       setMessage((Translations.ErrorMessage && Translations.ErrorMessage[lang]));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      {/* Mobile menu to go to home */}
-      <div style={{ width: '100%', padding: '10px 0', background: '#f5f5f5', position: 'absolute', top: 0, left: 0, textAlign: 'left' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px', marginLeft: '16px' }}>
-          Accueil
-        </Link>
-      </div>
-      <div style={{ marginTop: '60px', width: '100%' }}>
-        {success === null && <FormMobile onSubmit={handleSubmit} />}
+    <div className="canvas" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: 16 }}>
+      <div style={{ marginTop: '60px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h2 style={{ marginBottom: 24, textAlign: 'center', fontWeight: 700 }}>Nouvelle opportunité</h2>
+        {isLoading && <div style={{ margin: 16 }}><span className="loader"></span></div>}
+        {success === null && (
+          <>
+            <FormMobile onSubmit={handleSubmit} />
+
+          </>
+        )}
         {success !== null && (
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ color: success ? 'green' : 'red' }}>{message}</h2>
-            <Link to="/mobile" style={{ color: '#007aff', fontSize: 18, textDecoration: 'underline' }}>
-              {Translations.BackToHome ? (Translations.BackToHome[lang]) : 'Retour à l\'accueil'}
-            </Link>
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>{success ? '✅' : '❌'}</div>
+            <h2 style={{ color: success ? 'green' : 'red', marginBottom: 16 }}>{message}</h2>
+            {!success && (
+              <button className="button button-secondary" style={{ minWidth: 180 }} onClick={() => navigate('/mobile')}>
+                Retour à l'accueil
+              </button>
+            )}
           </div>
         )}
       </div>

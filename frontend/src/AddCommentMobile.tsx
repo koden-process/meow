@@ -8,12 +8,15 @@ import { getRequestClient } from './helpers/RequestHelper';
 import { updateCards } from './actions/Actions';
 import { Translations } from './Translations';
 import { DEFAULT_LANGUAGE } from './Constants';
+import './App.css';
+import { Button } from '@adobe/react-spectrum';
 
 const AddCommentMobile: React.FC = () => {
   const [comment, setComment] = useState('');
   const [selectedCardId, setSelectedCardId] = useState('');
   const [success, setSuccess] = useState<boolean | null>(null);
   const [message, setMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const cards = useSelector(selectCards);
   const lanes = useSelector(selectLanes);
@@ -50,6 +53,7 @@ const AddCommentMobile: React.FC = () => {
       alert('Veuillez sélectionner une opportunité active.');
       return;
     }
+    setIsLoading(true);
     try {
       await client.createCardEvent(selectedCardId, comment);
       setComment('');
@@ -57,24 +61,24 @@ const AddCommentMobile: React.FC = () => {
       dispatch(updateCards(fetchedCards));
       setSuccess(true);
       setMessage(Translations.CommentAddedSuccessMessage[lang]);
+      setTimeout(() => navigate('/mobile'), 1800);
     } catch (e) {
       setSuccess(false);
       setMessage(Translations.CommentAddedErrorMessage[lang]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const buttonStyle: React.CSSProperties = { borderRadius: 24, background: '#fff', color: '#007aff', border: '1px solid #007aff', boxShadow: '0 2px 8px #eee' };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-      {/* Mobile menu to go to home */}
-      <div style={{ width: '100%', padding: '10px 0', background: '#f5f5f5', position: 'absolute', top: 0, left: 0, textAlign: 'left' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '18px', marginLeft: '16px' }}>
-          Accueil
-        </Link>
-      </div>
-      <div style={{ marginTop: '60px', width: '100%' }}>
+    <div className="canvas" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      <div style={{ marginTop: '60px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <h2 style={{ marginBottom: 24, textAlign: 'center', fontWeight: 700 }}>Ajouter un commentaire</h2>
+        {isLoading && <div style={{ margin: 16 }}><span className="loader"></span></div>}
         {success === null && (
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '80%', maxWidth: 400 }}>
-            {/* Sélecteur de Card active obligatoire */}
             <select
               id="active-card-select"
               required
@@ -99,20 +103,26 @@ const AddCommentMobile: React.FC = () => {
               style={{ marginBottom: '16px', padding: '8px', fontSize: '16px' }}
               required
             />
-            <button type="submit" style={{ padding: '12px 24px', fontSize: '16px' }}>
-              Ajouter
-            </button>
-            <button type="button" onClick={() => navigate(-1)} style={{ marginTop: '8px', padding: '12px 24px', fontSize: '16px' }}>
-              Annuler
-            </button>
+            <div className="card-submit" style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Button type="submit" variant="primary" isDisabled={!comment.trim()} UNSAFE_style={{ minWidth: 180 }}>
+                Enregistrer
+              </Button>
+              <Button type="button" variant="secondary" UNSAFE_style={{ marginTop: 12, minWidth: 180 }} onPress={() => navigate('/mobile')}>
+                Annuler
+              </Button>
+            </div>
+            <div className="char-counter" style={{ textAlign: 'right', fontSize: 12, color: '#888', marginTop: 4 }}>{comment.length}/500</div>
           </form>
         )}
         {success !== null && (
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ color: success ? 'green' : 'red' }}>{message}</h2>
-            <Link to="/mobile" style={{ color: '#007aff', fontSize: 18, textDecoration: 'underline' }}>
-              Retour à l'accueil
-            </Link>
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>{success ? '✅' : '❌'}</div>
+            <h2 style={{ color: success ? 'green' : 'red', marginBottom: 16 }}>{message}</h2>
+            {!success && (
+              <button className="button button-secondary" style={{ minWidth: 180 }} onClick={() => navigate('/mobile')}>
+                Retour à l'accueil
+              </button>
+            )}
           </div>
         )}
       </div>
