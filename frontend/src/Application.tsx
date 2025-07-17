@@ -12,12 +12,13 @@ import { HirePage } from './pages/HirePage';
 import { HomePage } from './pages/HomePage';
 import { SetupPage } from './pages/SetupPage';
 import { UserSetupPage } from './pages/UserSetupPage';
-import { selectTeam, selectToken, store } from './store/Store';
+import { selectTeam, selectToken, store, selectAccounts } from './store/Store';
 import { getErrorMessage } from './helpers/ErrorHelper';
 import { useSelector } from 'react-redux';
 import { getRequestClient } from './helpers/RequestHelper';
 import { AllowTeamRegistrationModal } from './components/modal/AllowTeamRegistrationModal';
 import { ActivityPage } from './pages/ActivityPage';
+import { SelectMappingContext, SelectMappings } from './helpers/SelectMappingContext';
 import MobileMain from './MobileMain';
 import AddOpportunityMobile from './AddOpportunityMobile';
 import AddCommentMobile from './AddCommentMobile';
@@ -32,6 +33,18 @@ function Application() {
 
   const token = useSelector(selectToken);
   const team = useSelector(selectTeam);
+  const accounts = useSelector(selectAccounts);
+
+  // Construction du mapping : { uuidAttribut: { idAccount: nomAccount } }
+  const selectMappings: SelectMappings = {};
+  accounts.forEach(account => {
+    account.references?.forEach(ref => {
+      if (!selectMappings[ref.schemaAttributeKey]) {
+        selectMappings[ref.schemaAttributeKey] = {};
+      }
+      selectMappings[ref.schemaAttributeKey][account._id] = account.name;
+    });
+  });
 
   const client = getRequestClient(token);
 
@@ -104,22 +117,24 @@ function Application() {
   }
 
   return (
-    <BrowserRouter>
-      {team!.isFirstTeam === true ? <AllowTeamRegistrationModal /> : null}
-      <Layout>
-        <Routes>
-          <Route path="/forecast/*" element={<ForecastPage />}></Route>
-          <Route path="/setup" element={<SetupPage />}></Route>
-          <Route path="/activity" element={<ActivityPage />}></Route>
-          <Route path="/user-setup" element={<UserSetupPage />}></Route>
-          <Route path="/hire" element={<HirePage />}></Route>
-          <Route path="/accounts" element={<AccountsPage />}></Route>
-          <Route path="*" element={<HomePage />}></Route>
-        </Routes>
-      </Layout>
-      <SuccessModal />
-      <ErrorModal />
-    </BrowserRouter>
+    
+      <BrowserRouter>
+        {team!.isFirstTeam === true ? <AllowTeamRegistrationModal /> : null}
+        <Layout>
+          <Routes>
+            <Route path="/forecast/*" element={<ForecastPage />}></Route>
+            <Route path="/setup" element={<SetupPage />}></Route>
+            <Route path="/activity" element={<ActivityPage />}></Route>
+            <Route path="/user-setup" element={<UserSetupPage />}></Route>
+            <Route path="/hire" element={<HirePage />}></Route>
+            <Route path="/accounts" element={<AccountsPage />}></Route>
+            <Route path="*" element={<HomePage />}></Route>
+          </Routes>
+        </Layout>
+        <SuccessModal />
+        <ErrorModal />
+      </BrowserRouter>
+    
   );
 }
 

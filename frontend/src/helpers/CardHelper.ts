@@ -21,9 +21,10 @@ function isOverDue(card: Card) {
 function filterAll(
   lanes: LaneInterface[],
   cards: Card[],
-  filters: { mode: Set<FilterMode>; userId: string; text?: string }
+  filters: { mode: Set<FilterMode>; userId: string; text?: string },
+  selectMappings: { [key: string]: { [id: string]: string } } = {}
 ) {
-  const filtered = lanes.map((lane) => filterByLane(lane, cards, filters));
+  const filtered = lanes.map((lane) => filterByLane(lane, cards, filters, selectMappings));
 
   return filtered.reduce((previous, current) => {
     return previous.concat(current);
@@ -33,9 +34,9 @@ function filterAll(
 function filterByLane(
   lane: LaneInterface,
   cards: Card[],
-  filters: { mode: Set<FilterMode>; userId: string; text?: string }
+  filters: { mode: Set<FilterMode>; userId: string; text?: string },
+  selectMappings: { [key: string]: { [id: string]: string } } = {}
 ) {
-  console.log(cards);
   return cards
     .filter((card) => card.laneId === lane._id)
     .filter((card) => {
@@ -72,9 +73,25 @@ function filterByLane(
           return card;
         }
 
-        if (!regex.test(card.name)) {
-          return;
+        if (regex.test(card.name)) {
+          return card;
         }
+
+        // Recherche dans les attributs enrichis (attributesReadable)
+        const attributes = card.attributesReadable || card.attributes;
+        if (attributes && typeof attributes === 'object') {
+          for (const key in attributes) {
+            const value = attributes[key];
+            if (typeof value === 'string' && regex.test(value)) {
+              return card;
+            }
+            if (typeof value === 'number' && regex.test(value.toString())) {
+              return card;
+            }
+          }
+        }
+        // Si aucun match, on exclut la carte
+        return;
       }
 
       return card;

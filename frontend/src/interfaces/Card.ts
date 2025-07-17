@@ -16,6 +16,8 @@ export interface Card {
   nextFollowUpAt?: string;
   readonly createdAt: string;
   readonly updatedAt: string;
+  // Ajout pour la recherche enrichie
+  attributesReadable?: { [key: string]: string | number | boolean | null };
 }
 
 export enum CardStatus {

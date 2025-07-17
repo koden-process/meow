@@ -34,10 +34,11 @@ const getTitle = (count: number) => {
 export interface LaneProps {
   lane: LaneInterface;
   numberOfLanes: number;
+  cards?: Card[]; // cards filtrées à afficher dans cette lane
 }
 
-export const Lane = ({ lane, numberOfLanes }: LaneProps) => {
-  const cards = useSelector(selectCards);
+export const Lane = ({ lane, numberOfLanes, cards: cardsProp }: LaneProps) => {
+  const cards = cardsProp ?? useSelector(selectCards);
   const filters = useSelector(selectFilters);
   const ids = useSelector((store: ApplicationStore) => selectBoardByLaneId(store, lane._id));
   const [filtered, setFiltered] = useState<Card[]>([]);
