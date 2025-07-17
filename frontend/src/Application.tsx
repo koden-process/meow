@@ -22,9 +22,13 @@ import MobileMain from './MobileMain';
 import AddOpportunityMobile from './AddOpportunityMobile';
 import AddCommentMobile from './AddCommentMobile';
 
+const MOBILE_SCREEN_THRESHOLD = 900;
+
 function Application() {
   // Mobile screen detection (less than 9 inches, ~900px width as a proxy)
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 900 && window.innerHeight < 900);
+  const [isMobile, setIsMobile] = useState(
+    window.innerWidth < MOBILE_SCREEN_THRESHOLD && window.innerHeight < MOBILE_SCREEN_THRESHOLD
+  );
 
   const token = useSelector(selectToken);
   const team = useSelector(selectTeam);
