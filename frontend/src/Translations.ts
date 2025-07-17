@@ -53,12 +53,10 @@ export const Translations = {
     en: 'Opportunity created...',
     fr: 'Opportunité créée...',
   },
-
   CardUpdatedConfirmation: {
     en: 'Opportunity updated...',
     fr: 'Opportunité mise à jour...',
   },
-
   AccountCreatedConfirmation: {
     en: 'Account created...',
     fr: 'Compte créé...',
@@ -81,8 +79,8 @@ export const Translations = {
 
   // Login page translations
   ScreenResolutionWarning: {
-    en: 'This application is built for desktops, small screens are not supported.',
-    fr: 'Cette application est conçue pour les ordinateurs de bureau, les petits écrans ne sont pas pris en charge.',
+    en: 'This application is built for desktops, all features may not be available on mobile.',
+    fr: 'Cette application est conçue pour les ordinateurs de bureau, toutes les fonctionnalités ne sont pas disponibles sur mobile.',
   },
 
   // Login and Register form translations
@@ -965,5 +963,24 @@ export const Translations = {
   LogoutButton: {
     en: 'Logout',
     fr: 'Déconnexion',
+  },
+
+  BackToHome: {
+    en: 'Back to Home',
+    fr: 'Retour à l\'accueil',
+  },
+
+  ErrorMessage: {
+    en: 'An error occurred, please try again later.',
+    fr: 'Une erreur s\'est produite, veuillez réessayer plus tard.',
+  },
+
+  CommentAddedSuccessMessage: {
+    en: 'Comment added successfully.',
+    fr: 'Commentaire ajouté avec succès.'
+  },
+  CommentAddedErrorMessage: {
+    en: 'An error occurred while adding the comment.',
+    fr: 'Erreur lors de l\'ajout du commentaire.'
   }
 };

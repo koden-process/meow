@@ -45,11 +45,15 @@ export const Layer = () => {
             store.dispatch(updateAccount({...updated}));
 
             store.dispatch(showModalSuccess(Translations.AccountUpdatedConfirmation[DEFAULT_LANGUAGE]));
+            // Return to the previous sidebar (card sidebar)
+            store.dispatch(hideLayer());
         } else {
             const updated = await client.createAccount(preview); // TODO refactor
 
             store.dispatch(addAccount({...updated}));
             store.dispatch(showModalSuccess(Translations.AccountCreatedConfirmation[DEFAULT_LANGUAGE]));
+            // Return to the previous sidebar (card sidebar)
+            store.dispatch(hideLayer());
         }
     };
 

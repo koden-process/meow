@@ -24,6 +24,7 @@ import {Layer as CardLayer} from '../components/card/Layer';
 import {DragDropContext, DropResult} from 'react-beautiful-dnd';
 import {Trash} from '../components/Trash';
 import {Layer as LaneLayer} from '../components/lane/Layer';
+import {Layer as AccountLayer} from '../components/account/Layer';
 import {Currency} from '../components/Currency';
 import {Board} from '../components/Board';
 import {Card} from '../interfaces/Card';
@@ -239,6 +240,7 @@ export const HomePage = () => {
         <>
             {state === 'card-detail' && <CardLayer/>}
             {state === 'lane-detail' && <LaneLayer/>}
+            {state === 'account-detail' && <AccountLayer/>}
             <div className="board">
                 <div className="title">
                     <div>

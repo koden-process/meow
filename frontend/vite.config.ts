@@ -7,7 +7,7 @@ import svgrPlugin from 'vite-plugin-svgr';
 export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgrPlugin()],
   server: {
-    port: 3000,
+    port: 3119,
   },
   build: {
     outDir: './build',

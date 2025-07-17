@@ -1,10 +1,11 @@
 import { Picker, Item } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectAccounts } from '../../store/Store';
 import { Account } from '../../interfaces/Account';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { showAccountLayer } from '../../actions/Actions';
 
 const getOptions = (accounts: Account[]) => {
   const list: JSX.Element[] = [];
@@ -35,6 +36,7 @@ export const ReferenceAttribute = ({
 }: ReferenceAttributeProps) => {
   const [value, setValue] = useState(valueDefault ? valueDefault : '');
   const accounts = useSelector(selectAccounts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setValue(valueDefault ? valueDefault : '');
@@ -50,18 +52,45 @@ export const ReferenceAttribute = ({
     }
   };
 
+  const handleAddAccount = () => {
+    // Only allow adding an account when the form is not disabled
+    if (!isDisabled) {
+      dispatch(showAccountLayer());
+    }
+  };
+
   return (
     <div className="attribute">
-      <Picker
-        width="100%"
-        aria-label={name}
-        label={name}
-        selectedKey={value}
-        isDisabled={isDisabled}
-        onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
-      >
-        {getOptions(accounts)}
-      </Picker>
+      <div style={{ position: 'relative' }}>
+        <Picker
+          width="100%"
+          aria-label={name}
+          label={name}
+          selectedKey={value}
+          isDisabled={isDisabled}
+          onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
+        >
+          {getOptions(accounts)}
+        </Picker>
+        {/* This button should respect the disabled state of the form */}
+        <button
+          style={{
+            position: 'absolute',
+            right: '0',
+            bottom: '-20px',
+            fontSize: '14px',
+            color: isDisabled ? '#a0a0a0' : '#1473e6',
+            cursor: isDisabled ? 'default' : 'pointer',
+            opacity: isDisabled ? 0.7 : 1,
+            background: 'none',
+            border: 'none',
+          }}
+          onClick={handleAddAccount}
+          disabled={isDisabled}
+        >
+          + {Translations.AddButton[DEFAULT_LANGUAGE]}
+        </button>
+      </div>
     </div>
   );
 };
