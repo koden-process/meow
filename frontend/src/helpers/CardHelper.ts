@@ -37,7 +37,6 @@ function filterByLane(
   filters: { mode: Set<FilterMode>; userId: string; text?: string },
   selectMappings: { [key: string]: { [id: string]: string } } = {}
 ) {
-  console.log(cards);
   return cards
     .filter((card) => card.laneId === lane._id)
     .filter((card) => {
