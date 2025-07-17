@@ -34,6 +34,8 @@ export interface ApplicationStore {
   };
   ui: {
     state: InterfaceState;
+    previousState?: InterfaceState;
+    previousId?: Card['_id'] | Lane['_id'] | Account['_id'];
     _id: undefined | Card['_id'] | Lane['_id'] | Account['_id'];
     modal: 'success' | 'error' | undefined;
     text: string | undefined;
