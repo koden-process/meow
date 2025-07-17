@@ -287,10 +287,6 @@ export const application = (state = Default, action: ApplicationAction) => {
       return {
         ...state,
         accounts: [...state.accounts, action.payload],
-        uiState: {
-          ...state.uiState,
-          accountCreationStatus: 'completed',
-        },
       };
 
     case ActionType.TEAM_UPDATE:
