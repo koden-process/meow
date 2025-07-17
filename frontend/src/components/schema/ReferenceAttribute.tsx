@@ -73,21 +73,23 @@ export const ReferenceAttribute = ({
           {getOptions(accounts)}
         </Picker>
         {/* This button should respect the disabled state of the form */}
-        <div 
-          style={{ 
-            position: 'absolute', 
-            right: '0', 
-            bottom: '-20px', 
-            fontSize: '14px', 
-            color: isDisabled ? '#a0a0a0' : '#1473e6', 
+        <button
+          style={{
+            position: 'absolute',
+            right: '0',
+            bottom: '-20px',
+            fontSize: '14px',
+            color: isDisabled ? '#a0a0a0' : '#1473e6',
             cursor: isDisabled ? 'default' : 'pointer',
-            // The button should be visually disabled when the form is disabled
-            opacity: isDisabled ? 0.7 : 1
+            opacity: isDisabled ? 0.7 : 1,
+            background: 'none',
+            border: 'none',
           }}
           onClick={handleAddAccount}
+          disabled={isDisabled}
         >
           + {Translations.AddButton[DEFAULT_LANGUAGE]}
-        </div>
+        </button>
       </div>
     </div>
   );
