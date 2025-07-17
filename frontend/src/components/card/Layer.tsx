@@ -19,6 +19,8 @@ import {
 } from '../../store/Store';
 import {Form} from './Form';
 import {Events} from './Events';
+import {TransferModal} from './TransferModal';
+import {TransferRequests} from './TransferRequests';
 import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
 import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
@@ -38,6 +40,7 @@ export const Layer = () => {
     const id = useSelector(selectInterfaceStateId);
     const card = useSelector((store: ApplicationStore) => selectCard(store, id));
     const [isUserLayerVisible, setIsUserLayerVisible] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const users = useSelector(selectActiveUsers);
     const lanes = useSelector(selectLanes);
     const isMobileLayout = useMobileLayout();
@@ -75,6 +78,11 @@ export const Layer = () => {
 
             store.dispatch(showModalSuccess(Translations.CardCreatedConfirmation[DEFAULT_LANGUAGE]));
         }
+    };
+
+    const handleTransferSuccess = () => {
+        store.dispatch(showModalSuccess('Transfer request sent successfully!'));
+        // Optionally refresh the card data or close the layer
     };
 
     const getBannerColorClassName = (color: string | undefined) => {
@@ -211,6 +219,9 @@ export const Layer = () => {
                             <Tabs.Trigger value="events">
                                 <span className="tab-title">{Translations.HistoryTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
+                            <Tabs.Trigger value="transfer">
+                                <span className="tab-title">Transfer</span>
+                            </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
                         <Tabs.List>
@@ -225,8 +236,35 @@ export const Layer = () => {
                     <Tabs.Content value="events">
                         <Events entity="card" id={id}/>
                     </Tabs.Content>
+                    <Tabs.Content value="transfer">
+                        <div style={{ padding: '16px' }}>
+                            {card && (
+                                <>
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <Button 
+                                            variant="primary" 
+                                            onPress={() => setIsTransferModalOpen(true)}
+                                        >
+                                            Transfer This Opportunity
+                                        </Button>
+                                    </div>
+                                    <TransferRequests />
+                                </>
+                            )}
+                        </div>
+                    </Tabs.Content>
                 </Tabs.Root>
             </div>
+            
+            {/* Transfer Modal */}
+            {card && (
+                <TransferModal
+                    isOpen={isTransferModalOpen}
+                    onClose={() => setIsTransferModalOpen(false)}
+                    card={card}
+                    onTransferSuccess={handleTransferSuccess}
+                />
+            )}
         </div>
     );
 };
