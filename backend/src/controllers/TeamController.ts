@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { CurrencyCode } from '../entities/Team.js';
+import { CurrencyCode, Team } from '../entities/Team.js';
 import { InvalidRequestBodyError } from '../errors/InvalidRequestBodyError.js';
 import { EntityHelper } from '../helpers/EntityHelper.js';
 import { AuthenticatedRequest } from '../requests/AuthenticatedRequest.js';
@@ -79,6 +79,19 @@ const allowTeamRegistration = async (
     }
 };
 
+const list = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+        // Get all teams except the current user's team for transfer purposes
+        const teams = await EntityHelper.findBy(Team, {
+            _id: { $ne: req.jwt.user.teamId }
+        });
+
+        return res.json(teams);
+    } catch (error) {
+        return next(error);
+    }
+};
+
 const get = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
         const team = await validateAndFetchTeam(req.params.id, req.jwt.user);
@@ -93,5 +106,6 @@ export const TeamController = {
     update,
     allowTeamRegistration,
     updateIntegration,
+    list,
     get,
 };

@@ -615,4 +615,30 @@ export class RequestHelper {
       throw error;
     }
   };
+
+  async getTeams(): Promise<Team[]> {
+    const url = this.getUrl('/api/teams');
+    return this.doFetch(url, 'GET');
+  }
+
+  async createOpportunityTransfer(transferRequest: any) {
+    const url = this.getUrl('/api/opportunity-transfers');
+    return this.doFetch(url, 'POST', transferRequest);
+  }
+
+  async getOpportunityTransfers(type?: string) {
+    const urlPath = type ? `/api/opportunity-transfers?type=${type}` : '/api/opportunity-transfers';
+    const url = this.getUrl(urlPath);
+    return this.doFetch(url, 'GET');
+  }
+
+  async acceptOpportunityTransfer(transferId: string, responseMessage: string) {
+    const url = this.getUrl(`/api/opportunity-transfers/${transferId}/accept`);
+    return this.doFetch(url, 'POST', { responseMessage });
+  }
+
+  async declineOpportunityTransfer(transferId: string, responseMessage: string) {
+    const url = this.getUrl(`/api/opportunity-transfers/${transferId}/decline`);
+    return this.doFetch(url, 'POST', { responseMessage });
+  }
 }

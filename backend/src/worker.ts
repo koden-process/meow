@@ -81,6 +81,8 @@ import JobDailyScheduler from './job-daily-scheduler.js';
 import { BoardEventListener } from './events/BoardEventListener.js';
 import { CardForecastEventListener } from './events/CardForecastEventListener.js';
 import { ActivityController } from './controllers/ActivityController.js';
+import { OpportunityTransferController } from './controllers/OpportunityTransferController.js';
+import { OpportunityTransferRequestSchema, OpportunityTransferResponseSchema } from './middlewares/schema-validation/OpportunityTransferRequestSchema.js';
 
 /* spinning up express */
 export const app = express();
@@ -160,6 +162,7 @@ try {
 
   team.use(verifyJwt, addEntityToHeader, setHeaders, isDatabaseConnectionEstablished);
 
+  team.route('/').get(TeamController.list);
   team.route('/:id').get(TeamController.get);
   team
     .route('/:id')
@@ -176,6 +179,37 @@ try {
     .post(rejectIfContentTypeIsNot('application/json'), TeamController.allowTeamRegistration);
 
   app.use('/api/teams', team);
+
+  const opportunityTransfer = express.Router();
+
+  opportunityTransfer.use(express.json({ limit: '5kb' }));
+  opportunityTransfer.use(verifyJwt, addEntityToHeader, setHeaders, isDatabaseConnectionEstablished);
+
+  opportunityTransfer.route('/').get(OpportunityTransferController.list);
+  opportunityTransfer
+    .route('/')
+    .post(
+      rejectIfContentTypeIsNot('application/json'),
+      validateAgainst(OpportunityTransferRequestSchema),
+      OpportunityTransferController.create
+    );
+  opportunityTransfer.route('/:id').get(OpportunityTransferController.get);
+  opportunityTransfer
+    .route('/:id/accept')
+    .post(
+      rejectIfContentTypeIsNot('application/json'),
+      validateAgainst(OpportunityTransferResponseSchema),
+      OpportunityTransferController.accept
+    );
+  opportunityTransfer
+    .route('/:id/decline')
+    .post(
+      rejectIfContentTypeIsNot('application/json'),
+      validateAgainst(OpportunityTransferResponseSchema),
+      OpportunityTransferController.decline
+    );
+
+  app.use('/api/opportunity-transfers', opportunityTransfer);
 
   const account = express.Router();
 
