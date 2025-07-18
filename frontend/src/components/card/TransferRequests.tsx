@@ -11,7 +11,7 @@ import { DEFAULT_LANGUAGE } from '../../Constants';
 export const TransferRequests = () => {
   const token = useSelector(selectToken);
   const client = getRequestClient(token);
-  
+
   const [receivedTransfers, setReceivedTransfers] = useState<OpportunityTransfer[]>([]);
   const [sentTransfers, setSentTransfers] = useState<OpportunityTransfer[]>([]);
   const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
@@ -29,7 +29,7 @@ export const TransferRequests = () => {
         client.getOpportunityTransfers('received'),
         client.getOpportunityTransfers('sent'),
       ]);
-      
+
       setReceivedTransfers(receivedTransfers.filter((t: OpportunityTransfer) => t.status === TransferStatus.Pending));
       setSentTransfers(sentTransfers);
     } catch (err) {
@@ -84,7 +84,7 @@ export const TransferRequests = () => {
   };
 
   if (isLoading) {
-    return <div>Loading transfers...</div>;
+    return <div>{Translations.LoadingTransfersLabel[DEFAULT_LANGUAGE]}</div>;
   }
 
   const hasTransfers = receivedTransfers.length > 0 || sentTransfers.length > 0;
@@ -92,7 +92,7 @@ export const TransferRequests = () => {
   if (!hasTransfers) {
     return (
       <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
-        No transfer requests found.
+        {Translations.NoTransferRequestsFound[DEFAULT_LANGUAGE]}
       </div>
     );
   }
@@ -111,7 +111,7 @@ export const TransferRequests = () => {
             borderBottom: activeTab === 'received' ? '2px solid #007bff' : 'none',
           }}
         >
-          Received ({receivedTransfers.length})
+          {Translations.ReceivedTabLabel[DEFAULT_LANGUAGE]} ({receivedTransfers.length})
         </button>
         <button
           onClick={() => setActiveTab('sent')}
@@ -124,7 +124,7 @@ export const TransferRequests = () => {
             borderBottom: activeTab === 'sent' ? '2px solid #007bff' : 'none',
           }}
         >
-          Sent ({sentTransfers.length})
+          {Translations.SentTabLabel[DEFAULT_LANGUAGE]} ({sentTransfers.length})
         </button>
       </div>
 
@@ -143,23 +143,23 @@ export const TransferRequests = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 8px 0' }}>Opportunity Transfer Request</h4>
+                  <h4 style={{ margin: '0 0 8px 0' }}>{Translations.OpportunityTransferRequestTitle[DEFAULT_LANGUAGE]}</h4>
                   <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>
-                    Received: {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
+                    {Translations.ReceivedLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
                   </p>
                 </div>
                 {getStatusBadge(transfer.status)}
               </div>
-              
+
               {transfer.message && (
                 <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-                  <strong>Message:</strong> {transfer.message}
+                  <strong>{Translations.MessageLabel[DEFAULT_LANGUAGE]}</strong> {transfer.message}
                 </div>
               )}
 
               <div style={{ marginBottom: '16px' }}>
                 <textarea
-                  placeholder="Add a response message..."
+                  placeholder={Translations.ResponseMessagePlaceholder[DEFAULT_LANGUAGE]}
                   value={responseMessage[transfer._id] || ''}
                   onChange={(e) => setResponseMessage(prev => ({ ...prev, [transfer._id]: e.target.value }))}
                   style={{
@@ -178,13 +178,13 @@ export const TransferRequests = () => {
                   variant="cta"
                   onPress={() => handleAccept(transfer._id)}
                 >
-                  Accept
+                  {Translations.AcceptButton[DEFAULT_LANGUAGE]}
                 </Button>
                 <Button
                   variant="negative"
                   onPress={() => handleDecline(transfer._id)}
                 >
-                  Decline
+                  {Translations.DeclineButton[DEFAULT_LANGUAGE]}
                 </Button>
               </div>
             </div>
@@ -207,28 +207,28 @@ export const TransferRequests = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 8px 0' }}>Transfer Request</h4>
+                  <h4 style={{ margin: '0 0 8px 0' }}>{Translations.TransferRequestTitle[DEFAULT_LANGUAGE]}</h4>
                   <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>
-                    Sent: {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
+                    {Translations.SentLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
                   </p>
                   {transfer.respondedAt && (
                     <p style={{ margin: '0', fontSize: '14px', color: '#666' }}>
-                      Responded: {DateTime.fromISO(transfer.respondedAt).toLocaleString(DateTime.DATETIME_MED)}
+                      {Translations.RespondedLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.respondedAt).toLocaleString(DateTime.DATETIME_MED)}
                     </p>
                   )}
                 </div>
                 {getStatusBadge(transfer.status)}
               </div>
-              
+
               {transfer.message && (
                 <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-                  <strong>Your message:</strong> {transfer.message}
+                  <strong>{Translations.YourMessageLabel[DEFAULT_LANGUAGE]}</strong> {transfer.message}
                 </div>
               )}
 
               {transfer.responseMessage && (
                 <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#d4edda', borderRadius: '4px' }}>
-                  <strong>Response:</strong> {transfer.responseMessage}
+                  <strong>{Translations.ResponseLabel[DEFAULT_LANGUAGE]}</strong> {transfer.responseMessage}
                 </div>
               )}
             </div>

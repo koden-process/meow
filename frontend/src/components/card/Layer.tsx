@@ -220,7 +220,7 @@ export const Layer = () => {
                                 <span className="tab-title">{Translations.HistoryTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
                             <Tabs.Trigger value="transfer">
-                                <span className="tab-title">Transfer</span>
+                                <span className="tab-title">{Translations.TransferTab[DEFAULT_LANGUAGE]}</span>
                             </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
@@ -245,7 +245,7 @@ export const Layer = () => {
                                             variant="primary" 
                                             onPress={() => setIsTransferModalOpen(true)}
                                         >
-                                            Transfer This Opportunity
+                                            {Translations.TransferOpportunityButton[DEFAULT_LANGUAGE]}
                                         </Button>
                                     </div>
                                     <TransferRequests />
@@ -255,7 +255,7 @@ export const Layer = () => {
                     </Tabs.Content>
                 </Tabs.Root>
             </div>
-            
+
             {/* Transfer Modal */}
             {card && (
                 <TransferModal

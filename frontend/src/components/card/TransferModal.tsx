@@ -19,7 +19,7 @@ export interface TransferModalProps {
 export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: TransferModalProps) => {
   const token = useSelector(selectToken);
   const client = getRequestClient(token);
-  
+
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeamId, setSelectedTeamId] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -41,13 +41,13 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
       setTeams(teams);
     } catch (err) {
       console.error('Failed to load teams:', err);
-      setError('Failed to load available teams');
+      setError(Translations.LoadTeamsError[DEFAULT_LANGUAGE]);
     }
   };
 
   const handleTransfer = async () => {
     if (!selectedTeamId) {
-      setError('Please select a team');
+      setError(Translations.SelectTeamError[DEFAULT_LANGUAGE]);
       return;
     }
 
@@ -76,16 +76,16 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
     <DialogContainer onDismiss={onClose}>
       {isOpen && (
         <Dialog>
-          <Heading>Transfer Opportunity</Heading>
+          <Heading>{Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}</Heading>
           <Content>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <strong>Opportunity:</strong> {card.name}
+                <strong>{Translations.OpportunityLabel[DEFAULT_LANGUAGE]}</strong> {card.name}
               </div>
-              
+
               <ComboBox
-                label="Transfer to Team"
-                placeholder="Select a team"
+                label={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
+                placeholder={Translations.SelectTeamPlaceholder[DEFAULT_LANGUAGE]}
                 selectedKey={selectedTeamId}
                 onSelectionChange={(key) => setSelectedTeamId(key as string)}
                 isRequired
@@ -98,8 +98,8 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
               </ComboBox>
 
               <TextField
-                label="Message (Optional)"
-                placeholder="Add a message to explain why you're transferring this opportunity..."
+                label={Translations.MessageOptionalLabel[DEFAULT_LANGUAGE]}
+                placeholder={Translations.TransferMessagePlaceholder[DEFAULT_LANGUAGE]}
                 value={message}
                 onChange={setMessage}
               />
@@ -113,14 +113,14 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
           </Content>
           <ButtonGroup>
             <Button variant="secondary" onPress={onClose}>
-              Cancel
+              {Translations.CancelButton[DEFAULT_LANGUAGE]}
             </Button>
             <Button 
               variant="cta" 
               onPress={handleTransfer}
               isDisabled={isLoading || !selectedTeamId}
             >
-              {isLoading ? 'Transferring...' : 'Transfer'}
+              {isLoading ? Translations.TransferringLabel[DEFAULT_LANGUAGE] : Translations.TransferButton[DEFAULT_LANGUAGE]}
             </Button>
           </ButtonGroup>
         </Dialog>

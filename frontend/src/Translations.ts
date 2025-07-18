@@ -182,6 +182,11 @@ export const Translations = {
     fr: 'Assigner',
   },
 
+  TransferOpportunityButton: {
+    en: 'Transfer This Opportunity',
+    fr: 'Transférer Cette Opportunité',
+  },
+
   // Filter buttons
   RecentlyUpdatedFilter: {
     en: 'Recently Updated',
@@ -213,6 +218,11 @@ export const Translations = {
   HistoryTab: {
     en: 'History',
     fr: 'Historique',
+  },
+
+  TransferTab: {
+    en: 'Transfer',
+    fr: 'Transfert',
   },
 
   // Form labels
@@ -982,5 +992,137 @@ export const Translations = {
   CommentAddedErrorMessage: {
     en: 'An error occurred while adding the comment.',
     fr: 'Erreur lors de l\'ajout du commentaire.'
+  },
+
+  // Transfer Modal translations
+  TransferOpportunityTitle: {
+    en: 'Transfer Opportunity',
+    fr: 'Transférer l\'Opportunité'
+  },
+
+  OpportunityLabel: {
+    en: 'Opportunity:',
+    fr: 'Opportunité:'
+  },
+
+  TransferToTeamLabel: {
+    en: 'Transfer to Team',
+    fr: 'Transférer à l\'Équipe'
+  },
+
+  SelectTeamPlaceholder: {
+    en: 'Select a team',
+    fr: 'Sélectionner une équipe'
+  },
+
+  MessageOptionalLabel: {
+    en: 'Message (Optional)',
+    fr: 'Message (Optionnel)'
+  },
+
+  TransferMessagePlaceholder: {
+    en: 'Add a message to explain why you\'re transferring this opportunity...',
+    fr: 'Ajoutez un message pour expliquer pourquoi vous transférez cette opportunité...'
+  },
+
+  CancelButton: {
+    en: 'Cancel',
+    fr: 'Annuler'
+  },
+
+  TransferButton: {
+    en: 'Transfer',
+    fr: 'Transférer'
+  },
+
+  TransferringLabel: {
+    en: 'Transferring...',
+    fr: 'Transfert en cours...'
+  },
+
+  SelectTeamError: {
+    en: 'Please select a team',
+    fr: 'Veuillez sélectionner une équipe'
+  },
+
+  LoadTeamsError: {
+    en: 'Failed to load available teams',
+    fr: 'Échec du chargement des équipes disponibles'
+  },
+
+  // Transfer Requests translations
+  LoadingTransfersLabel: {
+    en: 'Loading transfers...',
+    fr: 'Chargement des transferts...'
+  },
+
+  NoTransferRequestsFound: {
+    en: 'No transfer requests found.',
+    fr: 'Aucune demande de transfert trouvée.'
+  },
+
+  ReceivedTabLabel: {
+    en: 'Received',
+    fr: 'Reçus'
+  },
+
+  SentTabLabel: {
+    en: 'Sent',
+    fr: 'Envoyés'
+  },
+
+  OpportunityTransferRequestTitle: {
+    en: 'Opportunity Transfer Request',
+    fr: 'Demande de Transfert d\'Opportunité'
+  },
+
+  ReceivedLabel: {
+    en: 'Received:',
+    fr: 'Reçu le:'
+  },
+
+  MessageLabel: {
+    en: 'Message:',
+    fr: 'Message:'
+  },
+
+  ResponseMessagePlaceholder: {
+    en: 'Add a response message...',
+    fr: 'Ajouter un message de réponse...'
+  },
+
+  AcceptButton: {
+    en: 'Accept',
+    fr: 'Accepter'
+  },
+
+  DeclineButton: {
+    en: 'Decline',
+    fr: 'Refuser'
+  },
+
+  TransferRequestTitle: {
+    en: 'Transfer Request',
+    fr: 'Demande de Transfert'
+  },
+
+  SentLabel: {
+    en: 'Sent:',
+    fr: 'Envoyé le:'
+  },
+
+  RespondedLabel: {
+    en: 'Responded:',
+    fr: 'Répondu le:'
+  },
+
+  YourMessageLabel: {
+    en: 'Your message:',
+    fr: 'Votre message:'
+  },
+
+  ResponseLabel: {
+    en: 'Response:',
+    fr: 'Réponse:'
   }
 };
