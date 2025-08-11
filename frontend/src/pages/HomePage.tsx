@@ -361,7 +361,7 @@ export const HomePage = () => {
 
                 <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                     {!isMobileLayout && (
-                        <div className="trash-canvas">
+                        <div className="trash-canvas" style={{marginRight: '100px'}}>
                             <Trash/>
                         </div>
                     )}
