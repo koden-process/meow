@@ -36,8 +36,8 @@ import {CardHelper} from '../helpers/CardHelper';
 import useMobileLayout from '../hooks/useMobileLayout';
 import {getErrorMessage} from '../helpers/ErrorHelper';
 import {getRequestClient} from '../helpers/RequestHelper';
-import { SchemaType, SchemaAttributeType } from '../interfaces/Schema';
-import { useMemo } from 'react';
+import {SchemaType, SchemaAttributeType} from '../interfaces/Schema';
+import {useMemo} from 'react';
 
 export const enum FilterMode {
     OwnedByMe = 'owned-by-me',
@@ -123,7 +123,7 @@ export const HomePage = () => {
                             }
                         });
                     }
-                    return { ...card, attributesReadable };
+                    return {...card, attributesReadable};
                 });
 
                 store.dispatch(updateCards([...enrichedCards]));
@@ -281,19 +281,19 @@ export const HomePage = () => {
                     <div className="filters-canvas">
                         <div>
                             <input className="inputSpacing"
-                                onChange={(event) => setText(event.target.value)}
-                                placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                                aria-label="Name or Stage"
-                                type="text"
+                                   onChange={(event) => setText(event.target.value)}
+                                   placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
+                                   aria-label="Name or Stage"
+                                   type="text"
                             />
-                        
-                        {/* Nouveau champ select pour filtrer par account/contact */}
-                        
-                            <select 
+
+                            {/* Nouveau champ select pour filtrer par account/contact */}
+
+                            <select
                                 className="inputSpacing"
                                 value={selectedAccountId}
                                 onChange={e => setSelectedAccountId(e.target.value)}
-                                style={{ minWidth: 200 }}
+                                style={{minWidth: 200}}
                             >
                                 <option value="">-- Filtrer par contact --</option>
                                 {accounts.map(acc => (
@@ -302,16 +302,7 @@ export const HomePage = () => {
                             </select>
                         </div>
                         <div>
-                            <button
-                                className={`filter ${
-                                    filters.mode.has(FilterMode.RecentlyUpdated)
-                                        ? 'recently-updated-active'
-                                        : 'recently-updated'
-                                }`}
-                                onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
-                            >
-                                {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                            </button>
+
                             <Picker
                                 UNSAFE_style={{display: 'inline-block'}}
                                 defaultSelectedKey={userId}
@@ -325,6 +316,7 @@ export const HomePage = () => {
                                 })}
                             </Picker>
                             &nbsp;
+
                             {false && (
                                 <button
                                     className={`filter ${
@@ -335,6 +327,16 @@ export const HomePage = () => {
                                     {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
                                 </button>
                             )}
+                            <button
+                                className={`filter ${
+                                    filters.mode.has(FilterMode.RecentlyUpdated)
+                                        ? 'recently-updated-active'
+                                        : 'recently-updated'
+                                }`}
+                                onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
+                            >
+                                {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
+                            </button>
                             <button
                                 className={`filter ${
                                     filters.mode.has(FilterMode.RequireUpdate)
@@ -356,7 +358,8 @@ export const HomePage = () => {
                     )}
 
                     <div className="lanes">
-                        {mode === 'board' && <Board lanes={lanes} cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
+                        {mode === 'board' && <Board lanes={lanes}
+                                                    cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
                         {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
                     </div>
                 </DragDropContext>
