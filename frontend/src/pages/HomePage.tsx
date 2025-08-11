@@ -241,6 +241,16 @@ export const HomePage = () => {
             {state === 'card-detail' && <CardLayer/>}
             {state === 'lane-detail' && <LaneLayer/>}
             {state === 'account-detail' && <AccountLayer/>}
+            <div style={{ position: 'relative' }}>
+              {/* Bouton Add, collé en haut à droite */}
+              <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}>
+                <Button variant="primary" onPress={() => openCard()}>
+                  {Translations.AddButton[DEFAULT_LANGUAGE]}
+                </Button>
+              </div>
+
+              {/* Ton contenu existant: filtres + DragDropContext + Board */}
+              
             <div className="board">
                 <div className="title">
                     <div>
@@ -270,11 +280,7 @@ export const HomePage = () => {
                                 <Currency value={amount}/>
                             </h2>
 
-                            <div style={{paddingLeft: '10px'}}>
-                                <Button variant="primary" onPress={() => openCard()}>
-                                    {Translations.AddButton[DEFAULT_LANGUAGE]}
-                                </Button>
-                            </div>
+
                         </div>
                     </div>
 
@@ -347,10 +353,15 @@ export const HomePage = () => {
                             </button>
                         </div>
                     </div>
+
                 </div>
+                <div style={{paddingLeft: '10px'}}>
+                    
+                </div>
+
                 <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                     {!isMobileLayout && (
-                        <div className="trash-canvas">
+                        <div className="trash-canvas" style={{marginRight: '100px'}}>
                             <Trash/>
                         </div>
                     )}
@@ -360,6 +371,8 @@ export const HomePage = () => {
                         {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
                     </div>
                 </DragDropContext>
+
+            </div>
             </div>
         </>
     );
