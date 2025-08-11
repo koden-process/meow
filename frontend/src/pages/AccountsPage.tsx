@@ -121,66 +121,14 @@ export const AccountsPage = () => {
             <span onClick={() => openAccount(row.id?.toString())} className="direct-link title">
               {row.name}
             </span>
-          </div>
-        );
-      case 'createdAt':
-        return (
-          <div key={item.column}>
-            <b>{Translations.CreatedLabel[DEFAULT_LANGUAGE]}</b> {toRelativeDate(row.createdAt)}
-          </div>
-        );
-      default:
-        return item.column !== null && row[item.column] ? (
-          <div key={item.column}>
-            <b>{item.name}:</b> {row[item.column]}
-          </div>
-        ) : null;
-    }
-  };
-
-  return (
-    <>
-      {state === 'account-detail' && <AccountLayer />}
-      {state === 'card-detail' && <CardLayer />}
-
-      <div className="canvas">
-        <div className="list-view-header" style={{ display: 'flex', alignItems: 'center' }}>
-          <h2>{Translations.AccountsTitle[DEFAULT_LANGUAGE]} {rows.length}</h2>
-          <div style={{ marginLeft: 'auto' }}>
-            <Button variant="primary" onPress={() => openAccount()}>
-              {Translations.AddButton[DEFAULT_LANGUAGE]}
-            </Button>
-          </div>
-        </div>
-        <div className="toolbar">
-          <ListSearchCanvas name="accounts" />
-          <ListFilterCanvas name="accounts" columns={columns} />
-        </div>
-
-        {isMobileLayout ? (
-          <div className="mobile-view">
-            {rows.map((row, index) => {
-              return (
-                <Item key={index}>
-                  {columns
-                    .filter(({ isHidden }) => isHidden === false)
-                    .map((item) => getListItem(row, item))}
-                </Item>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="content-box" style={{ overflow: 'auto' }}>
-            <TableCanvas>
-              <TableHeader name="accounts" sort={setListViewSortBy} view={view} columns={columns} />
-              {rows.map((row, index) => {
-                
+                    </div>
+                );
+            case 'createdAt':
                 return (
                     <div key={item.column}>
                         <b>{Translations.CreatedLabel[DEFAULT_LANGUAGE]}</b> {toRelativeDate(row.createdAt)}
                     </div>
                 );
-
             default:
                 return item.column !== null && row[item.column] ? (
                     <div key={item.column}>
