@@ -146,7 +146,7 @@ export const HomePage = () => {
     const getTitle = (cards: Card[]) => {
         const count = cards.length;
 
-        return count === 1
+        return count <= 1
             ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
             : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
     };
