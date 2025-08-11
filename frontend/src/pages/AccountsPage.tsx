@@ -144,19 +144,17 @@ export const AccountsPage = () => {
       {state === 'card-detail' && <CardLayer />}
 
       <div className="canvas">
-        <div className="list-view-header">
-          <div>
-            <h2>{Translations.AccountsTitle[DEFAULT_LANGUAGE]} {rows.length}</h2>
-            <div style={{ paddingLeft: '10px' }}>
-              <Button variant="primary" onPress={() => openAccount()}>
-                {Translations.AddButton[DEFAULT_LANGUAGE]}
-              </Button>
-            </div>
+        <div className="list-view-header" style={{ display: 'flex', alignItems: 'center' }}>
+          <h2>{Translations.AccountsTitle[DEFAULT_LANGUAGE]} {rows.length}</h2>
+          <div style={{ marginLeft: 'auto' }}>
+            <Button variant="primary" onPress={() => openAccount()}>
+              {Translations.AddButton[DEFAULT_LANGUAGE]}
+            </Button>
           </div>
-          <div className="toolbar">
-            <ListSearchCanvas name="accounts" />
-            <ListFilterCanvas name="accounts" columns={columns} />
-          </div>
+        </div>
+        <div className="toolbar">
+          <ListSearchCanvas name="accounts" />
+          <ListFilterCanvas name="accounts" columns={columns} />
         </div>
 
         {isMobileLayout ? (
