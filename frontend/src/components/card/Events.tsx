@@ -29,6 +29,8 @@ import {
   NextFollowUpAtWarningEvent,
 } from '../../interfaces/CardEvent';
 import { getRequestClient } from '../../helpers/RequestHelper';
+import {Translations} from "../../Translations";
+import {DEFAULT_LANGUAGE} from "../../Constants";
 
 export interface EventsProps {
   id?: string;
@@ -126,7 +128,7 @@ export const Events = ({ id, entity }: EventsProps) => {
         <TextArea value={comment} onChange={setComment} width="100%" height="80px"></TextArea>
         <div className="submit">
           <Button isDisabled={!isValid} variant="primary" onPress={save}>
-            Save
+            {Translations.SaveButton[DEFAULT_LANGUAGE]}
           </Button>
         </div>
       </div>
