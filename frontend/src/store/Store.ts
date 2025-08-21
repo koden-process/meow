@@ -5,6 +5,7 @@ import { ApplicationStore, ListName } from './ApplicationStore';
 import { cardUpdateListener } from './CardUpdateListener';
 import { cardLaneListener } from './CardLaneListener';
 import { cardDeleteListener } from './CardDeleteListener';
+import { accountDeleteListener } from './AccountDeleteListener';
 import { SchemaReferenceAttribute, SchemaType } from '../interfaces/Schema';
 import { UserStatus } from '../interfaces/User';
 import { SchemaHelper } from '../helpers/SchemaHelper';
@@ -17,6 +18,7 @@ export const store = configureStore({
     cardLaneListener.middleware,
     cardUpdateListener.middleware,
     cardDeleteListener.middleware,
+    accountDeleteListener.middleware,
   ],
 });
 

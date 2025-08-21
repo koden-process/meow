@@ -992,5 +992,37 @@ export const Translations = {
     CommentAddedErrorMessage: {
         en: 'An error occurred while adding the comment.',
         fr: 'Erreur lors de l\'ajout du commentaire.'
+    },
+
+    // Delete functionality translations
+    DeleteCardConfirmation: {
+        en: 'Are you sure you want to delete this opportunity? This action cannot be undone.',
+        fr: 'Êtes-vous sûr de vouloir supprimer cette opportunité ? Cette action ne peut pas être annulée.',
+    },
+
+    CardDeletedConfirmation: {
+        en: 'Opportunity deleted successfully',
+        fr: 'Opportunité supprimée avec succès',
+    },
+
+    ConfirmButton: {
+        en: 'Confirm',
+        fr: 'Confirmer',
+    },
+
+    CancelButton: {
+        en: 'Cancel',
+        fr: 'Annuler',
+    },
+
+    // Account/Contact delete functionality translations
+    DeleteAccountConfirmation: {
+        en: 'Are you sure you want to delete this contact? This action cannot be undone.',
+        fr: 'Êtes-vous sûr de vouloir supprimer ce contact ? Cette action ne peut pas être annulée.',
+    },
+
+    AccountDeletedConfirmation: {
+        en: 'Contact deleted successfully',
+        fr: 'Contact supprimé avec succès',
     }
 };

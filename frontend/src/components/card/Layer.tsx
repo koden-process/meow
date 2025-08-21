@@ -8,6 +8,7 @@ import {
     updateCardFromServer,
     showModalSuccess,
     updateCard,
+    deleteCard,
 } from '../../actions/Actions';
 import {
     selectActiveUsers,
@@ -29,6 +30,7 @@ import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
 import {getRequestClient} from '../../helpers/RequestHelper';
 import {IconLock} from "./IconLock";
+import {DeleteCardModal} from '../modal/DeleteCardModal';
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -38,6 +40,7 @@ export const Layer = () => {
     const id = useSelector(selectInterfaceStateId);
     const card = useSelector((store: ApplicationStore) => selectCard(store, id));
     const [isUserLayerVisible, setIsUserLayerVisible] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const users = useSelector(selectActiveUsers);
     const lanes = useSelector(selectLanes);
     const isMobileLayout = useMobileLayout();
@@ -102,6 +105,22 @@ export const Layer = () => {
         update(id, {...preview, amount: parseInt(preview.amount, 10)});
     };
 
+    const handleDeleteClick = () => {
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (card) {
+            store.dispatch(deleteCard(card));
+            setIsDeleteModalOpen(false);
+            hideCardDetail();
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteModalOpen(false);
+    };
+
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
@@ -163,15 +182,25 @@ export const Layer = () => {
                     )}
 
                     <div className="card-submit">
-                        {!isDisabled ? (
-                            <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
-                                {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                        {id && !isDisabled ? (
+                            <Button 
+                                variant="negative" 
+                                onPress={handleDeleteClick}
+                                UNSAFE_className="delete-button"
+                            >
+                                {Translations.DeleteButton[DEFAULT_LANGUAGE]}
                             </Button>
                         ) : null}
 
                         <Button variant="primary" onPress={() => hideCardDetail()}>
                             {Translations.CloseButton[DEFAULT_LANGUAGE]}
                         </Button>
+
+                        {!isDisabled ? (
+                            <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
+                                {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                            </Button>
+                        ) : null}
                     </div>
                 </div>
             </div>
@@ -227,6 +256,13 @@ export const Layer = () => {
                     </Tabs.Content>
                 </Tabs.Root>
             </div>
+            
+            <DeleteCardModal
+                isOpen={isDeleteModalOpen}
+                onConfirm={handleDeleteConfirm}
+                onCancel={handleDeleteCancel}
+                cardName={card?.name}
+            />
         </div>
     );
 };

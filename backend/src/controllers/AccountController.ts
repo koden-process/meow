@@ -1,9 +1,10 @@
 import { Response, NextFunction } from 'express';
-import { Account, NewAccount } from '../entities/Account.js';
+import { Account, NewAccount, AccountStatus } from '../entities/Account.js';
 import { EntityHelper } from '../helpers/EntityHelper.js';
 import { AuthenticatedRequest } from '../requests/AuthenticatedRequest.js';
 import { EventHelper } from '../helpers/EventHelper.js';
 import { validateAndFetchAccount } from '../helpers/EntityFetchHelper.js';
+import { InvalidCardPropertyError } from '../errors/InvalidCardPropertyError.js';
 
 const create = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
@@ -23,6 +24,17 @@ const create = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     }
 };
 
+function parseAccountStatus(value: unknown): AccountStatus {
+    switch (value) {
+        case 'active':
+            return AccountStatus.Active;
+        case 'deleted':
+            return AccountStatus.Deleted;
+        default:
+            throw new InvalidCardPropertyError(`Unsupported status value: ${value}`);
+    }
+}
+
 const update = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
         let account = await validateAndFetchAccount(req.params.id, req.jwt.user);
@@ -33,6 +45,10 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
         if (req.body.attributes) {
             account.attributes = req.body.attributes;
+        }
+
+        if (req.body.status) {
+            account.status = parseAccountStatus(req.body.status);
         }
 
         const latest = await EntityHelper.update(account);
@@ -52,7 +68,15 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
 const list = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-        const accounts = await EntityHelper.findByTeam(Account, req.jwt.team);
+        const query: any = {
+            teamId: { $eq: req.jwt.team._id! },
+            $or: [
+                { status: { $ne: AccountStatus.Deleted } },
+                { status: { $exists: false } } // Include accounts without status field (existing accounts)
+            ]
+        };
+
+        const accounts = await EntityHelper.findBy(Account, query);
 
         return res.json(accounts);
     } catch (error) {

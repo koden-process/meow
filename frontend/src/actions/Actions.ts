@@ -21,6 +21,7 @@ export enum ActionType {
   ACCOUNTS = 'ACCOUNTS',
   ACCOUNT_ADD = 'ACCOUNT_ADD',
   ACCOUNT_UPDATE = 'ACCOUNT_UPDATE',
+  ACCOUNT_DELETE = 'ACCOUNT_DELETE',
   TEAM_UPDATE = 'TEAM_UPDATE',
   CARDS = 'CARDS',
   CARD_ADD = 'CARD_ADD',
@@ -109,6 +110,10 @@ export interface ApplicationAccountAddAction extends Action<ActionType.ACCOUNT_A
 }
 
 export interface ApplicationAccountUpdateAction extends Action<ActionType.ACCOUNT_UPDATE> {
+  payload: Account;
+}
+
+export interface ApplicationAccountDeleteAction extends Action<ActionType.ACCOUNT_DELETE> {
   payload: Account;
 }
 
@@ -377,6 +382,20 @@ export const addAccount = (account: Account): ApplicationAccountAddAction => {
 export const updateAccount = (account: Account): ApplicationAccountUpdateAction => {
   return {
     type: ActionType.ACCOUNT_UPDATE,
+    payload: account,
+  };
+};
+
+export const deleteCard = (card: Card): ApplicationCardDeleteAction => {
+  return {
+    type: ActionType.CARD_DELETE,
+    payload: card,
+  };
+};
+
+export const deleteAccount = (account: Account): ApplicationAccountDeleteAction => {
+  return {
+    type: ActionType.ACCOUNT_DELETE,
     payload: account,
   };
 };

@@ -1,0 +1,96 @@
+/* Delete Card Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.delete-modal .modal-header h3 {
+  margin: 0 0 16px 0;
+  color: #d73a49;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.delete-modal .modal-body {
+  margin-bottom: 24px;
+}
+
+.delete-modal .modal-body p {
+  margin: 0 0 8px 0;
+  color: #586069;
+  line-height: 1.5;
+}
+
+.delete-modal .modal-body strong {
+  color: #24292e;
+}
+
+.delete-modal .modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.delete-confirm-button {
+  background-color: #d73a49 !important;
+  border-color: #d73a49 !important;
+}
+
+.delete-confirm-button:hover {
+  background-color: #cb2431 !important;
+  border-color: #cb2431 !important;
+}
+
+/* Delete Button in Card Layer */
+.delete-button {
+  background-color: #d73a49 !important;
+  border-color: #d73a49 !important;
+  color: white !important;
+}
+
+.delete-button:hover {
+  background-color: #cb2431 !important;
+  border-color: #cb2431 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(215, 58, 73, 0.2);
+}
+
+.delete-button:focus {
+  box-shadow: 0 0 0 3px rgba(215, 58, 73, 0.3);
+}
+
+.card-submit {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Button order: Delete (1), Close (2), Save (3) */
+.card-submit .delete-button {
+  order: 1;
+}
+
+.card-submit button:nth-child(2) {
+  order: 2; /* Close button */
+}
+
+.card-submit button:nth-child(3) {
+  order: 3; /* Save button */
+}

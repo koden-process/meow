@@ -13,10 +13,11 @@ import { DEFAULT_LANGUAGE } from '../../Constants';
 export interface FormProps {
   id: Account['_id'] | undefined;
   update: (id: Account['_id'] | undefined, account: AccountPreview) => void;
+  onPreviewChange?: (preview: AccountPreview) => void;
 }
 
 // TODO rename component
-export const Form = ({ update, id }: FormProps) => {
+export const Form = ({ update, id, onPreviewChange }: FormProps) => {
   const [preview, setPreview] = useState<AccountPreview>({
     name: '',
     attributes: undefined,
@@ -27,10 +28,14 @@ export const Form = ({ update, id }: FormProps) => {
   );
 
   const handlePreviewUpdate = (key: string, value: Attribute[typeof key]) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       [key]: value,
-    });
+    };
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
   };
 
   let isValidForm = useMemo(() => {
@@ -44,25 +49,34 @@ export const Form = ({ update, id }: FormProps) => {
   const account = useSelector((store: ApplicationStore) => selectAccount(store, id));
 
   useEffect(() => {
+    let newPreview;
     if (account) {
-      setPreview({
+      newPreview = {
         ...account,
-      });
+      };
     } else {
-      setPreview({
+      newPreview = {
         name: '',
         attributes: undefined,
-      });
+      };
     }
-  }, [account]);
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
+  }, [account, onPreviewChange]);
 
   const validate = (values: Attribute) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       attributes: {
         ...values,
       },
-    });
+    };
+    setPreview(newPreview);
+    if (onPreviewChange) {
+      onPreviewChange(newPreview);
+    }
   };
 
   const save = () => {
@@ -89,11 +103,7 @@ export const Form = ({ update, id }: FormProps) => {
         isDisabled={false}
       />
 
-      <div style={{ marginTop: '24px' }}>
-        <Button variant="primary" onPress={save} isDisabled={!isValidForm}>
-          {Translations.SaveButton[DEFAULT_LANGUAGE]}
-        </Button>
-      </div>
+
     </div>
   );
 };

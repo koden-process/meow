@@ -289,6 +289,12 @@ export const application = (state = Default, action: ApplicationAction) => {
         accounts: [...state.accounts, action.payload],
       };
 
+    case ActionType.ACCOUNT_DELETE:
+      return {
+        ...state,
+        accounts: state.accounts.filter((account) => account._id !== action.payload._id),
+      };
+
     case ActionType.TEAM_UPDATE:
       return {
         ...state,

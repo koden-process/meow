@@ -379,13 +379,20 @@ export class RequestHelper {
     return this.doFetch(url, 'POST', account);
   }
 
-  async updateAccount({ _id, name, attributes }: Account): Promise<Account> {
+  async updateAccount({ _id, name, attributes, status }: Account): Promise<Account> {
     let url = this.getUrl(`/api/accounts/${_id}`);
 
-    return this.doFetch(url, 'POST', {
+    const body: any = {
       name,
       attributes,
-    });
+    };
+
+    // Only include status if it's defined
+    if (status !== undefined) {
+      body.status = status;
+    }
+
+    return this.doFetch(url, 'POST', body);
   }
 
   async getAccounts(): Promise<Account[]> {
