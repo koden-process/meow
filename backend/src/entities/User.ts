@@ -9,6 +9,8 @@ export class User implements ExistingEntity {
   _id: ObjectId;
   teamId: ObjectId;
   name: string;
+  firstName?: string;
+  lastName?: string;
   status: UserStatus;
   animal?: string;
   locale?: string;
@@ -48,6 +50,8 @@ export class User implements ExistingEntity {
 export class NewUser implements NewEntity {
   teamId: ObjectId;
   name: string;
+  firstName?: string;
+  lastName?: string;
   status: UserStatus;
   animal?: string;
   locale?: string;
@@ -60,9 +64,11 @@ export class NewUser implements NewEntity {
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(team: Team, name: string, status: UserStatus) {
+  constructor(team: Team, name: string, firstName: string, lastName: string, status: UserStatus) {
     this.teamId = team._id!;
     this.name = name;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.status = status;
     this.createdAt = new Date();
     this.updatedAt = new Date();

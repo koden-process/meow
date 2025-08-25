@@ -3,10 +3,11 @@ export const LoginRequestSchema = {
   oneOf: [
     {
       properties: {
-        name: { type: 'string', minLength: 3, maxLength: 500 },
+        firstName: { type: 'string', minLength: 1, maxLength: 80 },
+        lastName: { type: 'string', minLength: 1, maxLength: 80 },
         password: { type: 'string', minLength: 3, maxLength: 500 },
       },
-      required: ['name', 'password'],
+      required: ['firstName', 'lastName', 'password'],
     },
     {
       properties: {

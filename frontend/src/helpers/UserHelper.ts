@@ -7,16 +7,22 @@ import {
 } from '../Constants';
 
 export const UserHelper = {
-  isValidNameAndPassword(name: string | undefined, password: string | undefined) {
-    if (!name || !password) {
+  isValidNameAndPassword(firstName: string | undefined, lastName: string | undefined, password: string | undefined) {
+    if (!firstName || !lastName || !password) {
       return false;
     }
 
-    if (name.length < MINIMUM_LENGTH_OF_USER_NAME || name.length > MAXIMUM_LENGTH_OF_USER_NAME) {
+    if (firstName.length < MINIMUM_LENGTH_OF_USER_NAME || firstName.length > MAXIMUM_LENGTH_OF_USER_NAME) {
       return false;
     }
 
-    if (RESERVED_USERS.includes(name)) {
+    if (lastName.length < MINIMUM_LENGTH_OF_USER_NAME || lastName.length > MAXIMUM_LENGTH_OF_USER_NAME) {
+      return false;
+    }
+
+    let combinedName = firstName + " " + lastName;
+
+    if (RESERVED_USERS.includes(combinedName)) {
       return false;
     }
 

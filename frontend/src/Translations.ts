@@ -218,7 +218,17 @@ export const Translations = {
     // Form labels
     NameLabel: {
         en: 'Name',
-        fr: 'Nom',
+        fr: 'Nom complet',
+    },
+
+    FirstNameLabel: {
+        en: 'First Name',
+        fr: 'Prénom',
+    },
+
+    LastNameLabel: {
+        en: 'Last Name',
+        fr: 'Nom de famille',
     },
 
     NextFollowUpLabel: {

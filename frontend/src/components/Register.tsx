@@ -1,86 +1,98 @@
-import { TextField, Button } from '@adobe/react-spectrum';
-import { useEffect, useState } from 'react';
-import { login } from '../actions/Actions';
-import { getRequestClient } from '../helpers/RequestHelper';
-import { store } from '../store/Store';
-import { PasswordStrength } from './register/PasswordStrength';
-import { getErrorMessage } from '../helpers/ErrorHelper';
-import { UserHelper } from '../helpers/UserHelper';
-import { Translations } from '../Translations';
-import { DEFAULT_LANGUAGE } from '../Constants';
+import {TextField, Button} from '@adobe/react-spectrum';
+import {useEffect, useMemo, useState} from 'react';
+import {login} from '../actions/Actions';
+import {getRequestClient} from '../helpers/RequestHelper';
+import {store} from '../store/Store';
+import {PasswordStrength} from './register/PasswordStrength';
+import {getErrorMessage} from '../helpers/ErrorHelper';
+import {UserHelper} from '../helpers/UserHelper';
+import {Translations} from '../Translations';
+import {DEFAULT_LANGUAGE} from '../Constants';
 
 export const Register = () => {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isValid, setIsValid] = useState(false);
 
-  useEffect(() => {
-    setError('');
-    setIsValid(UserHelper.isValidNameAndPassword(name, password));
-  }, [name, password]);
+    const combinedName = useMemo(() => `${firstName} ${lastName}`.trim(), [firstName, lastName]);
 
-  const register = async () => {
-    try {
-      setIsLoading(true);
+    useEffect(() => {
+        setError('');
+        setIsValid(UserHelper.isValidNameAndPassword(firstName, lastName, password));
+    }, [combinedName, password]);
 
-      const client = getRequestClient();
+    const register = async () => {
+        try {
+            setIsLoading(true);
 
-      await client.register(name, password);
+            const client = getRequestClient();
 
-      const { token, user, team, board } = await client.login(name, password);
+            await client.register(firstName, lastName, password);
 
-      client.token = token;
+            const {token, user, team, board} = await client.login(combinedName, password);
 
-      setIsLoading(false);
+            client.token = token;
 
-      store.dispatch(login(token, user, team, board));
-    } catch (error) {
-      console.error(error);
+            setIsLoading(false);
 
-      setIsLoading(false);
-      setError(await getErrorMessage(error));
-    }
-  };
+            store.dispatch(login(token, user, team, board));
+        } catch (error) {
+            console.error(error);
 
-  return (
-    <>
-      <div className="register" style={{ marginTop: '20px' }}>
-        <div>
-          <TextField
-            label={Translations.NameLabel[DEFAULT_LANGUAGE]}
-            isDisabled={isLoading}
-            value={name}
-            onChange={setName}
-            width="100%"
-          />
-        </div>
+            setIsLoading(false);
+            setError(await getErrorMessage(error));
+        }
+    };
 
-        <div>
-          <TextField
-            type="password"
-            label={Translations.PasswordLabel[DEFAULT_LANGUAGE]}
-            onChange={setPassword}
-            width="100%"
-            isDisabled={isLoading}
-          />
+    return (
+        <>
+            <div className="register" style={{marginTop: '20px'}}>
+                <div>
+                    <TextField
+                        label={Translations.FirstNameLabel[DEFAULT_LANGUAGE]}
+                        isDisabled={isLoading}
+                        value={firstName}
+                        onChange={setFirstName}
+                        width="100%"
+                    />
+                </div>
+                <div>
+                    <TextField
+                        label={Translations.LastNameLabel[DEFAULT_LANGUAGE]}
+                        isDisabled={isLoading}
+                        value={lastName}
+                        onChange={setLastName}
+                        width="100%"
+                    />
+                </div>
 
-          <PasswordStrength password={password} />
-        </div>
-        <div style={{ marginTop: '25px' }}>
-          <Button onPress={register} isDisabled={isLoading || !isValid} variant="cta">
-            {Translations.RegisterButton[DEFAULT_LANGUAGE]}
-          </Button>
-        </div>
-        <div className="spinner-canvas">{isLoading ? <div className="spinner"></div> : null}</div>
-      </div>
+                <div>
+                    <TextField
+                        type="password"
+                        label={Translations.PasswordLabel[DEFAULT_LANGUAGE]}
+                        onChange={setPassword}
+                        width="100%"
+                        isDisabled={isLoading}
+                    />
 
-      {error}
+                    <PasswordStrength password={password}/>
+                </div>
+                <div style={{marginTop: '25px'}}>
+                    <Button onPress={register} isDisabled={isLoading || !isValid} variant="cta">
+                        {Translations.RegisterButton[DEFAULT_LANGUAGE]}
+                    </Button>
+                </div>
+                <div className="spinner-canvas">{isLoading ? <div className="spinner"></div> : null}</div>
+            </div>
 
-      <div style={{ paddingTop: '10px', display: 'none' }}>
-        {Translations.NoPasswordReset[DEFAULT_LANGUAGE]}
-      </div>
-    </>
-  );
+            {error}
+
+            <div style={{paddingTop: '10px', display: 'none'}}>
+                {Translations.NoPasswordReset[DEFAULT_LANGUAGE]}
+            </div>
+        </>
+    );
 };

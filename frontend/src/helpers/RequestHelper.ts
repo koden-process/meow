@@ -550,10 +550,12 @@ export class RequestHelper {
     return parsed;
   }
 
-  async register(name: string, password: string, invite?: string) {
+  async register(firstName: string, lastName: string, password: string, invite?: string) {
     const url = this.getUrl(`/public/register`);
 
-    const payload: any = { name, password };
+    // let name = firstName.trim() + ' ' + lastName.trim();
+
+    const payload: any = { firstName, lastName, password };
 
     if (invite) {
       payload.invite = invite;

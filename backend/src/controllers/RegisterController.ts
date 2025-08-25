@@ -23,6 +23,7 @@ import { Board, NewBoard } from '../entities/Board.js';
 import { emitBoardEvent, emitCardEvent, emitLaneEvent } from '../helpers/EventHelper.js';
 import { log } from '../worker.js';
 import { InvalidRequestError } from '../errors/InvalidRequestError.js';
+import {keyword$DataError} from "ajv/dist/compile/errors.js";
 
 export const setupUserWithInvite = async (invite: string, authentication: UserAuthentication) => {
   const user = await EntityHelper.findUserByInvite(invite);
@@ -40,8 +41,10 @@ export const setupUserWithInvite = async (invite: string, authentication: UserAu
 };
 
 export const setupAccountWithExampleData = async (
+  authentication: UserAuthentication,
+  firstName: string,
+  lastName: string,
   name: string,
-  authentication: UserAuthentication
 ): Promise<User> => {
   const isFirstTeam = await EntityHelper.isFirstTeam();
 
@@ -67,7 +70,14 @@ export const setupAccountWithExampleData = async (
     new NewSchema(team, DefaultAccountSchema.type, DefaultAccountSchema.schema)
   );
 
-  const user = await EntityHelper.create(new NewUser(team, name, UserStatus.Enabled), User);
+  const user = await EntityHelper.create(new NewUser(team, name, firstName, lastName, UserStatus.Enabled), User);
+
+  if (firstName) {
+    user.firstName = firstName;
+  }
+  if (lastName) {
+    user.lastName = lastName;
+  }
 
   await Promise.all(
     DefaultCards.map(async (item, index) => {
@@ -156,9 +166,6 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       throw new InvalidRequestError('team registration is disabled');
     }
 
-    log.debug(`get user by name: ${req.body.name}`);
-
-    const name = req.body.name.trim();
     const password = req.body.password;
 
     await isValidPassword(password);
@@ -179,9 +186,22 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
       return res.json({ welcome: true });
     }
 
+    // Support either legacy { name } or new { firstName, lastName }
+    let name: string | undefined = req.body.name ? String(req.body.name).trim() : undefined;
+    const firstName: string = String(req.body.firstName).trim()
+    const lastName: string = String(req.body.lastName).trim()
+
+    if (!name && firstName && lastName) {
+      name = `${firstName} ${lastName}`.trim();
+    }
+
+    if (!name) {
+      throw new InvalidRequestBodyError();
+    }
+
     await isValidName(name);
 
-    await setupAccountWithExampleData(name, authentication);
+    await setupAccountWithExampleData(authentication, firstName, lastName, name);
 
     res.status(201).json({ welcome: true });
   } catch (error) {
