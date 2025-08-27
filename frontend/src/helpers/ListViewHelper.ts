@@ -42,35 +42,7 @@ export const ListViewHelper = {
     if (view.filterBy.text) {
       const regex = new RegExp(view.filterBy.text, 'i');
 
-      const matchesAnyField = (row: DataRow): boolean => {
-        for (const value of Object.values(row)) {
-          if (isNullOrUndefined(value)) {
-            continue;
-          }
-          let text = '';
-          if (isString(value)) {
-            text = value as string;
-          } else if (isNumber(value)) {
-            text = String(value);
-          } else if (value && typeof value === 'object' && 'toISOString' in (value as any) && typeof (value as any).toISOString === 'function') {
-            text = (value as any).toISOString();
-          } else if (typeof value === 'boolean') {
-            text = value ? 'true' : 'false';
-          } else {
-            try {
-              text = JSON.stringify(value);
-            } catch (e) {
-              text = '';
-            }
-          }
-          if (regex.test(text)) {
-            return true;
-          }
-        }
-        return false;
-      };
-
-      list = rows.filter((row) => matchesAnyField(row));
+      list = rows.filter((row) => regex.test(row.name));
     } else {
       list = [...rows];
     }
