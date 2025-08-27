@@ -63,7 +63,7 @@ export const Lane = ({lane, numberOfLanes, cards: cardsProp}: LaneProps) => {
                     {lane.inForecast === false && <div className="forecast-icon"></div>}
                 </div>
 
-                <div>
+                <div className="lane-count">
                     {getTitle(count)}
                 </div>
 
