@@ -37,18 +37,26 @@ const createListViewItemsFromSchema = (schema: Schema | undefined): ListViewItem
         },
     ];
 
+    const isAddressOrPhone = (attrName: string) => {
+        const n = attrName.toLowerCase();
+        return (
+            n.includes('address') || n.includes('adresse') ||
+            n.includes('phone') || n.includes('télé') || n.includes('tel') || n.includes('telephone')
+        );
+    };
+
     schema?.attributes.map((attribute) => {
         list.push({
             name: attribute.name,
             column: attribute.key,
-            isHidden: false,
+            isHidden: !isAddressOrPhone(attribute.name || attribute.key),
         });
     });
 
     list.push({
         name: Translations.CreatedAtLabel[DEFAULT_LANGUAGE],
         column: 'createdAt',
-        isHidden: false,
+        isHidden: true,
     });
 
     return list;
@@ -152,7 +160,7 @@ export const AccountsPage = () => {
                         </Button>
                     </div>
                 </div>
-                <div className="toolbar">
+                <div className="toolbar" style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12}}>
                     <ListSearchCanvas name="accounts"/>
                     <ListFilterCanvas name="accounts" columns={columns}/>
                 </div>

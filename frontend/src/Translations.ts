@@ -335,7 +335,7 @@ export const Translations = {
     // Search by name
     SearchByNamePlaceholder: {
         en: 'Search by Name',
-        fr: 'Rechercher par Nom',
+        fr: 'Rechercher',
     },
 
     // User management
