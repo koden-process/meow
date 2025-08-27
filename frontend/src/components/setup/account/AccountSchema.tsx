@@ -143,7 +143,7 @@ export const AccountSchema = ({ isDeveloperMode }: AccountSchemaProps) => {
     <div className="content-box">
       <div className="schema-editor-header">
         <div className="title">
-          <h2>{Translations.AccountTab[DEFAULT_LANGUAGE]}</h2>
+          <h2>{Translations.DirectoryTitle[DEFAULT_LANGUAGE]}</h2>
         </div>
         {isDeveloperMode ? (
           <div className="endpoint">

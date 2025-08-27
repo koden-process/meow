@@ -26,9 +26,9 @@ const getLaneColorClassName = (color: string | undefined) => {
 };
 
 const getTitle = (count: number) => {
-    return count === 1
-        ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
-        : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
+  return count <= 1
+    ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
+    : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
 };
 
 export interface LaneProps {

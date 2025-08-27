@@ -36,8 +36,8 @@ import {CardHelper} from '../helpers/CardHelper';
 import useMobileLayout from '../hooks/useMobileLayout';
 import {getErrorMessage} from '../helpers/ErrorHelper';
 import {getRequestClient} from '../helpers/RequestHelper';
-import { SchemaType, SchemaAttributeType } from '../interfaces/Schema';
-import { useMemo } from 'react';
+import {SchemaType, SchemaAttributeType} from '../interfaces/Schema';
+import {useMemo} from 'react';
 
 export const enum FilterMode {
     OwnedByMe = 'owned-by-me',
@@ -123,7 +123,7 @@ export const HomePage = () => {
                             }
                         });
                     }
-                    return { ...card, attributesReadable };
+                    return {...card, attributesReadable};
                 });
 
                 store.dispatch(updateCards([...enrichedCards]));
@@ -146,7 +146,7 @@ export const HomePage = () => {
     const getTitle = (cards: Card[]) => {
         const count = cards.length;
 
-        return count === 1
+        return count <= 1
             ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
             : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
     };
@@ -241,6 +241,16 @@ export const HomePage = () => {
             {state === 'card-detail' && <CardLayer/>}
             {state === 'lane-detail' && <LaneLayer/>}
             {state === 'account-detail' && <AccountLayer/>}
+            <div style={{ position: 'relative' }}>
+              {/* Bouton Add, collé en haut à droite */}
+              <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}>
+                <Button variant="primary" onPress={() => openCard()}>
+                  {Translations.AddButton[DEFAULT_LANGUAGE]}
+                </Button>
+              </div>
+
+              {/* Ton contenu existant: filtres + DragDropContext + Board */}
+              
             <div className="board">
                 <div className="title">
                     <div>
@@ -270,30 +280,26 @@ export const HomePage = () => {
                                 <Currency value={amount}/>
                             </h2>
 
-                            <div style={{paddingLeft: '10px'}}>
-                                <Button variant="primary" onPress={() => openCard()}>
-                                    {Translations.AddButton[DEFAULT_LANGUAGE]}
-                                </Button>
-                            </div>
+
                         </div>
                     </div>
 
                     <div className="filters-canvas">
                         <div>
                             <input className="inputSpacing"
-                                onChange={(event) => setText(event.target.value)}
-                                placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                                aria-label="Name or Stage"
-                                type="text"
+                                   onChange={(event) => setText(event.target.value)}
+                                   placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
+                                   aria-label="Name or Stage"
+                                   type="text"
                             />
-                        
-                        {/* Nouveau champ select pour filtrer par account/contact */}
-                        
-                            <select 
+
+                            {/* Nouveau champ select pour filtrer par account/contact */}
+
+                            <select
                                 className="inputSpacing"
                                 value={selectedAccountId}
                                 onChange={e => setSelectedAccountId(e.target.value)}
-                                style={{ minWidth: 200 }}
+                                style={{minWidth: 200}}
                             >
                                 <option value="">-- Filtrer par contact --</option>
                                 {accounts.map(acc => (
@@ -302,16 +308,7 @@ export const HomePage = () => {
                             </select>
                         </div>
                         <div>
-                            <button
-                                className={`filter ${
-                                    filters.mode.has(FilterMode.RecentlyUpdated)
-                                        ? 'recently-updated-active'
-                                        : 'recently-updated'
-                                }`}
-                                onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
-                            >
-                                {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                            </button>
+
                             <Picker
                                 UNSAFE_style={{display: 'inline-block'}}
                                 defaultSelectedKey={userId}
@@ -325,6 +322,7 @@ export const HomePage = () => {
                                 })}
                             </Picker>
                             &nbsp;
+
                             {false && (
                                 <button
                                     className={`filter ${
@@ -337,6 +335,16 @@ export const HomePage = () => {
                             )}
                             <button
                                 className={`filter ${
+                                    filters.mode.has(FilterMode.RecentlyUpdated)
+                                        ? 'recently-updated-active'
+                                        : 'recently-updated'
+                                }`}
+                                onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
+                            >
+                                {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
+                            </button>
+                            <button
+                                className={`filter ${
                                     filters.mode.has(FilterMode.RequireUpdate)
                                         ? 'require-update-active'
                                         : 'require-update'
@@ -347,19 +355,27 @@ export const HomePage = () => {
                             </button>
                         </div>
                     </div>
+
                 </div>
+                <div style={{paddingLeft: '10px'}}>
+                    
+                </div>
+
                 <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                     {!isMobileLayout && (
-                        <div className="trash-canvas">
+                        <div className="trash-canvas" style={{marginRight: '100px'}}>
                             <Trash/>
                         </div>
                     )}
 
                     <div className="lanes">
-                        {mode === 'board' && <Board lanes={lanes} cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
+                        {mode === 'board' && <Board lanes={lanes}
+                                                    cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
                         {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
                     </div>
                 </DragDropContext>
+
+            </div>
             </div>
         </>
     );
