@@ -144,48 +144,40 @@ export const AccountsPage = () => {
             {state === 'card-detail' && <CardLayer/>}
 
             <div className="canvas">
-                <div className="list-view-header">
-                    <div>
-                        <h2>
-                            {Translations.DirectoryTitle[DEFAULT_LANGUAGE]} - {Translations.NumberOfContacts[DEFAULT_LANGUAGE]}: {rows.length}
-                        </h2>
-                        <div style={{paddingLeft: '10px'}}>
-                            <Button variant="primary" onPress={() => openAccount()}>
-                                {Translations.AddButton[DEFAULT_LANGUAGE]}
-                            </Button>
-                        </div>
+                <div className="list-view-header" style={{display: 'flex', alignItems: 'center'}}>
+                    <h2>{Translations.AccountsTitle[DEFAULT_LANGUAGE]} {rows.length}</h2>
+                    <div style={{marginLeft: 'auto'}}>
+                        <Button variant="primary" onPress={() => openAccount()}>
+                            {Translations.AddButton[DEFAULT_LANGUAGE]}
+                        </Button>
                     </div>
-                    <div className="toolbar">
-                        <ListSearchCanvas name="accounts"/>
-                        <ListFilterCanvas name="accounts" columns={columns}/>
-                    </div>
+                </div>
+                <div className="toolbar">
+                    <ListSearchCanvas name="accounts"/>
+                    <ListFilterCanvas name="accounts" columns={columns}/>
                 </div>
 
                 {isMobileLayout ? (
                     <div className="mobile-view">
-                        {rows.map((row, index) => {
-                            return (
-                                <Item key={index}>
-                                    {columns
-                                        .filter(({isHidden}) => isHidden === false)
-                                        .map((item) => getListItem(row, item))}
-                                </Item>
-                            );
-                        })}
+                        {rows.map((row, index) => (
+                            <Item key={index}>
+                                {columns
+                                    .filter(({isHidden}) => isHidden === false)
+                                    .map((item) => getListItem(row, item))}
+                            </Item>
+                        ))}
                     </div>
                 ) : (
                     <div className="content-box" style={{overflow: 'auto'}}>
                         <TableCanvas>
                             <TableHeader name="accounts" sort={setListViewSortBy} view={view} columns={columns}/>
-                            {rows.map((row, index) => {
-                                return (
-                                    <Row key={index}>
-                                        {columns
-                                            .filter(({isHidden}) => isHidden === false)
-                                            .map((item) => getCell(row, item))}
-                                    </Row>
-                                );
-                            })}
+                            {rows.map((row, index) => (
+                                <Row key={index}>
+                                    {columns
+                                        .filter(({isHidden}) => isHidden === false)
+                                        .map((item) => getCell(row, item))}
+                                </Row>
+                            ))}
                         </TableCanvas>
                     </div>
                 )}

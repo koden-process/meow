@@ -351,6 +351,16 @@ h3 {
   padding: 6px;
 }
 
+/* Add row separators between table rows in desktop view */
+.page .main .canvas .content-box .desktop-view tr + tr td {
+  border-top: 1px solid var(--spectrum-global-color-gray-300);
+}
+
+/* Add column separators between table columns in desktop view */
+.page .main .canvas .content-box .desktop-view td + td {
+  border-left: 1px solid var(--spectrum-global-color-gray-300);
+}
+
 .trash-canvas {
   position: absolute;
   top: 20px;
@@ -1610,4 +1620,10 @@ h3 {
 
 .activity-list h2 {
   line-height: 1.8em;
+}
+
+
+/* Zebra striping: lighter gray every other data row in desktop view */
+.page .main .canvas .content-box .desktop-view tr:nth-child(even) td {
+  background-color: var(--spectrum-global-color-gray-100);
 }
