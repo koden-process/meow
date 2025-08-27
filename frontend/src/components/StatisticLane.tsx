@@ -32,7 +32,7 @@ const toDays = (hours: number | undefined) => {
 const getTitle = (cards: Card[], lane: LaneInterface) => {
   const count = cards.filter((card) => card.laneId === lane._id).length;
 
-  return count === 1
+  return count <= 1
     ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
     : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
 };
