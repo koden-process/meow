@@ -866,6 +866,8 @@ h3 {
 
 .layer .card-events .comment-form .submit {
   margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .layer .card-events .event-item {
