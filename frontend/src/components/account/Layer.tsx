@@ -157,17 +157,18 @@ export const Layer = () => {
     return (
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
-                <div style={{float: 'right'}} className="card-submit">
+                <div className="card-submit">
                     {id ? (
-                        <Button 
-                            variant="negative" 
+                        <Button
+                            variant="negative"
                             onPress={handleDeleteClick}
                             UNSAFE_className="delete-button"
                         >
                             {Translations.DeleteButton[DEFAULT_LANGUAGE]}
                         </Button>
                     ) : null}
-
+                </div>
+                <div className="card-submit">
                     <Button variant="primary" onPress={() => hideAccountDetail()}>
                         {Translations.CloseButton[DEFAULT_LANGUAGE]}
                     </Button>

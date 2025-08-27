@@ -159,19 +159,19 @@ export const Layer = () => {
     return (
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
-                <div>
-                    {card?.userId && (
-                        <Avatar
-                            id={card?.userId}
-                            width={36}
-                            onClick={() => {
-                                setIsUserLayerVisible(!isUserLayerVisible);
-                            }}
-                        />
-                    )}
-                </div>
+                <div style={{display: 'flex', flexDirection: 'column', width: '100%', gap: 8}}>
+                    <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        {card?.userId && (
+                            <Avatar
+                                id={card?.userId}
+                                width={36}
+                                onClick={() => {
+                                    setIsUserLayerVisible(!isUserLayerVisible);
+                                }}
+                            />
+                        )}
+                    </div>
 
-                <div>
                     {isDisabled && (
                         <div className={`lock ${getBannerColorClassName(lane?.color)}`}>
                             <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
@@ -181,26 +181,30 @@ export const Layer = () => {
                         </div>
                     )}
 
-                    <div className="card-submit">
-                        {id && !isDisabled ? (
-                            <Button 
-                                variant="negative" 
-                                onPress={handleDeleteClick}
-                                UNSAFE_className="delete-button"
-                            >
-                                {Translations.DeleteButton[DEFAULT_LANGUAGE]}
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div className="card-submit" style={{padding: 0, marginTop: 0}}>
+                            {id && !isDisabled ? (
+                                <Button
+                                    variant="negative"
+                                    onPress={handleDeleteClick}
+                                    UNSAFE_className="delete-button"
+                                >
+                                    {Translations.DeleteButton[DEFAULT_LANGUAGE]}
+                                </Button>
+                            ) : null}
+                        </div>
+                        <div style={{flexGrow: 1}}></div>
+                        <div className="card-submit" style={{padding: 0, marginTop: 0}}>
+                            <Button variant="primary" onPress={() => hideCardDetail()}>
+                                {Translations.CloseButton[DEFAULT_LANGUAGE]}
                             </Button>
-                        ) : null}
 
-                        <Button variant="primary" onPress={() => hideCardDetail()}>
-                            {Translations.CloseButton[DEFAULT_LANGUAGE]}
-                        </Button>
-
-                        {!isDisabled ? (
-                            <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
-                                {Translations.SaveButton[DEFAULT_LANGUAGE]}
-                            </Button>
-                        ) : null}
+                            {!isDisabled ? (
+                                <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
+                                    {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                                </Button>
+                            ) : null}
+                        </div>
                     </div>
                 </div>
             </div>

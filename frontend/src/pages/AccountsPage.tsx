@@ -149,7 +149,7 @@ export const AccountsPage = () => {
                         <h2>
                             {Translations.DirectoryTitle[DEFAULT_LANGUAGE]} - {Translations.NumberOfContacts[DEFAULT_LANGUAGE]}: {rows.length}
                         </h2>
-                        <div style={{paddingLeft: '10px'}}>
+                        <div style={{marginLeft: 'auto'}}>
                             <Button variant="primary" onPress={() => openAccount()}>
                                 {Translations.AddButton[DEFAULT_LANGUAGE]}
                             </Button>
