@@ -152,7 +152,7 @@ export const AccountsPage = () => {
                         </Button>
                     </div>
                 </div>
-                <div className="toolbar">
+                <div className="toolbar" style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12}}>
                     <ListSearchCanvas name="accounts"/>
                     <ListFilterCanvas name="accounts" columns={columns}/>
                 </div>
