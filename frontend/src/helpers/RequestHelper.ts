@@ -64,17 +64,27 @@ export class RequestHelper {
   }
 
   getUrl(path?: string): URL {
-    const segments = this.base
-      ? [...this.base.pathname.split('/').filter((segment) => segment !== '')]
-      : [];
-
     const url = new URL(this.base!);
 
     if (path) {
-      segments.push(strip(path));
-    }
+      // Séparer le path des paramètres de requête
+      const [pathname, search] = path.split('?');
+      
+      const segments = this.base
+        ? [...this.base.pathname.split('/').filter((segment) => segment !== '')]
+        : [];
 
-    url.pathname = segments.join('/');
+      if (pathname) {
+        segments.push(strip(pathname));
+      }
+
+      url.pathname = segments.join('/');
+      
+      // Ajouter les paramètres de requête s'ils existent
+      if (search) {
+        url.search = '?' + search;
+      }
+    }
 
     return url;
   }
@@ -622,4 +632,30 @@ export class RequestHelper {
       throw error;
     }
   };
+
+  async getTeams(): Promise<Team[]> {
+    const url = this.getUrl('/api/teams');
+    return this.doFetch(url, 'GET');
+  }
+
+  async createOpportunityTransfer(transferRequest: any) {
+    const url = this.getUrl('/api/opportunity-transfers');
+    return this.doFetch(url, 'POST', transferRequest);
+  }
+
+  async getOpportunityTransfers(type?: string) {
+    const urlPath = type ? `/api/opportunity-transfers?type=${type}` : '/api/opportunity-transfers';
+    const url = this.getUrl(urlPath);
+    return this.doFetch(url, 'GET');
+  }
+
+  async acceptOpportunityTransfer(transferId: string, responseMessage: string) {
+    const url = this.getUrl(`/api/opportunity-transfers/${transferId}/accept`);
+    return this.doFetch(url, 'POST', { responseMessage });
+  }
+
+  async declineOpportunityTransfer(transferId: string, responseMessage: string) {
+    const url = this.getUrl(`/api/opportunity-transfers/${transferId}/decline`);
+    return this.doFetch(url, 'POST', { responseMessage });
+  }
 }

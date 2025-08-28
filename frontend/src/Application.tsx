@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { getRequestClient } from './helpers/RequestHelper';
 import { AllowTeamRegistrationModal } from './components/modal/AllowTeamRegistrationModal';
 import { ActivityPage } from './pages/ActivityPage';
+import { TransfersPage } from './pages/TransfersPage';
 import { SelectMappingContext, SelectMappings } from './helpers/SelectMappingContext';
 import MobileMain from './MobileMain';
 import AddOpportunityMobile from './AddOpportunityMobile';
@@ -125,6 +126,7 @@ function Application() {
             <Route path="/forecast/*" element={<ForecastPage />}></Route>
             <Route path="/setup" element={<SetupPage />}></Route>
             <Route path="/activity" element={<ActivityPage />}></Route>
+            <Route path="/transfers" element={<TransfersPage />}></Route>
             <Route path="/user-setup" element={<UserSetupPage />}></Route>
             <Route path="/hire" element={<HirePage />}></Route>
             <Route path="/accounts" element={<AccountsPage />}></Route>

@@ -1,19 +1,26 @@
-import {useEffect, useRef, useState, MouseEvent} from 'react';
-import {useSelector} from 'react-redux';
-import {Link, useLocation} from 'react-router-dom';
-import {ActionType} from '../actions/Actions';
-import {selectCurrency, selectUserId, store} from '../store/Store';
-import {Avatar} from './Avatar';
-import {IconActivity} from './IconActivity';
-import {Translations} from '../Translations';
-import {DEFAULT_LANGUAGE} from '../Constants';
+import { useEffect, useRef, useState, MouseEvent } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+import { ActionType } from '../actions/Actions';
+import { selectCurrency, selectUserId, store } from '../store/Store';
+import { Avatar } from './Avatar';
+import { IconActivity } from './IconActivity';
+import { Translations } from '../Translations';
+import { DEFAULT_LANGUAGE } from '../Constants';
 
 export const Navigation = () => {
-    const userId = useSelector(selectUserId);
-    const currency = useSelector(selectCurrency);
-    const [userMenue, setUserMenu] = useState(false);
-    const layerRef = useRef<HTMLDivElement>(null);
-    const location = useLocation();
+  const userId = useSelector(selectUserId);
+  const currency = useSelector(selectCurrency);
+  const [userMenue, setUserMenu] = useState(false);
+  const layerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const isActiveRoute = (targetPath: string): boolean => {
+    if (targetPath === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(targetPath);
+  };
 
     const isActiveRoute = (targetPath: string): boolean => {
         if (targetPath === '/') {
@@ -76,6 +83,13 @@ export const Navigation = () => {
                     <img alt={Translations.DirectoryTitle[DEFAULT_LANGUAGE]} src="/accounts-icon.svg"/>
                 </Link>
             </div>
+        
+            <div className={`item ${isActiveRoute('/transfers') ? 'active' : ''}`}>
+              <Link to="/transfers" title={Translations.TransfersNavItem[DEFAULT_LANGUAGE]}>
+                <img alt={Translations.TransfersNavItem[DEFAULT_LANGUAGE]} src="/transfer-icon.svg"/>
+              </Link>
+            </div>
+        
             <div className={`item ${isActiveRoute('/hire') ? 'active' : ''}`}>
                 <Link to="/hire" title={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]}>
                     <img alt={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]} src="/paw-icon.svg"/>

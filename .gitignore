@@ -34,3 +34,5 @@ yarn-error.log*
 .vscode
 debug
 _mongo_data
+
+/scripts
