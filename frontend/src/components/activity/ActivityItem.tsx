@@ -4,6 +4,7 @@ import { Assign } from './events/Assign';
 import { Attribute } from './events/Attribute';
 import { ClosedAt } from './events/ClosedAt';
 import { CreatedAt } from './events/CreatedAt';
+import { Deleted } from './events/Deleted';
 import { Lane } from './events/Lane';
 import { Name } from './events/Name';
 
@@ -16,6 +17,7 @@ import {
   CardEvent,
   ClosedAtEvent,
   CommentEvent,
+  DeletedEvent,
   LaneEvent,
   NameEvent,
   NextFollowUpAtEvent,
@@ -41,6 +43,8 @@ const getItem = (event: CardEvent) => {
       return <Assign event={event as AssignEvent} />;
     case EventType.AttributeChanged:
       return <Attribute event={event as AttributeEvent} />;
+    case EventType.Deleted:
+      return <Deleted event={event as DeletedEvent} />;
     default:
       break;
   }

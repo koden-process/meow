@@ -1354,7 +1354,7 @@ h3 {
   background-color: #28b473;
   color: white;
   transition: transform 0.3s ease-in;
-  z-index: 100;
+  z-index: 10000; /* au-dessus de la layer (z-index: 100) */
 }
 
 #success-modal > div {
@@ -1366,6 +1366,8 @@ h3 {
   margin: auto;
   font-size: 1.4em;
   padding-left: 80px;
+  color: #ffffff; /* force le texte en blanc pour contraster avec le fond vert */
+  font-weight: 600;
 }
 
 #success-modal.show {
@@ -1380,7 +1382,7 @@ h3 {
   background-color: #db2228;
   color: white;
   transition: transform 0.3s ease-in;
-  z-index: 100;
+  z-index: 10000; /* au-dessus de la layer (z-index: 100) */
 }
 
 #error-modal > div {
@@ -1668,4 +1670,12 @@ h3 {
 /* Zebra striping: lighter gray every other data row in desktop view */
 .page .main .canvas .content-box .desktop-view tr:nth-child(even) td {
   background-color: var(--spectrum-global-color-gray-100);
+}
+
+/* Delete buttons common style */
+.btn-delete {
+  transition: background-color 120ms ease-in-out;
+}
+.btn-delete:hover {
+  background-color: var(--spectrum-global-color-gray-200) !important;
 }

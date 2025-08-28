@@ -7,7 +7,7 @@ import { CardEventPayload } from '../events/EventStrategy.js';
 import { log } from '../worker.js';
 import { Account } from '../entities/Account.js';
 import { CardEvent, NewCardEvent } from '../entities/CardEvent.js';
-import { Card } from '../entities/Card.js';
+import { Card, CardStatus } from '../entities/Card.js';
 import { User } from '../entities/User.js';
 import { EventHelper } from '../helpers/EventHelper.js';
 
@@ -124,6 +124,15 @@ export const CardEventListener = {
       await CardEventListener.persist(
         user,
         new NewCardEvent(entity, user, EventType.NameChanged, body)
+      );
+    }
+
+    if (previous.status !== latest.status && latest.status === CardStatus.Deleted) {
+      await CardEventListener.persist(
+        user,
+        new NewCardEvent(entity, user, EventType.Deleted, {
+          name: latest.name,
+        })
       );
     }
   },
