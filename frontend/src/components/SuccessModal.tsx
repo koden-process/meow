@@ -17,15 +17,19 @@ export const SuccessModal = () => {
     if (modal === 'success') {
       setIsVisible(true);
 
+      // Si le message contient "supprimée" ou "deleted", on garde le modal ouvert plus longtemps
+      const isDeleteMessage = text?.includes('supprimée') || text?.includes('deleted');
+      const timeoutDuration = isDeleteMessage ? 4000 : 2000;
+
       timer = setTimeout(() => {
         setIsVisible(false);
 
         store.dispatch(hideModal());
-      }, 2000);
+      }, timeoutDuration);
     }
 
     return () => clearTimeout(timer);
-  }, [modal]);
+  }, [modal, text]);
 
   return (
     <div
