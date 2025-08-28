@@ -1139,5 +1139,17 @@ export const Translations = {
   TransfersNavItem: {
     en: 'Transfers',
     fr: 'Transferts'
+  },
+
+  // Opportunity deleted event translation
+  OpportunityDeleted: {
+    en: 'Opportunity was deleted',
+    fr: 'Opportunité supprimée'
+  },
+
+  // Activity deleted confirmation message
+  ActivityDeletedConfirmation: {
+    en: '{name} has been successfully deleted',
+    fr: '{name} a été supprimé avec succès'
   }
 };
