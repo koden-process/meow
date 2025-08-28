@@ -7,6 +7,7 @@ export type CardEventType =
   | AttributeEvent
   | ClosedAtEvent
   | CommentEvent
+  | DeletedEvent
   | LaneEvent
   | NameEvent
   | NextFollowUpAtEvent;
@@ -89,5 +90,12 @@ export interface NextFollowUpAtWarningEvent extends CardEvent {
   type: EventType.NextFollowUpAtWarning;
   body: {
     followUpTargetDate: string;
+  };
+}
+
+export interface DeletedEvent extends CardEvent {
+  type: EventType.Deleted;
+  body: {
+    name: string;
   };
 }

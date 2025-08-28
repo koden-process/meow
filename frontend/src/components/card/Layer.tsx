@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 import {
     ActionType,
     addCard,
+    deleteCard,
     hideLayer,
     updateCardFromServer,
     showModalSuccess,
@@ -104,37 +105,12 @@ export const Layer = () => {
         update(id, {...preview, amount: parseInt(preview.amount, 10)});
     };
 
-    const deleteCard = async () => {
-        try {
-            // Utiliser la même méthode que le drag & drop
-            await client.updateCard({
-                ...card!,
-                status: CardStatus.Deleted,
-            });
-            
-            // Mettre à jour le board comme dans le listener
-            await client.updateBoard(userId!, store.getState().board);
-            
-            // Créer le message personnalisé avec le nom de l'activité
-            const activityName = card?.name || 'Activité';
-            const successMessage = Translations.ActivityDeletedConfirmation[DEFAULT_LANGUAGE].replace('{name}', activityName);
-            
-            // Afficher le message de confirmation
-            store.dispatch(showModalSuccess(successMessage));
-            
-            // Fermer la vue détaillée
-            hideCardDetail();
-            
-            // Attendre 3 secondes pour que l'utilisateur puisse voir le message
-            setTimeout(() => {
-                // Forcer la mise à jour de l'affichage en rechargeant les données
-                // Cela garantit que la carte supprimée n'apparaît plus dans les listes
-                window.location.reload();
-            }, 3000);
-        } catch (error) {
-            const message = await getErrorMessage(error);
-            store.dispatch(showModalError(message));
-        }
+    const handleDeleteCard = async () => {
+        // Supprimer immédiatement de l'affichage (comme addCard pour la création)
+        store.dispatch(deleteCard(card!));
+        
+        // Fermer la vue détaillée
+        hideCardDetail();
     };
 
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
@@ -255,6 +231,7 @@ export const Layer = () => {
                                         color: '#dc2626',
                                         backgroundColor: 'transparent'
                                     }}
+                                    UNSAFE_className="btn-delete"
                                 >
                                     Supprimer
                                 </Button>
@@ -339,15 +316,17 @@ export const Layer = () => {
                                 Annuler
                             </Button>
                             <Button 
-                                variant="primary" 
+                                variant="secondary" 
                                 onPress={() => {
                                     setShowDeleteModal(false);
-                                    deleteCard();
+                                    handleDeleteCard();
                                 }}
                                 UNSAFE_style={{
-                                    backgroundColor: '#dc2626',
-                                    borderColor: '#dc2626'
+                                    border: '1px solid #dc2626',
+                                    color: '#dc2626',
+                                    backgroundColor: 'transparent'
                                 }}
+                                UNSAFE_className="btn-delete"
                             >
                                 Supprimer
                             </Button>

@@ -1000,5 +1000,11 @@ export const Translations = {
     ActivityDeletedConfirmation: {
         en: 'Activity "{name}" has been deleted',
         fr: 'L\'activité "{name}" a été supprimée'
+    },
+    
+    // Deleted event translations
+    OpportunityDeleted: {
+        en: 'Opportunity deleted',
+        fr: 'Opportunité supprimée'
     }
 };

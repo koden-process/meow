@@ -367,6 +367,13 @@ export const updateCardFromServer = (card: Card): ApplicationCardUpdateOnServerA
   };
 };
 
+export const deleteCard = (card: Card): ApplicationCardDeleteAction => {
+  return {
+    type: ActionType.CARD_DELETE,
+    payload: card,
+  };
+};
+
 export const addAccount = (account: Account): ApplicationAccountAddAction => {
   return {
     type: ActionType.ACCOUNT_ADD,
