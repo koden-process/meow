@@ -113,8 +113,6 @@ const accept = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
     // Find the lane with the lowest index for the accepting team (first lane)
     // Use the same logic as LaneController.list to ensure consistency
-    console.log('Looking for lanes for team:', transfer.toTeamId);
-    console.log('Current user team:', req.jwt.user.teamId);
     
     // Verify that the user's team is the target team
     if (req.jwt.user.teamId.toString() !== transfer.toTeamId.toString()) {
@@ -122,8 +120,6 @@ const accept = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     }
     
     const lanes = await EntityHelper.findByTeam(Lane, req.jwt.team);
-    
-    console.log('Found lanes:', lanes.map(l => ({ id: l._id, name: l.name, index: l.index })));
     
     if (!lanes || lanes.length === 0) {
       throw new EntityNotFoundError('No lanes found for the target team');
@@ -141,8 +137,6 @@ const accept = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     if (!targetLane) {
       throw new EntityNotFoundError('No valid lane found for the target team');
     }
-    
-    console.log('Selected target lane:', { id: targetLane._id, name: targetLane.name, index: targetLane.index });
 
     // Update the transfer status
     transfer.status = TransferStatus.Accepted;
@@ -151,21 +145,11 @@ const accept = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     transfer.responseMessage = req.body.responseMessage;
     transfer.updatedAt = new Date();
 
-    // Transfer the card to the new team, assign to the accepting user, and move to lane 0
-    const oldTeamId = card.teamId;
-    const oldUserId = card.userId;
-    const oldLaneId = card.laneId;
-    
+    // Transfer the card to the new team, assign to the accepting user, and move to first lane
     card.teamId = transfer.toTeamId;
     card.userId = req.jwt.user._id;
     card.laneId = targetLane._id;
     card.updatedAt = new Date();
-
-    console.log(`Transferring card ${card._id}:`, {
-      from: { teamId: oldTeamId, userId: oldUserId, laneId: oldLaneId },
-      to: { teamId: card.teamId, userId: card.userId, laneId: card.laneId },
-      targetLane: { id: targetLane._id, name: targetLane.name, index: targetLane.index }
-    });
 
     // Save both entities
     const updatedTransfer = await EntityHelper.update(transfer);
