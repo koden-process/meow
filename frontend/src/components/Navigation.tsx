@@ -22,14 +22,7 @@ export const Navigation = () => {
     return location.pathname.startsWith(targetPath);
   };
 
-    const isActiveRoute = (targetPath: string): boolean => {
-        if (targetPath === '/') {
-            return location.pathname === '/';
-        }
-        return location.pathname.startsWith(targetPath);
-    };
-
-    const logout = () => {
+  const logout = () => {
         store.dispatch({
             type: ActionType.LOGOUT,
         });

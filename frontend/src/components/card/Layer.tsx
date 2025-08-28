@@ -265,29 +265,36 @@ export const Layer = () => {
                 <Tabs.Root defaultValue="opportunity" height="100%">
                     {(id && (
                         <Tabs.List>
+                            {/* @ts-ignore */}
                             <Tabs.Trigger value="opportunity">
-                                <span className="tab-title">{Translations.OpportunityTab[DEFAULT_LANGUAGE]}</span>
+                                {Translations.OpportunityTab[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
+                            {/* @ts-ignore */}
                             <Tabs.Trigger value="events">
-                                <span className="tab-title">{Translations.HistoryTab[DEFAULT_LANGUAGE]}</span>
+                                {Translations.HistoryTab[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
+                            {/* @ts-ignore */}
                             <Tabs.Trigger value="transfer">
-                                <span className="tab-title">{Translations.TransferTab[DEFAULT_LANGUAGE]}</span>
+                                {Translations.TransfersNavItem[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
                         <Tabs.List>
+                            {/* @ts-ignore */}
                             <Tabs.Trigger value="opportunity">
-                                <span className="tab-title">{Translations.OpportunityTab[DEFAULT_LANGUAGE]}</span>
+                                {Translations.OpportunityTab[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
                         </Tabs.List>
                     )}
+                    {/* @ts-ignore */}
                     <Tabs.Content value="opportunity">
                         <Form update={update} id={id} onPreviewChange={setPreview}/>
                     </Tabs.Content>
+                    {/* @ts-ignore */}
                     <Tabs.Content value="events">
                         <Events entity="card" id={id}/>
                     </Tabs.Content>
+                    {/* @ts-ignore */}
                     <Tabs.Content value="transfer">
                         <div style={{ padding: '16px' }}>
                             {card && (
@@ -297,7 +304,7 @@ export const Layer = () => {
                                             variant="primary" 
                                             onPress={() => setIsTransferModalOpen(true)}
                                         >
-                                            {Translations.TransferOpportunityButton[DEFAULT_LANGUAGE]}
+                                            {Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}
                                         </Button>
                                     </div>
                                     <TransferRequests cardId={id} />
@@ -316,6 +323,7 @@ export const Layer = () => {
                     card={card}
                     onTransferSuccess={handleTransferSuccess}
                 />
+            )}
             {/* Modale de confirmation de suppression */}
             {showDeleteModal && (
                 <div style={{

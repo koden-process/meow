@@ -54,7 +54,6 @@ export const NavigationMobile = () => {
               <img alt="Transfers" src="/transfer-icon.svg" /> Transfers
             </Link>
           </div>
-          <div className="item-mobile">
           <div className={`item-mobile ${isActiveRoute('/accounts') ? 'active' : ''}`}>
             <Link onClick={() => setIsExpanded(!isExpanded)} to="/accounts" title="Accounts">
               <img alt="Accounts" src="/accounts-icon.svg" /> Accounts
