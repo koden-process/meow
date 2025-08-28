@@ -148,6 +148,22 @@ h3 {
   color: white;
 }
 
+.page .navigation .item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.page .navigation .item.active img {
+  opacity: 1;
+  filter: brightness(1.2);
+}
+
+.page .navigation .item:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
 .page .navigation .burger {
   color: white;
   display: flex;
@@ -186,6 +202,11 @@ h3 {
 .page .navigation .item-mobile.logout {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.page .navigation .item-mobile.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 .page .navigation .item-mobile img {
@@ -251,17 +272,38 @@ h3 {
   background-color: var(--spectrum-global-color-gray-200);
 }
 
+.page .navigation .user-menu .link.active {
+  background-color: var(--spectrum-global-color-gray-300);
+  opacity: 1;
+}
+
 .page .navigation .user-menu .link:not(:last-child) {
   margin-bottom: 5px;
 }
 
 @media (prefers-color-scheme: dark) {
+  .page .navigation .item.active {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .page .navigation .item-mobile.active {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  
   .page .navigation .user-menu .wrapper .link.user-settings {
     background-image: url(../public/user-settings-icon-light.svg);
   }
 }
 
 @media (prefers-color-scheme: light) {
+  .page .navigation .item.active {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .page .navigation .item-mobile.active {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
   .page .navigation .user-menu .wrapper .link.user-settings {
     background-image: url(../public/user-settings-icon.svg);
   }
@@ -351,6 +393,16 @@ h3 {
   padding: 6px;
 }
 
+/* Add row separators between table rows in desktop view */
+.page .main .canvas .content-box .desktop-view tr + tr td {
+  border-top: 1px solid var(--spectrum-global-color-gray-300);
+}
+
+/* Add column separators between table columns in desktop view */
+.page .main .canvas .content-box .desktop-view td + td {
+  border-left: 1px solid var(--spectrum-global-color-gray-300);
+}
+
 .trash-canvas {
   position: absolute;
   top: 20px;
@@ -397,7 +449,7 @@ h3 {
 .board .lane .title {
   font-size: 1.2em;
   font-weight: 800;
-  padding: 5px 8px 0px 8px;
+  padding: 5px 0 0 0;
   display: flex;
 }
 
@@ -866,6 +918,8 @@ h3 {
 
 .layer .card-events .comment-form .submit {
   margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .layer .card-events .event-item {
@@ -1300,7 +1354,7 @@ h3 {
   background-color: #28b473;
   color: white;
   transition: transform 0.3s ease-in;
-  z-index: 100;
+  z-index: 10000; /* au-dessus de la layer (z-index: 100) */
 }
 
 #success-modal > div {
@@ -1312,6 +1366,8 @@ h3 {
   margin: auto;
   font-size: 1.4em;
   padding-left: 80px;
+  color: #ffffff; /* force le texte en blanc pour contraster avec le fond vert */
+  font-weight: 600;
 }
 
 #success-modal.show {
@@ -1326,7 +1382,7 @@ h3 {
   background-color: #db2228;
   color: white;
   transition: transform 0.3s ease-in;
-  z-index: 100;
+  z-index: 10000; /* au-dessus de la layer (z-index: 100) */
 }
 
 #error-modal > div {
@@ -1608,4 +1664,18 @@ h3 {
 
 .activity-list h2 {
   line-height: 1.8em;
+}
+
+
+/* Zebra striping: lighter gray every other data row in desktop view */
+.page .main .canvas .content-box .desktop-view tr:nth-child(even) td {
+  background-color: var(--spectrum-global-color-gray-100);
+}
+
+/* Delete buttons common style */
+.btn-delete {
+  transition: background-color 120ms ease-in-out;
+}
+.btn-delete:hover {
+  background-color: var(--spectrum-global-color-gray-200) !important;
 }

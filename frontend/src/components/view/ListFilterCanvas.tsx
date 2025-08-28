@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { IconHide } from '../IconHide';
+import { useState, useMemo } from 'react';
 import { ListViewItem } from '../../interfaces/ListView';
-import { Checkbox } from '@adobe/react-spectrum';
+import { ActionButton, Menu, MenuTrigger, Item } from '@adobe/react-spectrum';
 import { setListViewColumn } from '../../actions/Actions';
 import { store } from '../../store/Store';
 import { ListName } from '../../store/ApplicationStore';
@@ -12,43 +11,38 @@ export interface ListFilterCanvasProps {
 }
 
 export const ListFilterCanvas = ({ columns, name }: ListFilterCanvasProps) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const visibleKeys = useMemo(() => {
+    return new Set(columns.filter(c => c.isHidden === false).map(c => c.column as string));
+  }, [columns]);
 
-  const toggleLayer = () => {
-    setIsVisible(!isVisible);
-  };
+  const selectedColumns = columns.filter(col => !col.isHidden);
+  const selectedCount = selectedColumns.length;
 
   return (
     <div className="filter-canvas">
-      <div className="toggle" onClick={toggleLayer}>
-        <div>
-          <IconHide />
-        </div>
-      </div>
-
-      {isVisible && (
-        <div>
-          {columns.map((item) => {
-            return (
-              <div className="column">
-                <Checkbox
-                  key={item.column}
-                  isSelected={item.isHidden}
-                  onChange={(value) => {
-                    const list = columns.map((i) =>
-                      i.column === item.column ? { ...i, isHidden: value } : i
-                    );
-
-                    store.dispatch(setListViewColumn(name, list));
-                  }}
-                />
-
-                <div className="name">{item.name}</div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <MenuTrigger>
+        <ActionButton 
+          aria-label="Choix affichage" 
+          UNSAFE_style={{ minWidth: 160 }}
+        >
+          Colonnes ({selectedCount}/{columns.length})
+        </ActionButton>
+        <Menu
+          selectionMode="multiple"
+          selectedKeys={visibleKeys}
+          onSelectionChange={(keys) => {
+            // keys = Set des colonnes à afficher
+            // Normaliser en Set<string>
+            const set = new Set(Array.from(keys as Set<React.Key>).map(k => k.toString()));
+            const list = columns.map((i) => ({ ...i, isHidden: !set.has(i.column as string) }));
+            store.dispatch(setListViewColumn(name, list));
+          }}
+        >
+          {columns.map((item) => (
+            <Item key={item.column as string}>{item.name}</Item>
+          ))}
+        </Menu>
+      </MenuTrigger>
     </div>
   );
 };

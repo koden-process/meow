@@ -4,10 +4,12 @@ import {useSelector} from 'react-redux';
 import {
     ActionType,
     addCard,
+    deleteCard,
     hideLayer,
     updateCardFromServer,
     showModalSuccess,
     updateCard,
+    showModalError,
 } from '../../actions/Actions';
 import {
     selectActiveUsers,
@@ -31,6 +33,7 @@ import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
 import {getRequestClient} from '../../helpers/RequestHelper';
 import {IconLock} from "./IconLock";
+import {getErrorMessage} from '../../helpers/ErrorHelper';
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -110,8 +113,17 @@ export const Layer = () => {
         update(id, {...preview, amount: parseInt(preview.amount, 10)});
     };
 
+    const handleDeleteCard = async () => {
+        // Supprimer immédiatement de l'affichage (comme addCard pour la création)
+        store.dispatch(deleteCard(card!));
+        
+        // Fermer la vue détaillée
+        hideCardDetail();
+    };
+
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
     useEffect(() => {
         setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
@@ -148,7 +160,8 @@ export const Layer = () => {
     return (
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
-                <div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                    {/* Avatar en haut à droite */}
                     {card?.userId && (
                         <Avatar
                             id={card?.userId}
@@ -158,57 +171,96 @@ export const Layer = () => {
                             }}
                         />
                     )}
-                </div>
-
-                <div>
+                    
+                    {/* Message de verrouillage juste en dessous de l'avatar */}
                     {isDisabled && (
-                        <div className={`lock ${getBannerColorClassName(lane?.color)}`}>
+                        <div className={`lock ${getBannerColorClassName(lane?.color)}`} style={{ 
+                            marginTop: '8px',
+                            textAlign: 'center',
+                            padding: '8px 12px',
+                            borderRadius: '4px',
+                            fontSize: '14px'
+                        }}>
                             <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
-                            <div className="button" onClick={() => setIsDisabled(!isDisabled)}>
+                            <div className="button" onClick={() => setIsDisabled(!isDisabled)} style={{ 
+                                cursor: 'pointer',
+                                marginTop: '4px'
+                            }}>
                                 <IconLock/>
                             </div>
                         </div>
                     )}
+                    
+                    {/* Liste des utilisateurs au-dessus des boutons */}
+                    {isUserLayerVisible && (
+                        <div className="user-list" style={{ 
+                            backgroundColor: 'white', 
+                            border: '1px solid #ccc', 
+                            borderRadius: '4px', 
+                            padding: '8px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            minWidth: '200px'
+                        }}>
+                            <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                                <tbody>
+                                {users.map((user: User) => {
+                                    return (
+                                        <tr key={user._id} style={{width: '100%'}}>
+                                            <td>
+                                                <Avatar width={36} id={user._id}/>
+                                            </td>
+                                            <td>
+                                                <b>{user.name}</b>
+                                            </td>
+                                            <td>
+                                                <Button variant="primary" onPress={() => assign(user._id)}>
+                                                    {Translations.AssignButton[DEFAULT_LANGUAGE]}
+                                                </Button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    );
+                                })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    
+                    {/* Boutons sur la ligne d'en dessous */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        {/* Bouton Supprimer tout à gauche */}
+                        <div>
+                            {id && (
+                                <Button 
+                                    variant="secondary" 
+                                    onPress={() => setShowDeleteModal(true)}
+                                    UNSAFE_style={{
+                                        border: '1px solid #dc2626',
+                                        color: '#dc2626',
+                                        backgroundColor: 'transparent'
+                                    }}
+                                    UNSAFE_className="btn-delete"
+                                >
+                                    Supprimer
+                                </Button>
+                            )}
+                        </div>
 
-                    <div className="card-submit">
-                        {!isDisabled ? (
-                            <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
-                                {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                        {/* Boutons Enregistrer et Fermer à droite */}
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            {!isDisabled ? (
+                                <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
+                                    {Translations.SaveButton[DEFAULT_LANGUAGE]}
+                                </Button>
+                            ) : null}
+
+                            <Button variant="primary" onPress={() => hideCardDetail()}>
+                                {Translations.CloseButton[DEFAULT_LANGUAGE]}
                             </Button>
-                        ) : null}
-
-                        <Button variant="primary" onPress={() => hideCardDetail()}>
-                            {Translations.CloseButton[DEFAULT_LANGUAGE]}
-                        </Button>
+                        </div>
                     </div>
                 </div>
             </div>
-            {isUserLayerVisible && (
-                <div className="user-list">
-                    <table style={{width: '100%', borderCollapse: 'collapse'}}>
-                        <tbody>
-                        {users.map((user: User) => {
-                            return (
-                                <tr key={user._id} style={{width: '100%'}}>
-                                    <td>
-                                        <Avatar width={36} id={user._id}/>
-                                    </td>
-                                    <td>
-                                        <b>{user.name}</b>
-                                    </td>
-                                    <td>
-                                        <Button variant="primary" onPress={() => assign(user._id)}>
-                                            {Translations.AssignButton[DEFAULT_LANGUAGE]}
-                                        </Button>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
-                </div>
-            )}
             <div className="body">
                 <Tabs.Root defaultValue="opportunity" height="100%">
                     {(id && (
@@ -264,6 +316,59 @@ export const Layer = () => {
                     card={card}
                     onTransferSuccess={handleTransferSuccess}
                 />
+            {/* Modale de confirmation de suppression */}
+            {showDeleteModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 9999
+                }}>
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '24px',
+                        borderRadius: '8px',
+                        maxWidth: '400px',
+                        width: '90%',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                    }}>
+                        <h3 style={{ margin: '0 0 16px 0', color: '#dc2626' }}>
+                            Confirmer la suppression
+                        </h3>
+                        <p style={{ margin: '0 0 24px 0', color: '#666' }}>
+                            Êtes-vous sûr de vouloir supprimer cette opportunité ? Cette action est irréversible.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <Button 
+                                variant="secondary" 
+                                onPress={() => setShowDeleteModal(false)}
+                            >
+                                Annuler
+                            </Button>
+                            <Button 
+                                variant="secondary" 
+                                onPress={() => {
+                                    setShowDeleteModal(false);
+                                    handleDeleteCard();
+                                }}
+                                UNSAFE_style={{
+                                    border: '1px solid #dc2626',
+                                    color: '#dc2626',
+                                    backgroundColor: 'transparent'
+                                }}
+                                UNSAFE_className="btn-delete"
+                            >
+                                Supprimer
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

@@ -1,5 +1,5 @@
 export const Translations = {
-  RequestHelperError: {
+ RequestHelperError: {
     en: 'Please check your setup, the RequestHelper could not determine the backend, either set VITE_URL or the windows object needs to be set',
     fr: "Veuillez vérifier votre configuration, le RequestHelper n'a pas pu déterminer le backend, définissez VITE_URL ou l'objet window doit être défini",
   },
@@ -182,11 +182,6 @@ export const Translations = {
     fr: 'Assigner',
   },
 
-  TransferOpportunityButton: {
-    en: 'Transfer This Opportunity',
-    fr: 'Transférer Cette Opportunité',
-  },
-
   // Filter buttons
   RecentlyUpdatedFilter: {
     en: 'Recently Updated',
@@ -220,11 +215,6 @@ export const Translations = {
     fr: 'Historique',
   },
 
-  TransferTab: {
-    en: 'Transfer',
-    fr: 'Transfert',
-  },
-
   // Form labels
   NameLabel: {
     en: 'Name',
@@ -246,6 +236,16 @@ export const Translations = {
     en: 'This opportunity is closed, do you want to unlock?',
     fr: 'Cette opportunité est fermée, voulez-vous la déverrouiller?',
   },
+
+    NumberOfContacts : {
+        en: 'Number of Contacts',
+        fr: 'Nombre de contacts',
+    },
+
+    DirectoryTitle: {
+        en: 'Register',
+        fr: 'Répertoire',
+    },
 
   // Page titles and labels
   AccountsTitle: {
