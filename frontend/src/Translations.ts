@@ -1124,5 +1124,20 @@ export const Translations = {
   ResponseLabel: {
     en: 'Response:',
     fr: 'Réponse:'
+  },
+
+  TransfersPageTitle: {
+    en: 'Opportunity Transfers',
+    fr: 'Transferts d\'Opportunités'
+  },
+
+  TransfersPageDescription: {
+    en: 'Manage opportunity transfer requests between teams. Accept or decline transfer requests, and monitor the status of your sent requests.',
+    fr: 'Gérez les demandes de transfert d\'opportunités entre équipes. Acceptez ou refusez les demandes de transfert, et surveillez le statut de vos demandes envoyées.'
+  },
+
+  TransfersNavItem: {
+    en: 'Transfers',
+    fr: 'Transferts'
   }
 };

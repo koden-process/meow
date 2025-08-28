@@ -1,26 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Button, Text } from '@adobe/react-spectrum';
 import { useSelector } from 'react-redux';
-import { selectToken } from '../../store/Store';
+import { selectToken, selectCurrency } from '../../store/Store';
 import { getRequestClient } from '../../helpers/RequestHelper';
 import { OpportunityTransfer, TransferStatus } from '../../interfaces/OpportunityTransfer';
+import { Card } from '../../interfaces/Card';
 import { DateTime } from 'luxon';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
 
-export const TransferRequests = () => {
+export interface TransferRequestsProps {
+  cardId?: string; // Optional: filter transfers for a specific card
+}
+
+export const TransferRequests = ({ cardId }: TransferRequestsProps = {}) => {
   const token = useSelector(selectToken);
+  const currency = useSelector(selectCurrency) || 'EUR';
   const client = getRequestClient(token);
 
   const [receivedTransfers, setReceivedTransfers] = useState<OpportunityTransfer[]>([]);
   const [sentTransfers, setSentTransfers] = useState<OpportunityTransfer[]>([]);
+  const [cards, setCards] = useState<{ [cardId: string]: Card }>({});
+  const [cardAccessibility, setCardAccessibility] = useState<{ [cardId: string]: boolean }>({});
   const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
   const [isLoading, setIsLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     loadTransfers();
-  }, []);
+  }, [cardId]);
 
   const loadTransfers = async () => {
     setIsLoading(true);
@@ -30,8 +38,50 @@ export const TransferRequests = () => {
         client.getOpportunityTransfers('sent'),
       ]);
 
-      setReceivedTransfers(receivedTransfers.filter((t: OpportunityTransfer) => t.status === TransferStatus.Pending));
-      setSentTransfers(sentTransfers);
+      // Filter by cardId if provided
+      let filteredReceived = receivedTransfers;
+      let filteredSent = sentTransfers;
+      
+      if (cardId) {
+        filteredReceived = receivedTransfers.filter((t: OpportunityTransfer) => t.cardId === cardId);
+        filteredSent = sentTransfers.filter((t: OpportunityTransfer) => t.cardId === cardId);
+      }
+
+      const finalReceived = filteredReceived.filter((t: OpportunityTransfer) => t.status === TransferStatus.Pending);
+      setReceivedTransfers(finalReceived);
+      setSentTransfers(filteredSent);
+
+      // Récupérer les informations des cartes pour tous les transferts
+      // Pour les transferts reçus, on peut toujours accéder aux cartes
+      // Pour les transferts envoyés, les cartes peuvent être inaccessibles si elles ont été transférées
+      const allTransfers = [...finalReceived, ...filteredSent];
+      const uniqueCardIds = [...new Set(allTransfers.map(t => t.cardId))];
+      
+      const cardPromises = uniqueCardIds.map(async (cardId) => {
+        try {
+          const card = await client.getCard(cardId);
+          return { cardId, card, accessible: true };
+        } catch (err) {
+          // La carte n'est pas accessible (probablement transférée à une autre équipe)
+          console.warn(`Card ${cardId} not accessible (likely transferred):`, err);
+          return { cardId, card: null, accessible: false };
+        }
+      });
+
+      const cardResults = await Promise.all(cardPromises);
+      const cardMap: { [cardId: string]: Card } = {};
+      const cardAccessibility: { [cardId: string]: boolean } = {};
+      
+      cardResults.forEach(({ cardId, card, accessible }) => {
+        cardAccessibility[cardId] = accessible;
+        if (card) {
+          cardMap[cardId] = card;
+        }
+      });
+      
+      setCards(cardMap);
+      // Stocker l'accessibilité des cartes pour l'affichage
+      setCardAccessibility(cardAccessibility);
     } catch (err) {
       console.error('Failed to load transfers:', err);
     } finally {
@@ -61,6 +111,61 @@ export const TransferRequests = () => {
     }
   };
 
+  const formatAmount = (amount: number) => {
+    const currencyStr = String(currency).toLowerCase();
+    if (currencyStr === 'm2') {
+      // Cas spécial pour m2 qui n'est pas une devise standard
+      return new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount) + ' m2';
+    }
+    
+    try {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    } catch (error) {
+      // Si la devise n'est pas reconnue, afficher le montant avec la devise telle quelle
+      return new Intl.NumberFormat('fr-FR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount) + ' ' + currency;
+    }
+  };
+
+  const getCardInfo = (cardId: string, isFromCurrentTeam: boolean = true) => {
+    const card = cards[cardId];
+    if (!card) {
+      // Si c'est un transfert envoyé et que la carte n'est plus accessible
+      if (!isFromCurrentTeam) {
+        return { 
+          name: 'Opportunité transférée', 
+          amount: '', 
+          fullDisplay: 'Opportunité transférée (non accessible)' 
+        };
+      }
+      // Pour les transferts reçus, la carte n'est pas encore dans notre équipe
+      // Afficher un ID plus court et informatif
+      const shortId = cardId.substring(cardId.length - 8);
+      return { 
+        name: `Opportunité #${shortId}`, 
+        amount: '', 
+        fullDisplay: `Opportunité #${shortId} (détails disponibles après acceptation)`
+      };
+    }
+    
+    const formattedAmount = formatAmount(card.amount);
+    return {
+      name: card.name,
+      amount: formattedAmount,
+      fullDisplay: `${card.name} (${formattedAmount})`
+    };
+  };
+
   const getStatusBadge = (status: TransferStatus) => {
     const styles = {
       [TransferStatus.Pending]: { backgroundColor: '#ffa500', color: 'white' },
@@ -84,14 +189,14 @@ export const TransferRequests = () => {
   };
 
   if (isLoading) {
-    return <div>{Translations.LoadingTransfersLabel[DEFAULT_LANGUAGE]}</div>;
+    return <div style={{ color: '#fff' }}>{Translations.LoadingTransfersLabel[DEFAULT_LANGUAGE]}</div>;
   }
 
   const hasTransfers = receivedTransfers.length > 0 || sentTransfers.length > 0;
 
   if (!hasTransfers) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+      <div style={{ padding: '20px', textAlign: 'center', color: '#ccc' }}>
         {Translations.NoTransferRequestsFound[DEFAULT_LANGUAGE]}
       </div>
     );
@@ -99,14 +204,14 @@ export const TransferRequests = () => {
 
   return (
     <div style={{ padding: '16px' }}>
-      <div style={{ display: 'flex', marginBottom: '16px', borderBottom: '1px solid #ddd' }}>
+      <div style={{ display: 'flex', marginBottom: '16px', borderBottom: '1px solid #555' }}>
         <button
           onClick={() => setActiveTab('received')}
           style={{
             padding: '8px 16px',
             border: 'none',
             background: activeTab === 'received' ? '#007bff' : 'transparent',
-            color: activeTab === 'received' ? 'white' : '#007bff',
+            color: activeTab === 'received' ? 'white' : '#ccc',
             cursor: 'pointer',
             borderBottom: activeTab === 'received' ? '2px solid #007bff' : 'none',
           }}
@@ -119,7 +224,7 @@ export const TransferRequests = () => {
             padding: '8px 16px',
             border: 'none',
             background: activeTab === 'sent' ? '#007bff' : 'transparent',
-            color: activeTab === 'sent' ? 'white' : '#007bff',
+            color: activeTab === 'sent' ? 'white' : '#ccc',
             cursor: 'pointer',
             borderBottom: activeTab === 'sent' ? '2px solid #007bff' : 'none',
           }}
@@ -134,17 +239,16 @@ export const TransferRequests = () => {
             <div
               key={transfer._id}
               style={{
-                border: '1px solid #ddd',
+                border: '1px solid #555',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px',
-                backgroundColor: '#f9f9f9',
+                backgroundColor: '#2a2a2a',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 8px 0' }}>{Translations.OpportunityTransferRequestTitle[DEFAULT_LANGUAGE]}</h4>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#ccc' }}>
                     {Translations.ReceivedLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
                   </p>
                 </div>
@@ -152,8 +256,9 @@ export const TransferRequests = () => {
               </div>
 
               {transfer.message && (
-                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-                  <strong>{Translations.MessageLabel[DEFAULT_LANGUAGE]}</strong> {transfer.message}
+                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#3a3a3a', borderRadius: '4px', border: '1px solid #555' }}>
+                  <strong style={{ color: '#fff' }}>{Translations.MessageLabel[DEFAULT_LANGUAGE]}</strong> 
+                  <span style={{ color: '#ccc' }}> {transfer.message}</span>
                 </div>
               )}
 
@@ -166,9 +271,11 @@ export const TransferRequests = () => {
                     width: '100%',
                     minHeight: '60px',
                     padding: '8px',
-                    border: '1px solid #ddd',
+                    border: '1px solid #555',
                     borderRadius: '4px',
                     resize: 'vertical',
+                    backgroundColor: '#3a3a3a',
+                    color: '#fff',
                   }}
                 />
               </div>
@@ -198,21 +305,26 @@ export const TransferRequests = () => {
             <div
               key={transfer._id}
               style={{
-                border: '1px solid #ddd',
+                border: '1px solid #555',
                 borderRadius: '8px',
                 padding: '16px',
                 marginBottom: '16px',
-                backgroundColor: '#f9f9f9',
+                backgroundColor: '#2a2a2a',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                 <div>
-                  <h4 style={{ margin: '0 0 8px 0' }}>{Translations.TransferRequestTitle[DEFAULT_LANGUAGE]}</h4>
-                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>
+                  <div style={{ marginBottom: '8px', padding: '8px', backgroundColor: '#1a4d72', borderRadius: '4px', border: '1px solid #2a5d82' }}>
+                    <strong style={{ color: '#87ceeb' }}>Opportunité:</strong> 
+                    <span style={{ color: '#fff', marginLeft: '8px' }}>
+                      {getCardInfo(transfer.cardId, cardAccessibility[transfer.cardId] !== false).fullDisplay}
+                    </span>
+                  </div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#ccc' }}>
                     {Translations.SentLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.createdAt).toLocaleString(DateTime.DATETIME_MED)}
                   </p>
                   {transfer.respondedAt && (
-                    <p style={{ margin: '0', fontSize: '14px', color: '#666' }}>
+                    <p style={{ margin: '0', fontSize: '14px', color: '#ccc' }}>
                       {Translations.RespondedLabel[DEFAULT_LANGUAGE]} {DateTime.fromISO(transfer.respondedAt).toLocaleString(DateTime.DATETIME_MED)}
                     </p>
                   )}
@@ -221,14 +333,16 @@ export const TransferRequests = () => {
               </div>
 
               {transfer.message && (
-                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-                  <strong>{Translations.YourMessageLabel[DEFAULT_LANGUAGE]}</strong> {transfer.message}
+                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#3a3a3a', borderRadius: '4px', border: '1px solid #555' }}>
+                  <strong style={{ color: '#fff' }}>{Translations.YourMessageLabel[DEFAULT_LANGUAGE]}</strong> 
+                  <span style={{ color: '#ccc' }}> {transfer.message}</span>
                 </div>
               )}
 
               {transfer.responseMessage && (
-                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#d4edda', borderRadius: '4px' }}>
-                  <strong>{Translations.ResponseLabel[DEFAULT_LANGUAGE]}</strong> {transfer.responseMessage}
+                <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#2d5a2d', borderRadius: '4px', border: '1px solid #4a7c59' }}>
+                  <strong style={{ color: '#fff' }}>{Translations.ResponseLabel[DEFAULT_LANGUAGE]}</strong> 
+                  <span style={{ color: '#ccc' }}> {transfer.responseMessage}</span>
                 </div>
               )}
             </div>

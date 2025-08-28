@@ -64,17 +64,27 @@ export class RequestHelper {
   }
 
   getUrl(path?: string): URL {
-    const segments = this.base
-      ? [...this.base.pathname.split('/').filter((segment) => segment !== '')]
-      : [];
-
     const url = new URL(this.base!);
 
     if (path) {
-      segments.push(strip(path));
-    }
+      // Séparer le path des paramètres de requête
+      const [pathname, search] = path.split('?');
+      
+      const segments = this.base
+        ? [...this.base.pathname.split('/').filter((segment) => segment !== '')]
+        : [];
 
-    url.pathname = segments.join('/');
+      if (pathname) {
+        segments.push(strip(pathname));
+      }
+
+      url.pathname = segments.join('/');
+      
+      // Ajouter les paramètres de requête s'ils existent
+      if (search) {
+        url.search = '?' + search;
+      }
+    }
 
     return url;
   }

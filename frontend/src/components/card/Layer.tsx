@@ -248,7 +248,7 @@ export const Layer = () => {
                                             {Translations.TransferOpportunityButton[DEFAULT_LANGUAGE]}
                                         </Button>
                                     </div>
-                                    <TransferRequests />
+                                    <TransferRequests cardId={id} />
                                 </>
                             )}
                         </div>

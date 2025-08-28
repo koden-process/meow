@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Button, TextField, ComboBox, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
+import { Button, TextField, TextArea, ComboBox, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
 import { useSelector } from 'react-redux';
-import { selectToken } from '../../store/Store';
+import { selectToken, selectCurrency } from '../../store/Store';
 import { getRequestClient } from '../../helpers/RequestHelper';
 import { Team } from '../../interfaces/Team';
 import { Card } from '../../interfaces/Card';
@@ -18,6 +18,7 @@ export interface TransferModalProps {
 
 export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: TransferModalProps) => {
   const token = useSelector(selectToken);
+  const currency = useSelector(selectCurrency) || 'EUR';
   const client = getRequestClient(token);
 
   const [teams, setTeams] = useState<Team[]>([]);
@@ -26,14 +27,26 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
 
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
   useEffect(() => {
     if (isOpen) {
       loadTeams();
-      setMessage('');
+      // Pré-remplir le message avec les informations de l'opportunité
+      const formattedAmount = formatAmount(card.amount);
+      const defaultMessage = `Opportunité: ${card.name}\nQuotité: ${formattedAmount}\n\n`;
+      setMessage(defaultMessage);
       setSelectedTeamId('');
       setError('');
     }
-  }, [isOpen]);
+  }, [isOpen, card.name, card.amount, currency]);
 
   const loadTeams = async () => {
     try {
@@ -97,11 +110,12 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
                 ))}
               </ComboBox>
 
-              <TextField
+              <TextArea
                 label={Translations.MessageOptionalLabel[DEFAULT_LANGUAGE]}
                 placeholder={Translations.TransferMessagePlaceholder[DEFAULT_LANGUAGE]}
                 value={message}
                 onChange={setMessage}
+                height="120px"
               />
 
               {error && (
