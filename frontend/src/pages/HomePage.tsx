@@ -362,11 +362,13 @@ export const HomePage = () => {
                 </div>
 
                 <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                    {/* Corbeille commentée - suppression via bouton uniquement
                     {!isMobileLayout && (
                         <div className="trash-canvas" style={{marginRight: '100px'}}>
                             <Trash/>
                         </div>
                     )}
+                    */}
 
                     <div className="lanes">
                         {mode === 'board' && <Board lanes={lanes}

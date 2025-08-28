@@ -215,6 +215,11 @@ export class RequestHelper {
 
       const response = await this.fetchWithTimeout(url, request);
 
+      // Si la réponse est 204 (No Content), retourner undefined
+      if (response.status === 204) {
+        return undefined;
+      }
+
       try {
         const body = await response.json();
 
@@ -232,6 +237,8 @@ export class RequestHelper {
 
     return this.doFetch(url, 'POST', card);
   }
+
+
 
   async getAccountEvents(id: string) {
     const url = this.getUrl(`/api/accounts/${id}/events`);

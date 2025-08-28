@@ -992,5 +992,13 @@ export const Translations = {
     CommentAddedErrorMessage: {
         en: 'An error occurred while adding the comment.',
         fr: 'Erreur lors de l\'ajout du commentaire.'
+    },
+    CardDeletedConfirmation: {
+        en: 'Opportunity successfully deleted',
+        fr: 'Opportunité supprimée avec succès'
+    },
+    ActivityDeletedConfirmation: {
+        en: 'Activity "{name}" has been deleted',
+        fr: 'L\'activité "{name}" a été supprimée'
     }
 };
