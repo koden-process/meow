@@ -53,10 +53,10 @@ export const Form = (props: any) => {
             onChange={setName}
             onBlur={() => setName(name.trim())}
             value={name}
-            aria-label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+            aria-label={Translations.UserNameLabel[DEFAULT_LANGUAGE]}
             width="100%"
             key="name"
-            label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+            label={Translations.UserNameLabel[DEFAULT_LANGUAGE]}
           />
         </div>
 

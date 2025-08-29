@@ -25,7 +25,7 @@ import { DEFAULT_LANGUAGE } from '../../Constants';
 const createListViewItems = (): ListViewItem[] => {
   return [
     {
-      name: Translations.NameLabel[DEFAULT_LANGUAGE],
+      name: Translations.UserNameLabel[DEFAULT_LANGUAGE],
       column: 'name',
       isHidden: false,
     },

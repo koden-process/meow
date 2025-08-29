@@ -36,7 +36,7 @@ interface CardListProps {
 const createListViewItems = (): ListViewItem[] => {
   return [
     {
-      name: Translations.NameLabel[DEFAULT_LANGUAGE],
+      name: Translations.OpportunityNameLabel[DEFAULT_LANGUAGE],
       column: 'name',
       isHidden: false,
     },

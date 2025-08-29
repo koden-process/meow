@@ -119,7 +119,7 @@ export const Lane = (props: LaneProps) => {
                   onBlur={() => handleNameBlur()}
                   onChange={(value) => handleNameChange(value)}
                   value={laneData.name}
-                  aria-label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+                  aria-label={Translations.LaneNameLabel[DEFAULT_LANGUAGE]}
                   width="100%"
                   key="name"
                 />

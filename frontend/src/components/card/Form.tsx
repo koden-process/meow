@@ -150,7 +150,7 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
           aria-label="Name"
           width="100%"
           key="name"
-          label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+          label={Translations.OpportunityNameLabel[DEFAULT_LANGUAGE]}
           isDisabled={isDisabled}
           validationState={preview.name ? 'valid' : 'invalid'}
         />

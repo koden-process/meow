@@ -69,7 +69,7 @@ export const Translations = {
 
   OpportunityAmount: {
     en: 'Amount',
-    fr: 'Montant',
+    fr: 'Quotité',
   },
 
   OpportunityAmountInvalid: {
@@ -219,6 +219,26 @@ export const Translations = {
   NameLabel: {
     en: 'Email',
     fr: 'Email',
+  },
+
+  OpportunityNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  AccountNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  LaneNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  UserNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
   },
 
   NextFollowUpLabel: {
@@ -1063,6 +1083,11 @@ export const Translations = {
   LoadTeamsError: {
     en: 'Failed to load available teams',
     fr: 'Échec du chargement des équipes disponibles'
+  },
+
+  LockedOpportunityTransferError: {
+    en: 'Cannot transfer a locked opportunity. Opportunities in closed-won or closed-lost stages cannot be transferred',
+    fr: 'Impossible de transférer une opportunité verrouillée. Les opportunités dans les étapes gagnées fermées ou perdues fermées ne peuvent pas être transférées'
   },
 
   // Transfer Requests translations
