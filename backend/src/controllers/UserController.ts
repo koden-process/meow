@@ -56,6 +56,17 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
       user.color = req.body.color.toString();
     }
 
+    if (req.body.initials !== undefined) {
+      // Permet de définir initials à null si la chaîne est vide
+      const initialsValue = req.body.initials;
+      if (initialsValue === null || initialsValue === '') {
+        user.initials = undefined;
+      } else {
+        const initials = initialsValue.toString().trim();
+        user.initials = initials.length > 0 && initials.length <= 2 ? initials : undefined;
+      }
+    }
+
     if (req.body.status) {
       if (user._id === req.jwt.user._id) {
         throw new InvalidRequestBodyError();

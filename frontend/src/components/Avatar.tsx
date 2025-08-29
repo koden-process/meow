@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { User } from '../interfaces/User';
 import { ApplicationStore } from '../store/ApplicationStore';
 import { selectUser } from '../store/Store';
+import { UserHelper } from '../helpers/UserHelper';
 
 export interface AvatarProps {
   id: User['_id'] | undefined;
@@ -24,9 +25,12 @@ export const Avatar = ({ id, width, onClick }: AvatarProps) => {
     style.border = `1px solid ${user.color}`;
   }
 
+  // Utilise les initiales personnalisées si disponibles, sinon génère les initiales par défaut
+  const displayText = user?.initials || (user?.name ? UserHelper.generateDefaultInitials(user.name) : '');
+
   return (
     <div onClick={onClick} className="avatar" style={style}>
-      {user?.name.substring(0, 1).toUpperCase()}
+      {displayText}
     </div>
   );
 };

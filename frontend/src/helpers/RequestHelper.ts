@@ -374,6 +374,7 @@ export class RequestHelper {
       animal: user.animal,
       status: user.status,
       color: user.color,
+      initials: user.initials,
     });
   }
 

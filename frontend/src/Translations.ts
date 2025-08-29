@@ -121,8 +121,8 @@ export const Translations = {
   },
 
   InviteLinkInstruction: {
-    en: 'You register with an invite link, your name is already set, just define your password.',
-    fr: 'Vous vous inscrivez avec un lien d\'invitation, votre nom est déjà défini, définissez simplement votre mot de passe.',
+    en: 'You register with an invite link, your email is already set, just define your password.',
+    fr: 'Vous vous inscrivez avec un lien d\'invitation, votre email est déjà défini, définissez simplement votre mot de passe.',
   },
 
   NoPasswordReset: {
@@ -217,8 +217,8 @@ export const Translations = {
 
   // Form labels
   NameLabel: {
-    en: 'Name',
-    fr: 'Nom',
+    en: 'Email',
+    fr: 'Email',
   },
 
   NextFollowUpLabel: {
@@ -459,6 +459,21 @@ export const Translations = {
   YourColorLabel: {
     en: 'Your Color',
     fr: 'Votre Couleur',
+  },
+
+  InitialsLabel: {
+    en: 'Initials (1-2 letters)',
+    fr: 'Initiales (1-2 lettres)',
+  },
+
+  InitialsPlaceholder: {
+    en: 'e.g., JD',
+    fr: 'ex: JD',
+  },
+
+  InitialsHelpText: {
+    en: 'Your initials will appear in your avatar. Leave blank to use the first letter of your name.',
+    fr: 'Vos initiales apparaîtront dans votre avatar. Laissez vide pour utiliser la première lettre de votre nom.',
   },
 
   // Currency

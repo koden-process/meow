@@ -13,6 +13,12 @@ export const UserResponseSchema = {
     animal: {
       type: 'string',
     },
+    color: {
+      type: 'string',
+    },
+    initials: {
+      type: ['string', 'null'],
+    },
     invite: {
       type: ['string', 'null'],
     },

@@ -16,6 +16,7 @@ export class User implements ExistingEntity {
   invite?: string | null;
   authentication?: UserAuthentication | null;
   color?: string;
+  initials?: string;
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
   createdAt: Date;
@@ -55,6 +56,7 @@ export class NewUser implements NewEntity {
   invite?: string | null;
   authentication?: UserAuthentication | null;
   color?: string;
+  initials?: string;
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
   createdAt: Date;
