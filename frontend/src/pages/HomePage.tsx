@@ -236,6 +236,23 @@ export const HomePage = () => {
         return null;
     }
 
+    const getAccountOptions = () => {
+        const list: JSX.Element[] = [];
+        list.push(<Item key="">Filtrer par contact</Item>);
+        accounts.forEach(acc => {
+            list.push(<Item key={acc._id}>{acc.name}</Item>);
+        });
+        return list;
+    };
+
+    const getUserOptions = () => {
+        const list: JSX.Element[] = [];
+        [{_id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name}, ...users].forEach(user => {
+            list.push(<Item key={user._id}>{user.name}</Item>);
+        });
+        return list;
+    };
+
     return (
         <>
             {state === 'card-detail' && <CardLayer/>}
@@ -302,10 +319,7 @@ export const HomePage = () => {
                                     selectedKey={selectedAccountId}
                                     onSelectionChange={(key) => setSelectedAccountId(key ? key.toString() : '')}
                                 >
-                                    <Item key="">Filtrer par contact</Item>
-                                    {accounts.map(acc => (
-                                        <Item key={acc._id}>{acc.name}</Item>
-                                    ))}
+                                    {getAccountOptions()}
                                 </Picker>
 
                                 {/* Picker pour filtrer par utilisateur */}
@@ -317,9 +331,7 @@ export const HomePage = () => {
                                         setUserId(key.toString());
                                     }}
                                 >
-                                    {[{_id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name}, ...users].map((user) => {
-                                        return <Item key={user._id}>{user.name}</Item>;
-                                    })}
+                                    {getUserOptions()}
                                 </Picker>
                             </div>
 
