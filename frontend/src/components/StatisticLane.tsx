@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Lane, Lane as LaneInterface, LaneType } from '../interfaces/Lane';
 import { selectCards, store } from '../store/Store';
-import { showLaneLayer } from '../actions/Actions';
 import { Currency } from './Currency';
 import { useSelector } from 'react-redux';
 import { LANE_COLOR, DEFAULT_LANGUAGE } from '../Constants';
@@ -77,16 +76,9 @@ export const StatisticLane = ({ lane, numberOfLanes, statistics }: StatisticLane
     );
   }, [cards]);
 
-  const openLane = (id?: string) => {
-    store.dispatch(showLaneLayer(id));
-  };
-
   return (
     <div className="lane" style={{ width: `${100 / numberOfLanes}%` }}>
-      <div
-        className={`title ${getLaneColorClassName(lane.color)}`}
-        onClick={() => openLane(lane._id)}
-      >
+      <div className={`title ${getLaneColorClassName(lane.color)}`}>
         <div style={{ flexGrow: 1 }}>{lane.name}</div>
         {lane.inForecast === false && (
           <div
