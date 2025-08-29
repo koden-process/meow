@@ -250,7 +250,7 @@ export const HomePage = () => {
               </div>
 
               {/* Ton contenu existant: filtres + DragDropContext + Board */}
-              
+
             <div className="board">
                 <div className="title">
                     <div>
@@ -285,80 +285,83 @@ export const HomePage = () => {
                     </div>
 
                     <div className="filters-canvas">
-                        <div>
-                            <input className="inputSpacing"
-                                   onChange={(event) => setText(event.target.value)}
-                                   placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                                   aria-label="Name or Stage"
-                                   type="text"
-                            />
+                        {/* All elements on the same horizontal line with filter buttons on the right */}
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px'}}>
+                            {/* Left side: input and pickers */}
+                            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                <input className="inputSpacing"
+                                       onChange={(event) => setText(event.target.value)}
+                                       placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
+                                       aria-label="Name or Stage"
+                                       type="text"
+                                />
 
-                            {/* Nouveau champ select pour filtrer par account/contact */}
+                                {/* Picker pour filtrer par account/contact */}
+                                <Picker
+                                    aria-label="Filtrer par contact"
+                                    selectedKey={selectedAccountId}
+                                    onSelectionChange={(key) => setSelectedAccountId(key ? key.toString() : '')}
+                                >
+                                    <Item key="">Filtrer par contact</Item>
+                                    {accounts.map(acc => (
+                                        <Item key={acc._id}>{acc.name}</Item>
+                                    ))}
+                                </Picker>
 
-                            <select
-                                className="inputSpacing"
-                                value={selectedAccountId}
-                                onChange={e => setSelectedAccountId(e.target.value)}
-                                style={{minWidth: 200}}
-                            >
-                                <option value="">-- Filtrer par contact --</option>
-                                {accounts.map(acc => (
-                                    <option key={acc._id} value={acc._id}>{acc.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
+                                {/* Picker pour filtrer par utilisateur */}
+                                <Picker
+                                    aria-label="Filtrer par utilisateur"
+                                    selectedKey={userId}
+                                    onSelectionChange={(key) => {
+                                        if (key === null) return;
+                                        setUserId(key.toString());
+                                    }}
+                                >
+                                    {[{_id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name}, ...users].map((user) => {
+                                        return <Item key={user._id}>{user.name}</Item>;
+                                    })}
+                                </Picker>
+                            </div>
 
-                            <Picker
-                                UNSAFE_style={{display: 'inline-block'}}
-                                defaultSelectedKey={userId}
-                                onSelectionChange={(key) => {
-                                    if (key === null) return;
-                                    setUserId(key.toString());
-                                }}
-                            >
-                                {[{_id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name}, ...users].map((user) => {
-                                    return <Item key={user._id}>{user.name}</Item>;
-                                })}
-                            </Picker>
-                            &nbsp;
-
-                            {false && (
+                            {/* Right side: filter buttons */}
+                            <div>
+                                {false && (
+                                    <button
+                                        className={`filter ${
+                                            filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
+                                        }`}
+                                        onClick={() => handleFilterToggle(FilterMode.OwnedByMe)}
+                                    >
+                                        {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
+                                    </button>
+                                )}
                                 <button
                                     className={`filter ${
-                                        filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
+                                        filters.mode.has(FilterMode.RecentlyUpdated)
+                                            ? 'recently-updated-active'
+                                            : 'recently-updated'
                                     }`}
-                                    onClick={() => handleFilterToggle(FilterMode.OwnedByMe)}
+                                    onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
                                 >
-                                    {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
+                                    {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
                                 </button>
-                            )}
-                            <button
-                                className={`filter ${
-                                    filters.mode.has(FilterMode.RecentlyUpdated)
-                                        ? 'recently-updated-active'
-                                        : 'recently-updated'
-                                }`}
-                                onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
-                            >
-                                {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                            </button>
-                            <button
-                                className={`filter ${
-                                    filters.mode.has(FilterMode.RequireUpdate)
-                                        ? 'require-update-active'
-                                        : 'require-update'
-                                }`}
-                                onClick={() => handleFilterToggle(FilterMode.RequireUpdate)}
-                            >
-                                {Translations.RequiresUpdateFilter[DEFAULT_LANGUAGE]}
-                            </button>
+                                <button
+                                    className={`filter ${
+                                        filters.mode.has(FilterMode.RequireUpdate)
+                                            ? 'require-update-active'
+                                            : 'require-update'
+                                    }`}
+                                    onClick={() => handleFilterToggle(FilterMode.RequireUpdate)}
+                                >
+                                    {Translations.RequiresUpdateFilter[DEFAULT_LANGUAGE]}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                 </div>
                 <div style={{paddingLeft: '10px'}}>
-                    
+
                 </div>
 
                 <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
