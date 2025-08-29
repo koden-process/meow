@@ -99,7 +99,7 @@ function Application() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 900 && window.innerHeight < 900);
+      setIsMobile(window.innerWidth < 1000 && window.innerHeight < 1000);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
