@@ -2,7 +2,6 @@ import {Card as CardComponent} from './Card';
 import {Lane as LaneInterface, LaneType} from '../interfaces/Lane';
 import {selectBoardByLaneId, selectCards, selectFilters, store} from '../store/Store';
 import {Droppable} from 'react-beautiful-dnd';
-import {showLaneLayer} from '../actions/Actions';
 import {Currency} from './Currency';
 import {useSelector} from 'react-redux';
 import {ApplicationStore} from '../store/ApplicationStore';
@@ -44,10 +43,6 @@ export const Lane = ({lane, numberOfLanes, cards: cardsProp}: LaneProps) => {
     const [filtered, setFiltered] = useState<Card[]>([]);
     const {sum, count} = useLaneSummary(filtered);
 
-    const openLane = (id?: string) => {
-        store.dispatch(showLaneLayer(id));
-    };
-
     useEffect(() => {
         setFiltered([...CardHelper.filterByLane(lane, cards, filters)]);
     }, [lane, cards, filters]);
@@ -55,10 +50,7 @@ export const Lane = ({lane, numberOfLanes, cards: cardsProp}: LaneProps) => {
     return (
         <div className="lane" style={{width: `${100 / numberOfLanes}%`}}>
             <div className={`sum ${getLaneColorClassName(lane.color)}`} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div
-                    className={`title ${getLaneColorClassName(lane.color)}`}
-                    onClick={() => openLane(lane._id)}
-                >
+                <div className={`title ${getLaneColorClassName(lane.color)}`}>
                     <div style={{flexGrow: 1}}>{lane.name}</div>
                     {lane.inForecast === false && <div className="forecast-icon"></div>}
                 </div>
