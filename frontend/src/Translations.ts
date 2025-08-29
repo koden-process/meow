@@ -200,8 +200,8 @@ export const Translations = {
 
   // Search placeholder
   SearchPlaceholder: {
-    en: 'Search by name or stage',
-    fr: 'Rechercher par nom ou étape',
+    en: 'Search',
+    fr: 'Rechercher',
   },
 
   // Tab titles
