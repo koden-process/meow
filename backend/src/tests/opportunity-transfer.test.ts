@@ -2,6 +2,7 @@ import test from 'ava';
 import request from 'supertest';
 import { Helper } from './helpers/helper.js';
 import { TransferStatus } from '../entities/OpportunityTransfer.js';
+import { LaneType } from '../entities/Lane.js';
 
 const URL = process.env.URL!;
 
@@ -193,4 +194,100 @@ test.serial('POST /api/opportunity-transfers fails when trying to transfer to sa
     });
 
   t.is(res.statusCode, 400);
+});
+
+test.serial('POST /api/opportunity-transfers fails for locked opportunity (ClosedWon)', async (t) => {
+  // First get lanes
+  const lanesRes = await request(URL)
+    .get('/api/lanes')
+    .set('Authorization', `Bearer ${senderContext.token}`);
+
+  // Create or update a lane to be ClosedWon
+  const lanes = lanesRes.body;
+  const updatedLanes = lanes.map((lane: any, index: number) => ({
+    ...lane,
+    _id: lane._id,
+    tags: index === 0 ? { type: LaneType.ClosedWon } : (lane.tags || {})
+  }));
+
+  await request(URL)
+    .post('/api/lanes')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send(updatedLanes);
+
+  // Create a card in the closed-won lane
+  const closedWonLane = updatedLanes.find((lane: any) => lane.tags?.type === LaneType.ClosedWon);
+  
+  const cardRes = await request(URL)
+    .post('/api/cards')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      name: 'Locked Test Opportunity',
+      amount: 7500,
+      laneId: closedWonLane._id,
+    });
+
+  // Try to transfer the locked opportunity
+  const res = await request(URL)
+    .post('/api/opportunity-transfers')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      cardId: cardRes.body._id,
+      toTeamId: receiverContext.teamId,
+      message: 'This should fail because opportunity is locked',
+    });
+
+  t.is(res.statusCode, 400);
+  t.true(res.body.message.includes('locked opportunity'));
+});
+
+test.serial('POST /api/opportunity-transfers fails for locked opportunity (ClosedLost)', async (t) => {
+  // First get lanes
+  const lanesRes = await request(URL)
+    .get('/api/lanes')
+    .set('Authorization', `Bearer ${senderContext.token}`);
+
+  // Create or update a lane to be ClosedLost
+  const lanes = lanesRes.body;
+  const updatedLanes = lanes.map((lane: any, index: number) => ({
+    ...lane,
+    _id: lane._id,
+    tags: index === 1 ? { type: LaneType.ClosedLost } : (lane.tags || {})
+  }));
+
+  await request(URL)
+    .post('/api/lanes')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send(updatedLanes);
+
+  // Create a card in the closed-lost lane
+  const closedLostLane = updatedLanes.find((lane: any) => lane.tags?.type === LaneType.ClosedLost);
+  
+  const cardRes = await request(URL)
+    .post('/api/cards')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      name: 'Lost Test Opportunity',
+      amount: 3000,
+      laneId: closedLostLane._id,
+    });
+
+  // Try to transfer the locked opportunity
+  const res = await request(URL)
+    .post('/api/opportunity-transfers')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      cardId: cardRes.body._id,
+      toTeamId: receiverContext.teamId,
+      message: 'This should also fail because opportunity is locked',
+    });
+
+  t.is(res.statusCode, 400);
+  t.true(res.body.message.includes('locked opportunity'));
 });

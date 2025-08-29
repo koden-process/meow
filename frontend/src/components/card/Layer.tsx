@@ -28,6 +28,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
 import {User} from '../../interfaces/User';
+import {LaneType} from '../../interfaces/Lane';
 import {Translations} from '../../Translations';
 import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
@@ -124,6 +125,12 @@ export const Layer = () => {
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+
+    // Fonction pour vérifier si l'opportunité est verrouillée (dans une lane fermée)
+    const isOpportunityLocked = useMemo(() => {
+        if (!lane || !lane.tags?.type) return false;
+        return lane.tags.type === LaneType.ClosedWon || lane.tags.type === LaneType.ClosedLost;
+    }, [lane]);
 
     useEffect(() => {
         setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
@@ -300,12 +307,28 @@ export const Layer = () => {
                             {card && (
                                 <>
                                     <div style={{ marginBottom: '16px' }}>
-                                        <Button 
-                                            variant="primary" 
-                                            onPress={() => setIsTransferModalOpen(true)}
-                                        >
-                                            {Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}
-                                        </Button>
+                                        {isOpportunityLocked ? (
+                                            <div style={{ 
+                                                padding: '12px', 
+                                                backgroundColor: '#f3f4f6', 
+                                                borderRadius: '6px',
+                                                color: '#6b7280',
+                                                fontSize: '14px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px'
+                                            }}>
+                                                <IconLock />
+                                                {Translations.LockedOpportunityTransferError[DEFAULT_LANGUAGE]}
+                                            </div>
+                                        ) : (
+                                            <Button 
+                                                variant="primary" 
+                                                onPress={() => setIsTransferModalOpen(true)}
+                                            >
+                                                {Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}
+                                            </Button>
+                                        )}
                                     </div>
                                     <TransferRequests cardId={id} />
                                 </>

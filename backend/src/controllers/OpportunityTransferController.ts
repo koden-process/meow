@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { OpportunityTransfer, NewOpportunityTransfer, TransferStatus } from '../entities/OpportunityTransfer.js';
 import { Team } from '../entities/Team.js';
 import { Card } from '../entities/Card.js';
-import { Lane } from '../entities/Lane.js';
+import { Lane, LaneType } from '../entities/Lane.js';
 import { EntityHelper } from '../helpers/EntityHelper.js';
 import { AuthenticatedRequest } from '../requests/AuthenticatedRequest.js';
 import { validateAndFetchCard, validateAndFetchTeam, validateAndFetchUser } from '../helpers/EntityFetchHelper.js';
@@ -21,6 +21,16 @@ const create = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
     // Fetch and validate the card belongs to the user's team
     const card = await validateAndFetchCard(body.cardId, req.jwt.user);
+    
+    // Check if the card is in a locked lane (ClosedWon or ClosedLost)
+    const lane = await EntityHelper.findOneById(Lane, card.laneId);
+    if (!lane) {
+      throw new EntityNotFoundError('Lane not found');
+    }
+    
+    if (lane.tags?.type && (lane.tags.type === LaneType.ClosedWon || lane.tags.type === LaneType.ClosedLost)) {
+      throw new InvalidRequestError('Cannot transfer a locked opportunity. Opportunities in closed-won or closed-lost stages cannot be transferred');
+    }
     
     // Fetch and validate the target team exists
     const toTeam = await EntityHelper.findOneById(Team, body.toTeamId);
