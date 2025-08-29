@@ -121,8 +121,8 @@ export const Translations = {
   },
 
   InviteLinkInstruction: {
-    en: 'You register with an invite link, your name is already set, just define your password.',
-    fr: 'Vous vous inscrivez avec un lien d\'invitation, votre nom est déjà défini, définissez simplement votre mot de passe.',
+    en: 'You register with an invite link, your email is already set, just define your password.',
+    fr: 'Vous vous inscrivez avec un lien d\'invitation, votre email est déjà défini, définissez simplement votre mot de passe.',
   },
 
   NoPasswordReset: {
@@ -217,8 +217,8 @@ export const Translations = {
 
   // Form labels
   NameLabel: {
-    en: 'Name',
-    fr: 'Nom',
+    en: 'Email',
+    fr: 'Email',
   },
 
   NextFollowUpLabel: {
