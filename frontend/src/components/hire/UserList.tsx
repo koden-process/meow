@@ -92,7 +92,8 @@ export const UserList = (props: any) => {
   };
 
   const rows = useMemo(() => {
-    const list = toDataRows(users);
+    const activeUsers = users.filter((u) => u.status !== UserStatus.Deleted);
+    const list = toDataRows(activeUsers);
 
     return ListViewHelper.filterAndOrder(list, columns, view);
   }, [view, users, columns]);
@@ -128,11 +129,30 @@ export const UserList = (props: any) => {
         case 'name':
           return (
             <td key={item.column} style={{ width: '200px' }}>
-              <b>{row.name}</b>
+              <b
+                style={
+                  row.status === UserStatus.Deleted
+                    ? { textDecoration: 'line-through', color: '#888' }
+                    : undefined
+                }
+              >
+                {row.name}
+              </b>
             </td>
           );
         case 'status':
-          return <td key={item.column}>{row.status}</td>;
+          return (
+            <td
+              key={item.column}
+              style={
+                row.status === UserStatus.Deleted
+                  ? { color: '#888', fontStyle: 'italic' }
+                  : undefined
+              }
+            >
+              {row.status}
+            </td>
+          );
         case 'invite':
           return (
             <td key={item.column}>
