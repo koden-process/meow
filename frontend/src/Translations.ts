@@ -221,6 +221,26 @@ export const Translations = {
     fr: 'Email',
   },
 
+  OpportunityNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  AccountNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  LaneNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
+  UserNameLabel: {
+    en: 'Name',
+    fr: 'Nom',
+  },
+
   NextFollowUpLabel: {
     en: 'Next Follow Up',
     fr: 'Prochain suivi',

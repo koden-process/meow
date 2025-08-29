@@ -46,7 +46,7 @@ export const FormMobile = ({ onSubmit }: FormMobileProps) => {
     >
       <div className="card">
         <TextField
-          label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+          label={Translations.OpportunityNameLabel[DEFAULT_LANGUAGE]}
           value={preview.name}
           onChange={v => handlePreviewUpdate('name', v)}
           isRequired

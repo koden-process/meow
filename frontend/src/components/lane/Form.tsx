@@ -76,10 +76,10 @@ export const Form = ({id}: FormProps) => {
                 <TextField
                     onChange={setName}
                     value={name}
-                    aria-label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+                    aria-label={Translations.LaneNameLabel[DEFAULT_LANGUAGE]}
                     width="100%"
                     key="name"
-                    label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+                    label={Translations.LaneNameLabel[DEFAULT_LANGUAGE]}
                 />
 
                 {lane?.tags?.type !== 'normal' ? (

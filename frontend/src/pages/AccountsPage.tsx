@@ -31,7 +31,7 @@ import {DEFAULT_LANGUAGE} from '../Constants';
 const createListViewItemsFromSchema = (schema: Schema | undefined): ListViewItem[] => {
     const list = [
         {
-            name: Translations.NameLabel[DEFAULT_LANGUAGE],
+            name: Translations.AccountNameLabel[DEFAULT_LANGUAGE],
             column: 'name',
             isHidden: false,
         },

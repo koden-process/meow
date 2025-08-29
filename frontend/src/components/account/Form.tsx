@@ -75,10 +75,10 @@ export const Form = ({ update, id }: FormProps) => {
         <TextField
           onChange={(value) => handlePreviewUpdate('name', value)}
           value={preview.name}
-          aria-label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+          aria-label={Translations.AccountNameLabel[DEFAULT_LANGUAGE]}
           width="100%"
           key="name"
-          label={Translations.NameLabel[DEFAULT_LANGUAGE]}
+          label={Translations.AccountNameLabel[DEFAULT_LANGUAGE]}
         />
       </div>
 
