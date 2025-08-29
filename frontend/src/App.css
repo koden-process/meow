@@ -623,12 +623,12 @@ h3 {
 
 .board .lane .title.positive {
   background-color: var(--spectrum-global-color-static-green-400);
-  color: #00613c;
+  color: white;
 }
 
 .board .lane .title.negative {
   background-color: var(--spectrum-global-color-static-red-500);
-  color: #860100;
+  color: white;
 }
 
 .board .lane .sum {
@@ -642,12 +642,12 @@ h3 {
 
 .board .lane .sum.positive {
   background-color: var(--spectrum-global-color-static-green-400);
-  color: #00613c;
+  color: white;
 }
 
 .board .lane .sum.negative {
   background-color: var(--spectrum-global-color-static-red-500);
-  color: #860100;
+  color: white;
 }
 
 .board .lane .card {
@@ -840,12 +840,12 @@ h3 {
 
 .layer .body .lock.positive {
   background-color: var(--spectrum-global-color-static-green-400);
-  color: #00613c;
+  color: white;
 }
 
 .layer .body .lock.negative {
   background-color: var(--spectrum-global-color-static-red-500);
-  color: #860100;
+  color: white;
 }
 
 .layer .card-events .next-follow-up-warning {
