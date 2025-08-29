@@ -291,3 +291,99 @@ test.serial('POST /api/opportunity-transfers fails for locked opportunity (Close
   t.is(res.statusCode, 400);
   t.true(res.body.message.includes('locked opportunity'));
 });
+
+test.serial('POST /api/opportunity-transfers/:id/accept duplicates referenced accounts', async (t) => {
+  // First create an account for the sender team
+  const accountRes = await request(URL)
+    .post('/api/accounts')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      name: 'Test Account for Transfer',
+      attributes: {
+        'test-attribute': 'test-value'
+      }
+    });
+
+  t.is(accountRes.statusCode, 201);
+  const originalAccountId = accountRes.body._id;
+
+  // Create a new card with reference to the account
+  const lanesRes = await request(URL)
+    .get('/api/lanes')
+    .set('Authorization', `Bearer ${senderContext.token}`);
+
+  const firstLane = lanesRes.body[0];
+
+  const cardRes = await request(URL)
+    .post('/api/cards')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      name: 'Test Card with Account Reference',
+      amount: 15000,
+      laneId: firstLane._id,
+      attributes: {
+        '1a3231bb-73e4-7e97-8d77-1304dd674c54': originalAccountId // Reference to account
+      }
+    });
+
+  t.is(cardRes.statusCode, 201);
+  const cardWithAccountId = cardRes.body._id;
+
+  // Create transfer request
+  const transferRes = await request(URL)
+    .post('/api/opportunity-transfers')
+    .set('Authorization', `Bearer ${senderContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      cardId: cardWithAccountId,
+      toTeamId: receiverContext.teamId,
+      message: 'Transfer with account reference'
+    });
+
+  t.is(transferRes.statusCode, 201);
+  const transferId = transferRes.body._id;
+
+  // Accept the transfer
+  const acceptRes = await request(URL)
+    .post(`/api/opportunity-transfers/${transferId}/accept`)
+    .set('Authorization', `Bearer ${receiverContext.token}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      responseMessage: 'Accepting transfer with account duplication'
+    });
+
+  t.is(acceptRes.statusCode, 200);
+
+  // Verify the card was transferred and account was duplicated
+  const transferredCardRes = await request(URL)
+    .get(`/api/cards/${cardWithAccountId}`)
+    .set('Authorization', `Bearer ${receiverContext.token}`);
+
+  t.is(transferredCardRes.statusCode, 200);
+  t.is(transferredCardRes.body.teamId, receiverContext.teamId);
+  
+  // The account reference should be different from the original
+  const newAccountId = transferredCardRes.body.attributes?.['1a3231bb-73e4-7e97-8d77-1304dd674c54'];
+  t.truthy(newAccountId);
+  t.not(newAccountId, originalAccountId);
+
+  // Verify the new account exists in the receiver team
+  const newAccountRes = await request(URL)
+    .get(`/api/accounts/${newAccountId}`)
+    .set('Authorization', `Bearer ${receiverContext.token}`);
+
+  t.is(newAccountRes.statusCode, 200);
+  t.is(newAccountRes.body.teamId, receiverContext.teamId);
+  t.is(newAccountRes.body.name, 'Test Account for Transfer');
+  t.deepEqual(newAccountRes.body.attributes, { 'test-attribute': 'test-value' });
+
+  // Verify the original account still belongs to the sender team
+  const originalAccountCheckRes = await request(URL)
+    .get(`/api/accounts/${originalAccountId}`)
+    .set('Authorization', `Bearer ${senderContext.token}`);
+
+  t.is(originalAccountCheckRes.statusCode, 200);
+  t.is(originalAccountCheckRes.body.teamId, senderContext.teamId);
+});

@@ -9,6 +9,74 @@ import { validateAndFetchCard, validateAndFetchTeam, validateAndFetchUser } from
 import { EntityNotFoundError } from '../errors/EntityNotFoundError.js';
 import { InvalidRequestError } from '../errors/InvalidRequestError.js';
 import { ObjectId } from 'mongodb';
+import { Schema, SchemaType } from '../entities/Schema.js';
+import { SchemaHelper } from '../helpers/SchemaHelper.js';
+import { Account, NewAccount } from '../entities/Account.js';
+
+/**
+ * Duplicates accounts referenced in a card's attributes for a new team
+ * @param card - The card being transferred
+ * @param targetTeam - The team receiving the card
+ * @returns Updated attributes with new account references
+ */
+const duplicateReferencedAccounts = async (card: Card, targetTeam: Team) => {
+  if (!card.attributes) {
+    return card.attributes;
+  }
+
+  // Get the card schema from the target team to find account references
+  const cardSchema = await EntityHelper.findOneBy(Schema, {
+    type: SchemaType.Card,
+    teamId: targetTeam._id
+  });
+
+  if (!cardSchema) {
+    return card.attributes;
+  }
+
+  // Find reference attributes that point to accounts
+  const accountReferenceAttributes = SchemaHelper.getSchemaReferenceAttributes(cardSchema.attributes)
+    .filter(attr => attr.entity === SchemaType.Account);
+
+  if (accountReferenceAttributes.length === 0) {
+    return card.attributes;
+  }
+
+  const updatedAttributes = { ...card.attributes };
+  
+  // For each account reference attribute, duplicate the account if it exists
+  for (const refAttr of accountReferenceAttributes) {
+    const accountId = card.attributes[refAttr.key];
+    
+    if (accountId && typeof accountId === 'string') {
+      try {
+        // Fetch the original account
+        const originalAccount = await EntityHelper.findOneById(Account, accountId);
+        
+        if (originalAccount) {
+          // Create a new account for the target team with the same data
+          const duplicatedAccount = new NewAccount(
+            targetTeam,
+            originalAccount.name,
+            originalAccount.attributes,
+            originalAccount.references
+          );
+          
+          // Save the duplicated account
+          const newAccount = await EntityHelper.create(duplicatedAccount, Account);
+          
+          // Update the card's attribute to reference the new account
+          updatedAttributes[refAttr.key] = newAccount!._id.toString();
+        }
+      } catch (error) {
+        // If we can't duplicate an account, keep the original reference
+        console.warn(`Failed to duplicate account ${accountId}:`, error);
+      }
+    }
+  }
+
+  return updatedAttributes;
+};
 
 const create = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
@@ -155,10 +223,14 @@ const accept = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     transfer.responseMessage = req.body.responseMessage;
     transfer.updatedAt = new Date();
 
+    // Duplicate any referenced accounts for the target team
+    const duplicatedAttributes = await duplicateReferencedAccounts(card, req.jwt.team);
+
     // Transfer the card to the new team, assign to the accepting user, and move to first lane
     card.teamId = transfer.toTeamId;
     card.userId = req.jwt.user._id;
     card.laneId = targetLane._id;
+    card.attributes = duplicatedAttributes;
     card.updatedAt = new Date();
 
     // Save both entities
