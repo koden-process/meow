@@ -145,7 +145,7 @@ export const AccountsPage = () => {
 
             <div className="canvas">
                 <div className="list-view-header" style={{display: 'flex', alignItems: 'center'}}>
-                    <h2>{rows.length} {Translations.DirectoryTitle[DEFAULT_LANGUAGE]}{rows.length > 1 ? 's' : ''}</h2>
+                    <h2><b>{Translations.DirectoryTitle[DEFAULT_LANGUAGE]}</b> - {rows.length} Contact{rows.length > 1 ? 's' : ''}</h2>
                     <div style={{marginLeft: 'auto'}}>
                         <Button variant="primary" onPress={() => openAccount()}>
                             {Translations.AddButton[DEFAULT_LANGUAGE]}
