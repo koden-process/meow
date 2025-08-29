@@ -461,6 +461,21 @@ export const Translations = {
     fr: 'Votre Couleur',
   },
 
+  InitialsLabel: {
+    en: 'Initials (1-2 letters)',
+    fr: 'Initiales (1-2 lettres)',
+  },
+
+  InitialsPlaceholder: {
+    en: 'e.g., JD',
+    fr: 'ex: JD',
+  },
+
+  InitialsHelpText: {
+    en: 'Your initials will appear in your avatar. Leave blank to use the first letter of your name.',
+    fr: 'Vos initiales apparaîtront dans votre avatar. Laissez vide pour utiliser la première lettre de votre nom.',
+  },
+
   // Currency
   CurrencyTitle: {
     en: 'Currency',

@@ -8,6 +8,10 @@ export const UserUpdateRequestSchema = {
       minLength: 7,
     },
     status: { type: 'string', maxLength: 50 },
+    initials: { 
+      type: ['string', 'null'], 
+      maxLength: 2 
+    },
   },
   additionalProperties: false,
 };

@@ -45,4 +45,34 @@ export const UserHelper = {
 
     return true;
   },
+
+  /**
+   * Génère des initiales par défaut basées sur le nom de l'utilisateur
+   * @param name - Nom de l'utilisateur
+   * @returns Les initiales générées (1-2 lettres)
+   */
+  generateDefaultInitials(name: string): string {
+    if (!name) return '';
+    
+    // Divise le nom en mots et prend la première lettre de chaque mot
+    const words = name.trim().split(/\s+/);
+    
+    if (words.length === 1) {
+      // Si un seul mot, prend la première lettre
+      return words[0].charAt(0).toUpperCase();
+    } else {
+      // Si plusieurs mots, prend la première lettre des deux premiers mots
+      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+    }
+  },
+
+  /**
+   * Valide les initiales personnalisées
+   * @param initials - Initiales à valider
+   * @returns true si les initiales sont valides
+   */
+  isValidInitials(initials: string): boolean {
+    if (!initials) return true; // Vide est valide (utilise les initiales par défaut)
+    return /^[a-zA-Z]{1,2}$/.test(initials.trim());
+  },
 };

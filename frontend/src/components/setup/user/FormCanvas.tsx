@@ -1,10 +1,11 @@
-import {Button, Item, Picker} from '@adobe/react-spectrum';
+import {Button, Item, Picker, TextField} from '@adobe/react-spectrum';
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ActionType, showModalError, showModalSuccess} from '../../../actions/Actions';
 import {
     selectAnimal,
     selectColor,
+    selectInitials,
     selectToken,
     selectUserId,
     selectUsers,
@@ -15,6 +16,7 @@ import {USER_COLORS, DEFAULT_LANGUAGE} from '../../../Constants';
 import {ColorCircleSelected} from './ColorCircleSelected';
 import {ColorCircle} from './ColorCircle';
 import {getRequestClient} from '../../../helpers/RequestHelper';
+import {UserHelper} from '../../../helpers/UserHelper';
 
 
 export const FormCanvas = () => {
@@ -26,9 +28,20 @@ export const FormCanvas = () => {
     const users = useSelector(selectUsers);
     const animalDefault = useSelector(selectAnimal);
     const colorDefault = useSelector(selectColor);
+    const initialsDefault = useSelector(selectInitials);
 
     const [avatarColor, setAvatarColor] = useState<string | undefined>(colorDefault);
     const [animal, setAnimal] = useState(animalDefault);
+    const [initials, setInitials] = useState<string>(initialsDefault || '');
+
+    const currentUser = users.find((user) => user._id === userId);
+    const defaultInitials = currentUser?.name ? UserHelper.generateDefaultInitials(currentUser.name) : '';
+    
+    const handleInitialsChange = (value: string) => {
+        // Limite à 2 caractères et conversion en majuscules
+        const cleanValue = value.replace(/[^a-zA-Z]/g, '').substring(0, 2).toUpperCase();
+        setInitials(cleanValue);
+    };
 
     const save = async () => {
         const user = users.find((user) => user._id === userId)!;
@@ -39,6 +52,7 @@ export const FormCanvas = () => {
 
         user.animal = animal;
         user.color = avatarColor;
+        user.initials = initials.trim() || undefined;
 
         try {
             const updated = await client.updateUser(user);
@@ -98,6 +112,23 @@ export const FormCanvas = () => {
                         <ColorCircle key={color} color={color} setColor={setAvatarColor}/>
                     );
                 })}
+            </div>
+
+            <h2>{Translations.InitialsLabel[DEFAULT_LANGUAGE]}</h2>
+            <span style={{fontSize: '0.8em', display: 'block', marginBottom: '10px'}}>
+                {Translations.InitialsHelpText[DEFAULT_LANGUAGE]}
+            </span>
+            
+            <div style={{marginBottom: '20px'}}>
+                <TextField
+                    value={initials}
+                    onChange={handleInitialsChange}
+                    onBlur={() => setInitials(initials.trim())}
+                    placeholder={`${Translations.InitialsPlaceholder[DEFAULT_LANGUAGE]} (défaut: ${defaultInitials})`}
+                    aria-label={Translations.InitialsLabel[DEFAULT_LANGUAGE]}
+                    maxLength={2}
+                    width="200px"
+                />
             </div>
 
             <div style={{marginTop: '20px'}}>

@@ -10,6 +10,7 @@ export interface User {
   invite?: string;
   animal?: string;
   color?: string;
+  initials?: string;
 }
 
 export enum UserStatus {
