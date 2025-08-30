@@ -22,7 +22,7 @@ services:
     networks:
       - internal
   apprc:
-    image: killiankopp/meow:1.3
+    image: killiankopp/meow:1.5
     environment:
       - MONGODB_URI=mongodb://db:27017/meow
       - SESSION_SECRET=$(bash -c 'echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)')

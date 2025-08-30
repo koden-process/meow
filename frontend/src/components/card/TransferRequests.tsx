@@ -112,13 +112,23 @@ export const TransferRequests = ({ cardId }: TransferRequestsProps = {}) => {
   };
 
   const formatAmount = (amount: number) => {
+    if (currency === 'MT2') {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'unit',
+        unit: 'meter',
+        unitDisplay: 'narrow',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount) + '²';
+    }
+    
     const currencyStr = String(currency).toLowerCase();
     if (currencyStr === 'm2') {
-      // Cas spécial pour m2 qui n'est pas une devise standard
+      // Fallback for lowercase m2 format
       return new Intl.NumberFormat('fr-FR', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
-      }).format(amount) + ' m2';
+      }).format(amount) + ' m²';
     }
     
     try {

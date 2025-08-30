@@ -28,6 +28,16 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
   const [error, setError] = useState<string>('');
 
   const formatAmount = (amount: number) => {
+    if (currency === 'MT2') {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'unit',
+        unit: 'meter',
+        unitDisplay: 'narrow',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount) + '²';
+    }
+    
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency,
