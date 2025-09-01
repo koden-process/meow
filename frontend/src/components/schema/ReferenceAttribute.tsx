@@ -10,6 +10,9 @@ import { showAccountLayer } from '../../actions/Actions';
 const getOptions = (accounts: Account[]) => {
   const list: JSX.Element[] = [];
 
+  // Add "Add a contact" as the first option
+  list.push(<Item key="__ADD_CONTACT__">+ Ajouter un contact</Item>);
+  
   list.push(<Item key="">{Translations.NoneOption[DEFAULT_LANGUAGE]}</Item>);
 
   accounts?.sort((a, b) => a.name.localeCompare(b.name)).map((account) => {
@@ -43,6 +46,12 @@ export const ReferenceAttribute = ({
   }, [valueDefault]);
 
   const updateValue = (value: string) => {
+    // Handle the special "Add Contact" option
+    if (value === '__ADD_CONTACT__') {
+      handleAddAccount();
+      return; // Don't update the actual value, just trigger the add account modal
+    }
+
     setValue(value);
 
     if (value === '') {
@@ -61,36 +70,16 @@ export const ReferenceAttribute = ({
 
   return (
     <div className="attribute">
-      <div style={{ position: 'relative' }}>
-        <Picker
-          width="100%"
-          aria-label={name}
-          label={name}
-          selectedKey={value}
-          isDisabled={isDisabled}
-          onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
-        >
-          {getOptions(accounts)}
-        </Picker>
-        {/* This button should respect the disabled state of the form */}
-        <button
-          style={{
-            position: 'absolute',
-            right: '0',
-            bottom: '-20px',
-            fontSize: '14px',
-            color: isDisabled ? '#a0a0a0' : '#1473e6',
-            cursor: isDisabled ? 'default' : 'pointer',
-            opacity: isDisabled ? 0.7 : 1,
-            background: 'none',
-            border: 'none',
-          }}
-          onClick={handleAddAccount}
-          disabled={isDisabled}
-        >
-          + {Translations.AddButton[DEFAULT_LANGUAGE]}
-        </button>
-      </div>
+      <Picker
+        width="100%"
+        aria-label={name}
+        label={name}
+        selectedKey={value}
+        isDisabled={isDisabled}
+        onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
+      >
+        {getOptions(accounts)}
+      </Picker>
     </div>
   );
 };

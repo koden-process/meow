@@ -345,7 +345,7 @@ export const application = (state = Default, action: ApplicationAction) => {
             state: action.payload.state,
             _id: action.payload._id,
             modal: state.ui.modal,
-            text: undefined,
+            text: state.ui.text, // Keep the current text instead of resetting to undefined
           },
         };
       } else if (action.payload.state === 'default' && state.ui.state === 'account-detail' && state.ui.previousState) {
@@ -359,7 +359,7 @@ export const application = (state = Default, action: ApplicationAction) => {
             previousState: undefined,
             previousId: undefined,
             modal: state.ui.modal,
-            text: undefined,
+            text: state.ui.text, // Keep the current text instead of resetting to undefined
           },
         };
       } else {
@@ -371,7 +371,7 @@ export const application = (state = Default, action: ApplicationAction) => {
             state: action.payload.state,
             _id: action.payload._id,
             modal: state.ui.modal,
-            text: undefined,
+            text: state.ui.text, // Keep the current text instead of resetting to undefined
           },
         };
       }
