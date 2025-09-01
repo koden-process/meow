@@ -13,10 +13,12 @@ import { DEFAULT_LANGUAGE } from '../../Constants';
 export interface FormProps {
   id: Account['_id'] | undefined;
   update: (id: Account['_id'] | undefined, account: AccountPreview) => void;
+  onPreviewChange?: (preview: AccountPreview) => void;
+  onValidationChange?: (isValid: boolean) => void;
 }
 
 // TODO rename component
-export const Form = ({ update, id }: FormProps) => {
+export const Form = ({ update, id, onPreviewChange, onValidationChange }: FormProps) => {
   const [preview, setPreview] = useState<AccountPreview>({
     name: '',
     attributes: undefined,
@@ -27,19 +29,19 @@ export const Form = ({ update, id }: FormProps) => {
   );
 
   const handlePreviewUpdate = (key: string, value: Attribute[typeof key]) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       [key]: value,
-    });
+    };
+    setPreview(newPreview);
+    onPreviewChange?.(newPreview);
   };
 
   let isValidForm = useMemo(() => {
-    if (preview.name) {
-      return true;
-    }
-
-    return false;
-  }, [preview]);
+    const isValid = !!preview.name;
+    onValidationChange?.(isValid);
+    return isValid;
+  }, [preview, onValidationChange]);
 
   const account = useSelector((store: ApplicationStore) => selectAccount(store, id));
 
@@ -57,12 +59,14 @@ export const Form = ({ update, id }: FormProps) => {
   }, [account]);
 
   const validate = (values: Attribute) => {
-    setPreview({
+    const newPreview = {
       ...preview,
       attributes: {
         ...values,
       },
-    });
+    };
+    setPreview(newPreview);
+    onPreviewChange?.(newPreview);
   };
 
   const save = () => {
@@ -88,12 +92,6 @@ export const Form = ({ update, id }: FormProps) => {
         validate={validate}
         isDisabled={false}
       />
-
-      <div style={{ marginTop: '24px' }}>
-        <Button variant="primary" onPress={save} isDisabled={!isValidForm}>
-          {Translations.SaveButton[DEFAULT_LANGUAGE]}
-        </Button>
-      </div>
     </div>
   );
 };

@@ -424,6 +424,12 @@ export class RequestHelper {
     return this.doFetch(url, 'GET');
   }
 
+  async deleteAccount(id: Account['_id']): Promise<void> {
+    const url = this.getUrl(`/api/accounts/${id}`);
+
+    return this.doFetch(url, 'DELETE');
+  }
+
   async fetchForecastAchieved(start: DateTime, end: DateTime, userId?: string) {
     let url = this.getUrl(`/api/forecast/achieved`);
 

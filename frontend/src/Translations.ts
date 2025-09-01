@@ -58,13 +58,23 @@ export const Translations = {
     fr: 'Opportunité mise à jour...',
   },
   AccountCreatedConfirmation: {
-    en: 'Account created...',
-    fr: 'Compte créé...',
+    en: 'Contact created successfully',
+    fr: 'Contact créé avec succès',
   },
 
   AccountUpdatedConfirmation: {
-    en: 'Account updated...',
-    fr: 'Compte mis à jour...',
+    en: 'Contact updated successfully',
+    fr: 'Contact mis à jour avec succès',
+  },
+
+  AccountDeletedConfirmation: {
+    en: 'Contact deleted successfully',
+    fr: 'Contact supprimé avec succès',
+  },
+
+  DeleteAccountConfirmation: {
+    en: 'Delete Account',
+    fr: 'Supprimer le Compte',
   },
 
   OpportunityAmount: {
