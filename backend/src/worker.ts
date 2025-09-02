@@ -34,6 +34,7 @@ import compression from 'compression';
 import express from 'express';
 import http from 'http';
 import { CardController } from './controllers/CardController.js';
+import TeamConfigRoutes from './TeamConfigRoutes.js';
 import { LoginController } from './controllers/LoginController.js';
 import { setHeaders } from './middlewares/setHeaders.js';
 import { rejectIfContentTypeIsNot } from './middlewares/rejectIfContentTypeIsNot.js';
@@ -395,6 +396,8 @@ try {
     );
 
   app.use('/public', unprotected);
+  // ...existing code...
+  app.use('/api', TeamConfigRoutes);
 } catch (error) {
   log.error(error);
 }

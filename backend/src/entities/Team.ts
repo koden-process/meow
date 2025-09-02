@@ -9,6 +9,7 @@ export class Team implements ExistingEntity {
     currency: CurrencyCode;
     integrations?: Integration[];
     isFirstTeam?: boolean;
+    appliedConfigId?: ObjectId; // Config appliquée
     createdAt: Date;
     updatedAt: Date;
 

@@ -1679,3 +1679,30 @@ h3 {
 .btn-delete:hover {
   background-color: var(--spectrum-global-color-gray-200) !important;
 }
+
+/* Team config cards */
+.team-config-card {
+  border: 1px solid var(--spectrum-global-color-gray-300);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+  background-color: var(--spectrum-global-color-gray-100);
+  transition: all 0.2s ease;
+}
+
+.team-config-card:hover {
+  background-color: var(--spectrum-global-color-gray-200);
+  border-color: var(--spectrum-global-color-gray-400);
+}
+
+@media (prefers-color-scheme: dark) {
+  .team-config-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .team-config-card:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
