@@ -1,9 +1,9 @@
-import {Tabs} from '@chakra-ui/react';
-import {useEffect} from 'react';
-import {useSelector} from 'react-redux';
-import {addAccount, hideLayer, showModalSuccess, updateAccount} from '../../actions/Actions';
-import {Account, AccountPreview} from '../../interfaces/Account';
-import {ApplicationStore} from '../../store/ApplicationStore';
+import { Tabs } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { addAccount, hideLayer, showModalSuccess, updateAccount } from '../../actions/Actions';
+import { Account, AccountPreview } from '../../interfaces/Account';
+import { ApplicationStore } from '../../store/ApplicationStore';
 import {
     selectAccount,
     selectInterfaceStateId,
@@ -11,15 +11,15 @@ import {
     selectToken,
     store,
 } from '../../store/Store';
-import {Translations} from '../../Translations';
-import {Form} from './Form';
+import { Translations } from '../../Translations';
+import { Form } from './Form';
 import useMobileLayout from '../../hooks/useMobileLayout';
-import {SchemaReferenceAttribute, SchemaType} from '../../interfaces/Schema';
-import {Reference} from './Reference';
-import {Events} from './Events';
-import {getRequestClient} from '../../helpers/RequestHelper';
-import {DEFAULT_LANGUAGE} from '../../Constants';
-import {Button} from "@adobe/react-spectrum";
+import { SchemaReferenceAttribute, SchemaType } from '../../interfaces/Schema';
+import { Reference } from './Reference';
+import { Events } from './Events';
+import { getRequestClient } from '../../helpers/RequestHelper';
+import { DEFAULT_LANGUAGE } from '../../Constants';
+import { Button } from "@adobe/react-spectrum";
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -40,9 +40,9 @@ export const Layer = () => {
 
     const update = async (id: Account['_id'] | undefined, preview: AccountPreview) => {
         if (id) {
-            const updated = await client.updateAccount({...account!, ...preview}); // TODO refactor
+            const updated = await client.updateAccount({ ...account!, ...preview }); // TODO refactor
 
-            store.dispatch(updateAccount({...updated}));
+            store.dispatch(updateAccount({ ...updated }));
 
             store.dispatch(showModalSuccess(Translations.AccountUpdatedConfirmation[DEFAULT_LANGUAGE]));
             // Return to the previous sidebar (card sidebar)
@@ -50,7 +50,7 @@ export const Layer = () => {
         } else {
             const updated = await client.createAccount(preview); // TODO refactor
 
-            store.dispatch(addAccount({...updated}));
+            store.dispatch(addAccount({ ...updated }));
             store.dispatch(showModalSuccess(Translations.AccountCreatedConfirmation[DEFAULT_LANGUAGE]));
             // Return to the previous sidebar (card sidebar)
             store.dispatch(hideLayer());
@@ -61,7 +61,7 @@ export const Layer = () => {
         const execute = async () => {
             const updated = await client.getAccount(id!);
 
-            store.dispatch(updateAccount({...updated}));
+            store.dispatch(updateAccount({ ...updated }));
         };
 
         if (id) {
@@ -98,21 +98,21 @@ export const Layer = () => {
     const getPanelItems = (id?: string, references?: SchemaReferenceAttribute[]) => {
         const list = [
             <Tabs.Content value="account">
-                <Form update={update} id={id}/>
+                <Form update={update} id={id} />
             </Tabs.Content>,
         ];
 
         if (id) {
             list.push(
                 <Tabs.Content value="events">
-                    <Events id={id}/>
+                    <Events id={id} />
                 </Tabs.Content>
             );
 
             references?.map((attribute) => {
                 list.push(
                     <Tabs.Content value={attribute.name}>
-                        <Reference attribute={attribute} account={account}/>
+                        <Reference attribute={attribute} account={account} />
                     </Tabs.Content>
                 );
             });
@@ -124,7 +124,7 @@ export const Layer = () => {
     return (
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
-                <div style={{float: 'right'}}>
+                <div style={{ float: 'right' }}>
                     <Button variant="primary" onPress={() => hideAccountDetail()}>
                         {Translations.CloseButton[DEFAULT_LANGUAGE]}
                     </Button>

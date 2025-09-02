@@ -26,6 +26,8 @@ export const SuccessModal = () => {
 
         store.dispatch(hideModal());
       }, timeoutDuration);
+    } else {
+      setIsVisible(false);
     }
 
     return () => clearTimeout(timer);
