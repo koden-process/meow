@@ -1177,8 +1177,8 @@ export const Translations = {
   },
 
   TransfersNavItem: {
-    en: 'Transfers',
-    fr: 'Transferts'
+    en: 'Transfer',
+    fr: 'Transfert'
   },
 
   // Opportunity deleted event translation
