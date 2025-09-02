@@ -12,6 +12,9 @@ const create = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
         if (req.body.attributes) {
             account.attributes = req.body.attributes;
         }
+        if (req.body.status) {
+            account.status = req.body.status;
+        }
 
         const latest = await EntityHelper.create(account, Account);
 
@@ -33,6 +36,9 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
         if (req.body.attributes) {
             account.attributes = req.body.attributes;
+        }
+        if (req.body.status) {
+            account.status = req.body.status;
         }
 
         const latest = await EntityHelper.update(account);

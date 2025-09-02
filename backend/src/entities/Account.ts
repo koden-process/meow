@@ -9,6 +9,7 @@ export class Account implements ExistingEntity {
   _id: ObjectId;
   teamId: ObjectId;
   name: string;
+  status: AccountStatus;
   attributes?: Attribute;
   references?: Reference[];
   createdAt: Date;
@@ -18,6 +19,7 @@ export class Account implements ExistingEntity {
     this._id = _id;
     this.teamId = teamId;
     this.name = name;
+    this.status = AccountStatus.Enabled;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -27,6 +29,7 @@ export class Account implements ExistingEntity {
       _id: this._id.toString(),
       teamId: this.teamId.toString(),
       name: this.name,
+      status: this.status,
       attributes: this.attributes,
       createdAt: this.createdAt!,
       updatedAt: this.updatedAt!,
@@ -40,6 +43,7 @@ export class NewAccount implements NewEntity {
 
   teamId: ObjectId;
   name: string;
+  status: AccountStatus;
   attributes?: Attribute;
   references?: Reference[];
   createdAt: Date;
@@ -48,6 +52,7 @@ export class NewAccount implements NewEntity {
   constructor(team: Team, name: string, attributes: Attribute = {}, references?: Reference[]) {
     this.teamId = team._id;
     this.name = name;
+    this.status = AccountStatus.Enabled;
     this.attributes = attributes;
     this.references = references;
     this.createdAt = new Date();
@@ -59,6 +64,7 @@ export interface PlainAccount {
   _id: string;
   teamId: string;
   name: string;
+  status: string;
   attributes?: Attribute;
   createdAt: Date;
   updatedAt: Date;
@@ -69,4 +75,9 @@ export interface Reference {
   _id: ObjectId;
   entity: string | null;
   schemaAttributeKey: string;
+}
+
+export enum AccountStatus {
+  Enabled = 'enabled',
+  Deleted = 'deleted'
 }
