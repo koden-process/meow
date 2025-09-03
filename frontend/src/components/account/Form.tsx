@@ -13,10 +13,11 @@ import { DEFAULT_LANGUAGE } from '../../Constants';
 export interface FormProps {
   id: Account['_id'] | undefined;
   update: (id: Account['_id'] | undefined, account: AccountPreview) => void;
+  onPreviewChange?: (preview: AccountPreview) => void;
 }
 
 // TODO rename component
-export const Form = ({ update, id }: FormProps) => {
+export const Form = ({ update, id, onPreviewChange }: FormProps) => {
   const [preview, setPreview] = useState<AccountPreview>({
     name: '',
     attributes: undefined,
@@ -27,10 +28,12 @@ export const Form = ({ update, id }: FormProps) => {
   );
 
   const handlePreviewUpdate = (key: string, value: Attribute[typeof key]) => {
-    setPreview({
+    const next = {
       ...preview,
       [key]: value,
-    });
+    } as AccountPreview;
+    setPreview(next);
+    onPreviewChange && onPreviewChange(next);
   };
 
   let isValidForm = useMemo(() => {
@@ -45,24 +48,30 @@ export const Form = ({ update, id }: FormProps) => {
 
   useEffect(() => {
     if (account) {
-      setPreview({
+      const next = {
         ...account,
-      });
+      } as AccountPreview;
+      setPreview(next);
+      onPreviewChange && onPreviewChange(next);
     } else {
-      setPreview({
+      const next = {
         name: '',
         attributes: undefined,
-      });
+      } as AccountPreview;
+      setPreview(next);
+      onPreviewChange && onPreviewChange(next);
     }
   }, [account]);
 
   const validate = (values: Attribute) => {
-    setPreview({
+    const next = {
       ...preview,
       attributes: {
         ...values,
       },
-    });
+    } as AccountPreview;
+    setPreview(next);
+    onPreviewChange && onPreviewChange(next);
   };
 
   const save = () => {
@@ -89,11 +98,11 @@ export const Form = ({ update, id }: FormProps) => {
         isDisabled={false}
       />
 
-      <div style={{ marginTop: '24px' }}>
-        <Button variant="primary" onPress={save} isDisabled={!isValidForm}>
-          {Translations.SaveButton[DEFAULT_LANGUAGE]}
-        </Button>
-      </div>
+      {/*<div style={{ marginTop: '24px' }}>*/}
+      {/*  <Button variant="primary" onPress={save} isDisabled={!isValidForm}>*/}
+      {/*    {Translations.SaveButton[DEFAULT_LANGUAGE]}*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
     </div>
   );
 };
