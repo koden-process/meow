@@ -91,7 +91,9 @@ export const AccountsPage = () => {
     };
 
     const rows = useMemo(() => {
-        const list = toDataRows(accounts);
+        // Filter out accounts with status 'deleted'
+        const visibleAccounts = accounts.filter((a) => a.status !== 'deleted');
+        const list = toDataRows(visibleAccounts);
 
         return ListViewHelper.filterAndOrder(list, columns, view);
     }, [schema, view, accounts, columns]);

@@ -6,7 +6,7 @@ export const AccountsResponseSchema = {
       teamId: { type: 'string' },
       _id: { type: 'string' },
       name: { type: 'string' },
-      status: { type: 'string', enum: ['enabled', 'disable'] },
+      status: { type: 'string', enum: ['enabled', 'deleted'] },
       attributes: { type: 'object' },
       references: { type: ['object', 'null'] },
       createdAt: { type: 'string' },
