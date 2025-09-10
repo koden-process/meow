@@ -3,6 +3,8 @@
  * Allows customization via environment variables with fallback to default
  */
 
+import { getCustomLogoUrl, getCustomLogoAlt } from '../utils/env';
+
 export interface LogoConfig {
   url: string;
   alt: string;
@@ -13,13 +15,14 @@ export interface LogoConfig {
  * Falls back to default logo if VITE_CUSTOM_LOGO_URL is not defined
  */
 export const getLogoConfig = (): LogoConfig => {
-  const customLogoUrl = import.meta.env.VITE_CUSTOM_LOGO_URL;
-  const customLogoAlt = import.meta.env.VITE_CUSTOM_LOGO_ALT || 'Logo';
+  const customLogoUrl = getCustomLogoUrl();
+  const customLogoAlt = getCustomLogoAlt() || 'Logo';
   
   // Debug: log the environment variables
   console.log('🔍 Debug Logo Config:');
   console.log('  VITE_CUSTOM_LOGO_URL:', customLogoUrl);
   console.log('  VITE_CUSTOM_LOGO_ALT:', customLogoAlt);
+  console.log('  window.ENV:', window.ENV);
   console.log('  Has custom logo:', !!(customLogoUrl && customLogoUrl.trim() !== ''));
   
   // Default logo configuration
@@ -46,7 +49,7 @@ export const getLogoConfig = (): LogoConfig => {
  * Check if custom logo is configured
  */
 export const hasCustomLogo = (): boolean => {
-  const customLogoUrl = import.meta.env.VITE_CUSTOM_LOGO_URL;
+  const customLogoUrl = getCustomLogoUrl();
   return !!(customLogoUrl && customLogoUrl.trim() !== '');
 };
 

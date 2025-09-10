@@ -2,8 +2,10 @@
  * Helper for dynamic navigation color configuration
  */
 
+import { getCustomNavigationColor } from '../utils/env';
+
 export const setDynamicNavigationColor = (): void => {
-  const customNavigationColor = import.meta.env.VITE_CUSTOM_NAVIGATION_COLOR;
+  const customNavigationColor = getCustomNavigationColor();
   
   if (customNavigationColor) {
     console.log('Setting custom navigation color:', customNavigationColor);

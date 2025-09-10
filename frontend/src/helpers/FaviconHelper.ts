@@ -2,8 +2,11 @@
  * Utility function to set the favicon dynamically based on environment variable
  * Falls back to default favicon if VITE_CUSTOM_FAVICON_URL is not defined
  */
+
+import { getCustomFaviconUrl } from '../utils/env';
+
 export const setDynamicFavicon = (): void => {
-  const customFaviconUrl = import.meta.env.VITE_CUSTOM_FAVICON_URL;
+  const customFaviconUrl = getCustomFaviconUrl();
   const defaultFaviconUrl = '/meow-logo-reduced.svg';
   
   // Get the current favicon link element or create one if it doesn't exist

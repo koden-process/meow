@@ -2,8 +2,11 @@
  * Utility function to set dynamic theme color for PWA
  * Updates both meta tag and potential manifest
  */
+
+import { getCustomThemeColor } from '../utils/env';
+
 export const setDynamicThemeColor = (): void => {
-  const customThemeColor = import.meta.env.VITE_CUSTOM_THEME_COLOR;
+  const customThemeColor = getCustomThemeColor();
   const defaultThemeColor = '#1D1D1B';
   
   // Use custom theme color if available, otherwise use default

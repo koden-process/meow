@@ -17,12 +17,25 @@ declare global {
 
 // Function to get environment variable value
 export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
+  console.log(`🔍 Getting env var: ${key}`);
+  console.log('  window.ENV:', window.ENV);
+  console.log(`  window.ENV[${key}]:`, window.ENV?.[key]);
+  console.log(`  import.meta.env.${key}:`, getImportMetaEnv(key));
+  
   // First try to get from runtime config (Kubernetes)
   if (window.ENV && window.ENV[key]) {
+    console.log(`  ✅ Using runtime value for ${key}:`, window.ENV[key]);
     return window.ENV[key];
   }
   
   // Fallback to build-time environment variables (for development)
+  const buildTimeValue = getImportMetaEnv(key);
+  console.log(`  ℹ️ Using build-time value for ${key}:`, buildTimeValue);
+  return buildTimeValue;
+};
+
+// Helper function to get import.meta.env values
+const getImportMetaEnv = (key: keyof EnvConfig): string | undefined => {
   switch (key) {
     case 'VITE_CUSTOM_THEME_COLOR':
       return import.meta.env.VITE_CUSTOM_THEME_COLOR;
