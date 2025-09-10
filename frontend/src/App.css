@@ -128,8 +128,7 @@ h3 {
 
 .page .navigation {
   padding: 10px;
-  background-color: #064afe;
-  background-color: #1D1D1B;
+  background-color: var(--navigation-bg-color, #1D1D1B);
   display: flex;
   flex-direction: column;
 }
