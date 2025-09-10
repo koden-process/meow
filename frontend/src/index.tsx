@@ -6,7 +6,11 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store/Store';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { getBrowserLocale } from './helpers/Helper';
+import { setDynamicFavicon } from './helpers/FaviconHelper';
 import ErrorBoundary from './ErrorBoundary';
+
+// Set the favicon based on environment variable
+setDynamicFavicon();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
