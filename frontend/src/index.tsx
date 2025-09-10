@@ -6,7 +6,15 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store/Store';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { getBrowserLocale } from './helpers/Helper';
+import { setDynamicFavicon } from './helpers/FaviconHelper';
+import { setDynamicThemeColor } from './helpers/ThemeHelper';
+import { setDynamicNavigationColor } from './helpers/NavigationHelper';
 import ErrorBoundary from './ErrorBoundary';
+
+// Set the favicon, theme color and navigation color based on environment variables
+setDynamicFavicon();
+setDynamicThemeColor();
+setDynamicNavigationColor();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

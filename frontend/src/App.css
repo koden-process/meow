@@ -128,8 +128,7 @@ h3 {
 
 .page .navigation {
   padding: 10px;
-  background-color: #064afe;
-  background-color: #330a34;
+  background-color: var(--navigation-bg-color, #1D1D1B);
   display: flex;
   flex-direction: column;
 }
@@ -146,6 +145,15 @@ h3 {
 
 .page .navigation .item a {
   color: white;
+}
+
+.page .navigation .logo-spacer {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.page .navigation .logo-spacer:hover {
+  opacity: 1;
 }
 
 .page .navigation .item.active {

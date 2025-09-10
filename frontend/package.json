@@ -39,6 +39,8 @@
   },
   "scripts": {
     "start": "vite",
+    "dev": "vite",
+    "dev:unikalo": "VITE_CUSTOM_LOGO_URL=https://koden-process.github.io/meow/b.png VITE_CUSTOM_FAVICON_URL=https://koden-process.github.io/meow/b.png VITE_CUSTOM_NAVIGATION_COLOR=#1D1D1B VITE_CUSTOM_THEME_COLOR=#1D1D1B vite",
     "build": "tsc && vite build --emptyOutDir",
     "serve": "vite preview"
   },
