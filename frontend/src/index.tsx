@@ -7,10 +7,12 @@ import { store } from './store/Store';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { getBrowserLocale } from './helpers/Helper';
 import { setDynamicFavicon } from './helpers/FaviconHelper';
+import { setDynamicThemeColor } from './helpers/ThemeHelper';
 import ErrorBoundary from './ErrorBoundary';
 
-// Set the favicon based on environment variable
+// Set the favicon and theme color based on environment variables
 setDynamicFavicon();
+setDynamicThemeColor();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
