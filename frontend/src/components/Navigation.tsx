@@ -5,6 +5,7 @@ import { ActionType } from '../actions/Actions';
 import { selectCurrency, selectUserId, store } from '../store/Store';
 import { Avatar } from './Avatar';
 import { IconActivity } from './IconActivity';
+import { Logo } from './Logo';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
 
@@ -93,7 +94,9 @@ export const Navigation = () => {
                     <img alt={Translations.SetupNavItem[DEFAULT_LANGUAGE]} src="/setup-icon.svg"/>
                 </Link>
             </div>
-            <div className="item" style={{flexGrow: 1}}></div>
+            <div className="item logo-spacer" style={{flexGrow: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px 0'}}>
+                <Logo />
+            </div>
             <div className="user-menu">
                 {userMenue && (
                     <div className={userMenue ? 'wrapper' : ''} ref={layerRef}>

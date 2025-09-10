@@ -148,6 +148,15 @@ h3 {
   color: white;
 }
 
+.page .navigation .logo-spacer {
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.page .navigation .logo-spacer:hover {
+  opacity: 1;
+}
+
 .page .navigation .item.active {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
