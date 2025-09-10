@@ -1,7 +1,7 @@
 FROM node:24
 
-# Install Nginx
-RUN apt-get update && apt-get install -y nginx
+# Install Nginx and gettext (for envsubst)
+RUN apt-get update && apt-get install -y nginx gettext
 
 # Remove the default Nginx configuration file
 RUN rm /etc/nginx/sites-available/default
@@ -22,8 +22,12 @@ RUN cd backend && npm install
 # Build the frontend and copy it to the Nginx document root
 RUN cd frontend && npm run build && cp -r build/. /var/www/html
 
+# Copy the startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 # Expose port 80 for Nginx
 EXPOSE 80
 
-# Start Nginx and the backend server
-CMD service nginx start && cd backend && npm start
+# Use the startup script
+CMD ["/start.sh"]
