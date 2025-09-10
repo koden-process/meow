@@ -6,8 +6,6 @@
 export interface LogoConfig {
   url: string;
   alt: string;
-  maxWidth?: number;
-  maxHeight?: number;
 }
 
 /**
@@ -17,27 +15,30 @@ export interface LogoConfig {
 export const getLogoConfig = (): LogoConfig => {
   const customLogoUrl = import.meta.env.VITE_CUSTOM_LOGO_URL;
   const customLogoAlt = import.meta.env.VITE_CUSTOM_LOGO_ALT || 'Logo';
-  const customLogoMaxWidth = import.meta.env.VITE_CUSTOM_LOGO_MAX_WIDTH;
-  const customLogoMaxHeight = import.meta.env.VITE_CUSTOM_LOGO_MAX_HEIGHT;
+  
+  // Debug: log the environment variables
+  console.log('🔍 Debug Logo Config:');
+  console.log('  VITE_CUSTOM_LOGO_URL:', customLogoUrl);
+  console.log('  VITE_CUSTOM_LOGO_ALT:', customLogoAlt);
+  console.log('  Has custom logo:', !!(customLogoUrl && customLogoUrl.trim() !== ''));
   
   // Default logo configuration
   const defaultConfig: LogoConfig = {
     url: '/meow-logo-reduced.svg',
-    alt: 'Meow',
-    maxWidth: 120,
-    maxHeight: 60
+    alt: 'Meow'
   };
   
   // If custom logo URL is provided, use custom configuration
   if (customLogoUrl && customLogoUrl.trim() !== '') {
-    return {
+    const config = {
       url: customLogoUrl,
-      alt: customLogoAlt,
-      maxWidth: customLogoMaxWidth ? parseInt(customLogoMaxWidth, 10) : defaultConfig.maxWidth,
-      maxHeight: customLogoMaxHeight ? parseInt(customLogoMaxHeight, 10) : defaultConfig.maxHeight
+      alt: customLogoAlt
     };
+    console.log('  Using custom config:', config);
+    return config;
   }
   
+  console.log('  Using default config:', defaultConfig);
   return defaultConfig;
 };
 
@@ -54,11 +55,6 @@ export const hasCustomLogo = (): boolean => {
  */
 export const getLogoStyles = (config: LogoConfig): React.CSSProperties => {
   return {
-    maxWidth: `${config.maxWidth}px`,
-    maxHeight: `${config.maxHeight}px`,
-    objectFit: 'contain' as const,
     display: 'block',
-    margin: '0 auto',
-    transform: 'rotate(-90deg)'
   };
 };

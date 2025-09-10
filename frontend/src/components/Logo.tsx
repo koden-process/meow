@@ -10,11 +10,6 @@ export const Logo: React.FC<LogoProps> = ({ className, style }) => {
   const logoConfig = getLogoConfig();
   const logoStyles = getLogoStyles(logoConfig);
   
-  // Don't render anything if no custom logo is configured
-  if (!hasCustomLogo()) {
-    return null;
-  }
-  
   const combinedStyles = {
     ...logoStyles,
     ...style
@@ -27,7 +22,7 @@ export const Logo: React.FC<LogoProps> = ({ className, style }) => {
       className={className}
       style={combinedStyles}
       onError={(e) => {
-        console.warn(`Failed to load custom logo: ${logoConfig.url}`);
+        console.warn(`Failed to load logo: ${logoConfig.url}`);
         // Hide the logo if it fails to load
         (e.target as HTMLImageElement).style.display = 'none';
       }}

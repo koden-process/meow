@@ -39,6 +39,8 @@
   },
   "scripts": {
     "start": "vite",
+    "dev": "vite",
+    "dev:unikalo": "VITE_CUSTOM_LOGO_URL=https://storage.googleapis.com/koden-public/unikalo/logo-vertical.png VITE_CUSTOM_LOGO_ALT='Unikalo Logo' vite",
     "build": "tsc && vite build --emptyOutDir",
     "serve": "vite preview"
   },
