@@ -348,15 +348,16 @@ export const HomePage = () => {
                                     </button>
                                 )}
                                 <button
-                                    className={`filter ${
-                                        filters.mode.has(FilterMode.RecentlyUpdated)
-                                            ? 'recently-updated-active'
-                                            : 'recently-updated'
-                                    }`}
-                                    onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
-                                >
-                                    {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                                </button>
+                                        className={`filter ${
+                                            filters.mode.has(FilterMode.RecentlyUpdated)
+                                                ? 'recently-updated-active'
+                                                : 'recently-updated'
+                                        }`}
+                                        onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
+                                        style={{ display: 'none' }}
+                                    >
+                                        {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
+                                    </button>
                                 <button
                                     className={`filter ${
                                         filters.mode.has(FilterMode.RequireUpdate)
