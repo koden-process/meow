@@ -114,10 +114,44 @@ h3 {
   }
 }
 
+
 .page {
   display: flex;
   min-height: 100vh;
   flex-direction: row;
+}
+
+.page .navigation {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 80px;
+  padding: 10px 0;
+  background-color: var(--navigation-bg-color, #1D1D1B);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 100;
+}
+
+.page .main {
+  margin-left: 80px;
+  flex-grow: 1;
+  background-color: var(--spectrum-global-color-gray-100);
+}
+
+.page .navigation .logo-spacer {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page .navigation .user-menu {
+  margin-top: auto;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 768px) {

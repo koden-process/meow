@@ -54,6 +54,7 @@ export const Navigation = () => {
 
     return (
         <>
+            {/* Icônes du haut */}
             <div className={`item ${isActiveRoute('/') ? 'active' : ''}`}>
                 <Link to="/" title={Translations.OpportunitiesNavItem[DEFAULT_LANGUAGE]}>
                     <img alt={Translations.OpportunitiesNavItem[DEFAULT_LANGUAGE]}
@@ -62,9 +63,9 @@ export const Navigation = () => {
             </div>
             <div className={`item ${isActiveRoute('/activity') ? 'active' : ''}`}>
                 <Link to="/activity" title={Translations.ActivitiesNavItem[DEFAULT_LANGUAGE]}>
-          <span className="icon">
-            <IconActivity/>
-          </span>
+                    <span className="icon">
+                        <IconActivity/>
+                    </span>
                 </Link>
             </div>
             <div className={`item ${isActiveRoute('/forecast') ? 'active' : ''}`}>
@@ -77,13 +78,11 @@ export const Navigation = () => {
                     <img alt={Translations.DirectoryTitle[DEFAULT_LANGUAGE]} src="/accounts-icon.svg"/>
                 </Link>
             </div>
-        
             <div className={`item ${isActiveRoute('/transfers') ? 'active' : ''}`}>
-              <Link to="/transfers" title={Translations.TransfersNavItem[DEFAULT_LANGUAGE]}>
-                <img alt={Translations.TransfersNavItem[DEFAULT_LANGUAGE]} src="/transfer-icon.svg"/>
-              </Link>
+                <Link to="/transfers" title={Translations.TransfersNavItem[DEFAULT_LANGUAGE]}>
+                    <img alt={Translations.TransfersNavItem[DEFAULT_LANGUAGE]} src="/transfer-icon.svg"/>
+                </Link>
             </div>
-        
             <div className={`item ${isActiveRoute('/hire') ? 'active' : ''}`}>
                 <Link to="/hire" title={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]}>
                     <img alt={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]} src="/paw-icon.svg"/>
@@ -94,9 +93,13 @@ export const Navigation = () => {
                     <img alt={Translations.SetupNavItem[DEFAULT_LANGUAGE]} src="/setup-icon.svg"/>
                 </Link>
             </div>
-            <div className="item logo-spacer" style={{flexGrow: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px 0'}}>
+
+            {/* Zone libre avec logo, toujours visible */}
+            <div className="logo-spacer">
                 <Logo />
             </div>
+
+            {/* Icône du bas (menu utilisateur), toujours visible */}
             <div className="user-menu">
                 {userMenue && (
                     <div className={userMenue ? 'wrapper' : ''} ref={layerRef}>
