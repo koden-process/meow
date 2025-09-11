@@ -5,6 +5,121 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Styles de navigation - TOUJOURS présents */
+.page .navigation {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 80px;
+  padding: 10px 0;
+  background-color: var(--navigation-bg-color, #1D1D1B);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 100;
+}
+
+.page .main {
+  margin-left: 80px;
+  flex-grow: 1;
+  background-color: var(--spectrum-global-color-gray-100);
+}
+
+.page .navigation .logo-spacer {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page .navigation .user-menu {
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+/* Thème clair */
+body.light {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* TOUJOURS préserver le menu de navigation */
+body.light .page .navigation,
+body.dark .page .navigation {
+  background-color: var(--navigation-bg-color, #1D1D1B) !important;
+  color: #ffffff !important;
+}
+
+body.light .page .navigation *,
+body.dark .page .navigation * {
+  color: #ffffff !important;
+}
+
+/* Forcer un fond pour les menus utilisateur */
+body.light .page .navigation .user-menu .wrapper,
+body.dark .page .navigation .user-menu .wrapper {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.light .page .navigation .user-menu .wrapper .link,
+body.dark .page .navigation .user-menu .wrapper .link {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+body.light .page .navigation .user-menu .wrapper .link:hover,
+body.dark .page .navigation .user-menu .wrapper .link:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Zone principale en clair */
+body.light .page .main {
+  background-color: #f5f5f5 !important;
+  color: #000000 !important;
+}
+
+body.light .page .main .canvas .content-box {
+  background-color: #e1e1e1 !important;
+  color: #000000 !important;
+}
+
+/* Board et lanes en clair */
+body.light .board {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+body.light .board .lanes > div {
+  background-color: #f9f9f9 !important;
+  color: #000000 !important;
+}
+
+/* Champs de formulaire en clair */
+body.light input:not(.navigation input),
+body.light textarea:not(.navigation textarea),
+body.light select:not(.navigation select) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #cccccc !important;
+}
+
+/* Thème sombre */
+body.dark {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+body.dark .page .main {
+  background-color: #2a2a2a !important;
+}
+
+body.dark .page .main .canvas .content-box {
+  background-color: #3a3a3a !important;
+  color: #ffffff !important;
 }
 
 code {

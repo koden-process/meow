@@ -35,6 +35,7 @@ export const FormCanvas = () => {
     const [initials, setInitials] = useState<string>(initialsDefault || '');
 
     const currentUser = users.find((user) => user._id === userId);
+    const [theme, setTheme] = useState<'light' | 'dark'>(currentUser?.theme || 'dark');
     const defaultInitials = currentUser?.name ? UserHelper.generateDefaultInitials(currentUser.name) : '';
     
     const handleInitialsChange = (value: string) => {
@@ -53,6 +54,7 @@ export const FormCanvas = () => {
         user.animal = animal;
         user.color = avatarColor;
         user.initials = initials.trim() || undefined;
+        user.theme = theme;
 
         try {
             const updated = await client.updateUser(user);
@@ -129,6 +131,21 @@ export const FormCanvas = () => {
                     maxLength={2}
                     width="200px"
                 />
+            </div>
+
+            <h2>Thème</h2>
+            <div style={{marginBottom: '20px'}}>
+                <Picker
+                    selectedKey={theme}
+                    aria-label="Sélecteur de thème"
+                    onSelectionChange={(key) => {
+                        if (key === null) return;
+                        setTheme(key as 'light' | 'dark');
+                    }}
+                >
+                    <Item key="light">Clair</Item>
+                    <Item key="dark">Sombre</Item>
+                </Picker>
             </div>
 
             <div style={{marginTop: '20px'}}>

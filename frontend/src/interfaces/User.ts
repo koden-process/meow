@@ -11,6 +11,7 @@ export interface User {
   animal?: string;
   color?: string;
   initials?: string;
+  theme?: 'light' | 'dark';
 }
 
 export enum UserStatus {
