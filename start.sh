@@ -2,6 +2,13 @@
 
 echo "🚀 Starting container initialization..."
 
+# Set default empty values for undefined environment variables
+export VITE_CUSTOM_THEME_COLOR="${VITE_CUSTOM_THEME_COLOR:-}"
+export VITE_CUSTOM_LOGO_URL="${VITE_CUSTOM_LOGO_URL:-}"
+export VITE_CUSTOM_FAVICON_URL="${VITE_CUSTOM_FAVICON_URL:-}"
+export VITE_CUSTOM_LOGO_ALT="${VITE_CUSTOM_LOGO_ALT:-}"
+export VITE_CUSTOM_NAVIGATION_COLOR="${VITE_CUSTOM_NAVIGATION_COLOR:-}"
+
 # Debug: Show environment variables
 echo "📋 Environment variables:"
 echo "  VITE_CUSTOM_THEME_COLOR: $VITE_CUSTOM_THEME_COLOR"

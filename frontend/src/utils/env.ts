@@ -26,7 +26,7 @@ export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
   if (window.ENV && window.ENV[key]) {
     const runtimeValue = window.ENV[key];
     // Check if the value is not the variable name itself
-    if (runtimeValue !== key && runtimeValue.trim() !== '') {
+    if (runtimeValue && runtimeValue !== key && runtimeValue.trim() !== '') {
       console.log(`  ✅ Using runtime value for ${key}:`, runtimeValue);
       return runtimeValue;
     }
