@@ -7,7 +7,9 @@ import { getCustomNavigationColor } from '../utils/env';
 export const setDynamicNavigationColor = (): void => {
   const customNavigationColor = getCustomNavigationColor();
   
-  if (customNavigationColor) {
+  if (customNavigationColor && 
+      customNavigationColor.trim() !== '' && 
+      customNavigationColor !== 'VITE_CUSTOM_NAVIGATION_COLOR') {
     console.log('Setting custom navigation color:', customNavigationColor);
     updateNavigationColor(customNavigationColor);
   } else {

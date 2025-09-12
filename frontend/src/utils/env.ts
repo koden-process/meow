@@ -24,14 +24,24 @@ export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
   
   // First try to get from runtime config (Kubernetes)
   if (window.ENV && window.ENV[key]) {
-    console.log(`  ✅ Using runtime value for ${key}:`, window.ENV[key]);
-    return window.ENV[key];
+    const runtimeValue = window.ENV[key];
+    // Check if the value is not the variable name itself
+    if (runtimeValue !== key && runtimeValue.trim() !== '') {
+      console.log(`  ✅ Using runtime value for ${key}:`, runtimeValue);
+      return runtimeValue;
+    }
   }
   
   // Fallback to build-time environment variables (for development)
   const buildTimeValue = getImportMetaEnv(key);
-  console.log(`  ℹ️ Using build-time value for ${key}:`, buildTimeValue);
-  return buildTimeValue;
+  // Check if the value is not the variable name itself and not empty
+  if (buildTimeValue && buildTimeValue !== key && buildTimeValue.trim() !== '') {
+    console.log(`  ℹ️ Using build-time value for ${key}:`, buildTimeValue);
+    return buildTimeValue;
+  }
+  
+  console.log(`  ❌ No valid value found for ${key}`);
+  return undefined;
 };
 
 // Helper function to get import.meta.env values

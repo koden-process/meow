@@ -10,7 +10,9 @@ export const setDynamicThemeColor = (): void => {
   const defaultThemeColor = '#1D1D1B';
   
   // Use custom theme color if available, otherwise use default
-  const themeColor = customThemeColor && customThemeColor.trim() !== '' 
+  const themeColor = customThemeColor && 
+    customThemeColor.trim() !== '' && 
+    customThemeColor !== 'VITE_CUSTOM_THEME_COLOR'
     ? customThemeColor 
     : defaultThemeColor;
     

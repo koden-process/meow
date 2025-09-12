@@ -20,7 +20,9 @@ export const setDynamicFavicon = (): void => {
   }
   
   // Set the favicon URL - use custom if available, otherwise use default
-  const faviconUrl = customFaviconUrl && customFaviconUrl.trim() !== '' 
+  const faviconUrl = customFaviconUrl && 
+    customFaviconUrl.trim() !== '' && 
+    customFaviconUrl !== 'VITE_CUSTOM_FAVICON_URL'
     ? customFaviconUrl 
     : defaultFaviconUrl;
     

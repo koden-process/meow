@@ -90,7 +90,7 @@ export const Navigation = () => {
                 </Link>
             </div>
 
-            {/* Zone libre avec logo, toujours visible */}
+            {/* Zone libre avec logo, positionnée en bas */}
             <div className="logo-spacer">
                 <Logo />
             </div>

@@ -16,14 +16,23 @@ export interface LogoConfig {
  */
 export const getLogoConfig = (): LogoConfig => {
   const customLogoUrl = getCustomLogoUrl();
-  const customLogoAlt = getCustomLogoAlt() || 'Logo';
+  const customLogoAlt = getCustomLogoAlt();
+  
+  // Use custom alt text if valid, otherwise use default
+  const logoAlt = customLogoAlt && 
+    customLogoAlt.trim() !== '' && 
+    customLogoAlt !== 'VITE_CUSTOM_LOGO_ALT' 
+    ? customLogoAlt 
+    : 'Logo';
   
   // Debug: log the environment variables
   console.log('🔍 Debug Logo Config:');
   console.log('  VITE_CUSTOM_LOGO_URL:', customLogoUrl);
   console.log('  VITE_CUSTOM_LOGO_ALT:', customLogoAlt);
   console.log('  window.ENV:', window.ENV);
-  console.log('  Has custom logo:', !!(customLogoUrl && customLogoUrl.trim() !== ''));
+  console.log('  Has custom logo:', !!(customLogoUrl && 
+    customLogoUrl.trim() !== '' && 
+    customLogoUrl !== 'VITE_CUSTOM_LOGO_URL'));
   
   // Default logo configuration
   const defaultConfig: LogoConfig = {
@@ -32,10 +41,12 @@ export const getLogoConfig = (): LogoConfig => {
   };
   
   // If custom logo URL is provided, use custom configuration
-  if (customLogoUrl && customLogoUrl.trim() !== '') {
+  if (customLogoUrl && 
+      customLogoUrl.trim() !== '' && 
+      customLogoUrl !== 'VITE_CUSTOM_LOGO_URL') {
     const config = {
       url: customLogoUrl,
-      alt: customLogoAlt
+      alt: logoAlt
     };
     console.log('  Using custom config:', config);
     return config;
@@ -50,7 +61,9 @@ export const getLogoConfig = (): LogoConfig => {
  */
 export const hasCustomLogo = (): boolean => {
   const customLogoUrl = getCustomLogoUrl();
-  return !!(customLogoUrl && customLogoUrl.trim() !== '');
+  return !!(customLogoUrl && 
+    customLogoUrl.trim() !== '' && 
+    customLogoUrl !== 'VITE_CUSTOM_LOGO_URL');
 };
 
 /**

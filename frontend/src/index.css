@@ -31,14 +31,14 @@ body {
 }
 
 .page .navigation .logo-spacer {
-  margin: 20px 0;
+  margin-top: auto;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .page .navigation .user-menu {
-  margin-top: auto;
   margin-bottom: 10px;
 }
 
