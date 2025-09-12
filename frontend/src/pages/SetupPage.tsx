@@ -116,12 +116,12 @@ export const SetupPage = () => {
       <Divider marginY="size-200" />
       <Heading level={3}>Configuration équipe</Heading>
       {appliedConfigId ? (
-        <div style={{ color: 'red', marginBottom: 8 }}>
+        <div style={{ color: 'red', marginBottom: 8, marginTop: 16 }}>
           Cette équipe est verrouillée par la configuration {appliedConfigId}.<br />
           Pour modifier, appliquez une autre configuration.
         </div>
       ) : null}
-      <Button variant="primary" onPress={handleExport} isDisabled={loading || !!appliedConfigId} marginBottom="size-200">
+      <Button variant="primary" onPress={handleExport} isDisabled={loading || !!appliedConfigId} marginTop="size-200" marginBottom="size-200">
         Exporter la configuration de l'équipe
       </Button>
       <div style={{ marginBottom: '16px' }}>

@@ -2,16 +2,15 @@ import { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { ActionType } from '../actions/Actions';
-import { selectCurrency, selectUserId, store } from '../store/Store';
+import { selectUserId, store } from '../store/Store';
 import { Avatar } from './Avatar';
-import { IconActivity } from './IconActivity';
+
 import { Logo } from './Logo';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
 
 export const Navigation = () => {
   const userId = useSelector(selectUserId);
-  const currency = useSelector(selectCurrency);
   const [userMenue, setUserMenu] = useState(false);
   const layerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -57,15 +56,12 @@ export const Navigation = () => {
             {/* Icônes du haut */}
             <div className={`item ${isActiveRoute('/') ? 'active' : ''}`}>
                 <Link to="/" title={Translations.OpportunitiesNavItem[DEFAULT_LANGUAGE]}>
-                    <img alt={Translations.OpportunitiesNavItem[DEFAULT_LANGUAGE]}
-                         src={`/${currency?.toLocaleLowerCase()}-icon.svg`}/>
+                    <img alt={Translations.OpportunitiesNavItem[DEFAULT_LANGUAGE]} src="/dashboard-icon.svg"/>
                 </Link>
             </div>
             <div className={`item ${isActiveRoute('/activity') ? 'active' : ''}`}>
                 <Link to="/activity" title={Translations.ActivitiesNavItem[DEFAULT_LANGUAGE]}>
-                    <span className="icon">
-                        <IconActivity/>
-                    </span>
+                    <img alt={Translations.ActivitiesNavItem[DEFAULT_LANGUAGE]} src="/activity-icon.svg"/>
                 </Link>
             </div>
             <div className={`item ${isActiveRoute('/forecast') ? 'active' : ''}`}>
