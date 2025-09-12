@@ -67,6 +67,10 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
       }
     }
 
+    if (req.body.theme !== undefined) {
+      user.theme = req.body.theme;
+    }
+
     if (req.body.status) {
       if (user._id === req.jwt.user._id) {
         throw new InvalidRequestBodyError();

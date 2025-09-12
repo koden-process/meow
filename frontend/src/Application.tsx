@@ -23,10 +23,14 @@ import { SelectMappingContext, SelectMappings } from './helpers/SelectMappingCon
 import MobileMain from './MobileMain';
 import AddOpportunityMobile from './AddOpportunityMobile';
 import AddCommentMobile from './AddCommentMobile';
+import { useTheme } from './hooks/useTheme';
 
 const MOBILE_SCREEN_THRESHOLD = 900;
 
 function Application() {
+  // Appliquer le thème
+  useTheme();
+
   // Mobile screen detection (less than 9 inches, ~900px width as a proxy)
   const [isMobile, setIsMobile] = useState(
     window.innerWidth < MOBILE_SCREEN_THRESHOLD && window.innerHeight < MOBILE_SCREEN_THRESHOLD

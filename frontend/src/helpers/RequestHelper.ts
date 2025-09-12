@@ -375,6 +375,7 @@ export class RequestHelper {
       status: user.status,
       color: user.color,
       initials: user.initials,
+      theme: user.theme,
     });
   }
 

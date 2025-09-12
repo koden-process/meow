@@ -17,6 +17,7 @@ export class User implements ExistingEntity {
   authentication?: UserAuthentication | null;
   color?: string;
   initials?: string;
+  theme?: 'light' | 'dark';
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
   createdAt: Date;
@@ -57,6 +58,7 @@ export class NewUser implements NewEntity {
   authentication?: UserAuthentication | null;
   color?: string;
   initials?: string;
+  theme?: 'light' | 'dark';
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
   createdAt: Date;

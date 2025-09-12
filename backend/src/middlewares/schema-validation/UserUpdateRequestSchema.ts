@@ -12,6 +12,10 @@ export const UserUpdateRequestSchema = {
       type: ['string', 'null'], 
       maxLength: 2 
     },
+    theme: {
+      type: 'string',
+      enum: ['light', 'dark'],
+    },
   },
   additionalProperties: false,
 };
