@@ -32,6 +32,13 @@ export const Login = ({}: LoginProps) => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoading && isValid && state !== 'validating') {
+      authenticate();
+    }
+  };
+
   useEffect(() => {
     return () => {
       client.destroy(); // Abort all ongoing requests when the component is unmounted
@@ -58,7 +65,7 @@ export const Login = ({}: LoginProps) => {
 
   return (
     <>
-      <div className="login">
+      <form className="login" onSubmit={handleSubmit}>
         <div>
           <TextField
             label={Translations.NameLabel[DEFAULT_LANGUAGE]}
@@ -90,7 +97,7 @@ export const Login = ({}: LoginProps) => {
         <div className="spinner-canvas">
           {state === 'validating' || isLoading ? <div className="spinner"></div> : null}
         </div>
-      </div>
+      </form>
 
       {error}
     </>
