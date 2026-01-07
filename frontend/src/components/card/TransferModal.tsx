@@ -107,8 +107,11 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
               </div>
 
               <ComboBox
-                label={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
-                placeholder={Translations.SelectTeamPlaceholder[DEFAULT_LANGUAGE]}
+                aria-label={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
+                placeholder={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
+                defaultFilter={(textValue, inputValue) =>
+                  textValue.toLowerCase().startsWith(inputValue.toLowerCase())
+                }
                 selectedKey={selectedTeamId}
                 onSelectionChange={(key) => setSelectedTeamId(key as string)}
                 isRequired

@@ -204,6 +204,21 @@ export const Translations = {
     fr: 'Rechercher',
   },
 
+  FilterByContact: {
+    en: 'Filter by contact',
+    fr: 'Filtrer par contact',
+  },
+
+  FilterByUser: {
+    en: 'Filter by user',
+    fr: 'Filtrer par utilisateur',
+  },
+
+  NameOrStage: {
+    en: 'Name or Stage',
+    fr: 'Nom ou Étape',
+  },
+
   // Tab titles
   OpportunityTab: {
     en: 'Opportunity',

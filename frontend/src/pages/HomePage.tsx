@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Button, Item, Picker} from '@adobe/react-spectrum';
+import {Button, Item, Picker, ComboBox} from '@adobe/react-spectrum';
 import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {
@@ -75,6 +75,13 @@ export const HomePage = () => {
     const [text, setText] = useState<string>('');
     const [userId, setUserId] = useState(FILTER_BY_NONE.key);
     const [selectedAccountId, setSelectedAccountId] = useState<string>('');
+    const [accountSearchText, setAccountSearchText] = useState('');
+
+    const accountFiltered = useMemo(() => {
+        return accounts.filter(acc =>
+            acc.name.toLowerCase().startsWith(accountSearchText.toLowerCase())
+        );
+    }, [accounts, accountSearchText]);
 
     const isMobileLayout = useMobileLayout();
 
@@ -236,14 +243,6 @@ export const HomePage = () => {
         return null;
     }
 
-    const getAccountOptions = () => {
-        const list: JSX.Element[] = [];
-        list.push(<Item key="">Filtrer par contact</Item>);
-        accounts.forEach(acc => {
-            list.push(<Item key={acc._id}>{acc.name}</Item>);
-        });
-        return list;
-    };
 
     const getUserOptions = () => {
         const list: JSX.Element[] = [];
@@ -256,129 +255,145 @@ export const HomePage = () => {
     return (
         <>
             {state === 'card-detail' && <CardLayer/>}
-            {state === 'lane-detail' && <LaneLayer/>}
-            {state === 'account-detail' && <AccountLayer/>}
-            <div style={{ position: 'relative' }}>
-              {/* Bouton Add, collé en haut à droite */}
-              <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}>
-                <Button variant="primary" onPress={() => openCard()}>
-                  {Translations.AddButton[DEFAULT_LANGUAGE]}
-                </Button>
-              </div>
+        {state === 'lane-detail' && <LaneLayer/>}
+        {state === 'account-detail' && <AccountLayer/>}
+            <div style={{position: 'relative'}}>
+                {/* Bouton Add, collé en haut à droite */}
+                <div style={{position: 'absolute', top: 12, right: 12, zIndex: 2}}>
+                    <Button variant="primary" onPress={() => openCard()}>
+                        {Translations.AddButton[DEFAULT_LANGUAGE]}
+                    </Button>
+                </div>
 
-              {/* Ton contenu existant: filtres + DragDropContext + Board */}
+                {/* Ton contenu existant: filtres + DragDropContext + Board */}
 
-            <div className="board">
-                <div className="title">
-                    <div>
-                        <div className="sum">
-                            {mode === 'board' && (
-                                <button
-                                    className="statistics-button"
-                                    onClick={() => {
-                                        setMode('statistics');
-                                    }}
-                                ></button>
-                            )}
-
-                            {mode === 'statistics' && (
-                                <button
-                                    className="statistics-button"
-                                    style={{
-                                        border: '1px solid var(--spectrum-global-color-gray-600)',
-                                    }}
-                                    onClick={() => {
-                                        setMode('board');
-                                    }}
-                                ></button>
-                            )}
-                            <h2>
-                                {getTitle(filteredCardsByAccount)} -
-                                <Currency value={amount}/>
-                            </h2>
-
-
-                        </div>
-                    </div>
-
-                    <div className="filters-canvas">
-                        {/* All elements on the same horizontal line with filter buttons on the right */}
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px'}}>
-                            {/* Left side: input and pickers */}
-                            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                <input className="inputSpacing"
-                                       onChange={(event) => setText(event.target.value)}
-                                       placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                                       aria-label="Name or Stage"
-                                       type="text"
-                                />
-
-                                {/* Picker pour filtrer par account/contact */}
-                                <Picker
-                                    aria-label="Filtrer par contact"
-                                    selectedKey={selectedAccountId}
-                                    onSelectionChange={(key) => setSelectedAccountId(key ? key.toString() : '')}
-                                >
-                                    {getAccountOptions()}
-                                </Picker>
-
-                                {/* Picker pour filtrer par utilisateur */}
-                                <Picker
-                                    aria-label="Filtrer par utilisateur"
-                                    selectedKey={userId}
-                                    onSelectionChange={(key) => {
-                                        if (key === null) return;
-                                        setUserId(key.toString());
-                                    }}
-                                >
-                                    {getUserOptions()}
-                                </Picker>
-                            </div>
-
-                            {/* Right side: filter buttons */}
-                            <div>
-                                {false && (
+                <div className="board">
+                    <div className="title">
+                        <div>
+                            <div className="sum">
+                                {mode === 'board' && (
                                     <button
-                                        className={`filter ${
-                                            filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
-                                        }`}
-                                        onClick={() => handleFilterToggle(FilterMode.OwnedByMe)}
-                                    >
-                                        {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
-                                    </button>
+                                        className="statistics-button"
+                                        onClick={() => {
+                                            setMode('statistics');
+                                        }}
+                                    ></button>
                                 )}
-                                <button
+
+                                {mode === 'statistics' && (
+                                    <button
+                                        className="statistics-button"
+                                        style={{
+                                            border: '1px solid var(--spectrum-global-color-gray-600)',
+                                        }}
+                                        onClick={() => {
+                                            setMode('board');
+                                        }}
+                                    ></button>
+                                )}
+                                <h2>
+                                    {getTitle(filteredCardsByAccount)} -
+                                    <Currency value={amount}/>
+                                </h2>
+
+
+                            </div>
+                        </div>
+
+                        <div className="filters-canvas">
+                            {/* All elements on the same horizontal line with filter buttons on the right */}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '10px'
+                            }}>
+                                {/* Left side: input and pickers */}
+                                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                    <input className="inputSpacing"
+                                           onChange={(event) => setText(event.target.value)}
+                                           placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
+                                           aria-label={Translations.NameOrStage[DEFAULT_LANGUAGE]}
+                                           type="text"
+                                    />
+
+                                    <ComboBox
+                                        aria-label={Translations.FilterByContact[DEFAULT_LANGUAGE]}
+                                        placeholder={Translations.FilterByContact[DEFAULT_LANGUAGE]}
+                                        items={accountFiltered}
+                                        inputValue={accountSearchText}
+                                        onInputChange={setAccountSearchText}
+                                        selectedKey={selectedAccountId}
+                                        onSelectionChange={(key) => {
+                                            const id = key ? key.toString() : '';
+                                            setSelectedAccountId(id);
+                                            if (id) {
+                                                setAccountSearchText(accountMapping[id] || '');
+                                            } else {
+                                                setAccountSearchText('');
+                                            }
+                                        }}
+                                    >
+                                        {(item: any) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
+                                    </ComboBox>
+
+                                    {/* Picker pour filtrer par utilisateur */}
+                                    <Picker
+                                        aria-label={Translations.FilterByUser[DEFAULT_LANGUAGE]}
+                                        selectedKey={userId}
+                                        onSelectionChange={(key) => {
+                                            if (key === null) return;
+                                            setUserId(key.toString());
+                                        }}
+                                    >
+                                        {getUserOptions()}
+                                    </Picker>
+                                </div>
+
+                                {/* Right side: filter buttons */}
+                                <div>
+                                    {false && (
+                                        <button
+                                            className={`filter ${
+                                                filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
+                                            }`}
+                                            onClick={() => handleFilterToggle(FilterMode.OwnedByMe)}
+                                        >
+                                            {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
+                                        </button>
+                                    )}
+                                    <button
                                         className={`filter ${
                                             filters.mode.has(FilterMode.RecentlyUpdated)
                                                 ? 'recently-updated-active'
                                                 : 'recently-updated'
                                         }`}
                                         onClick={() => handleFilterToggle(FilterMode.RecentlyUpdated)}
-                                        style={{ display: 'none' }}
+                                        style={{display: 'none'}}
                                     >
                                         {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
                                     </button>
-                                <button
-                                    className={`filter ${
-                                        filters.mode.has(FilterMode.RequireUpdate)
-                                            ? 'require-update-active'
-                                            : 'require-update'
-                                    }`}
-                                    onClick={() => handleFilterToggle(FilterMode.RequireUpdate)}
-                                >
-                                    {Translations.RequiresUpdateFilter[DEFAULT_LANGUAGE]}
-                                </button>
+                                    <button
+                                        className={`filter ${
+                                            filters.mode.has(FilterMode.RequireUpdate)
+                                                ? 'require-update-active'
+                                                : 'require-update'
+                                        }`}
+                                        onClick={() => handleFilterToggle(FilterMode.RequireUpdate)}
+                                    >
+                                        {Translations.RequiresUpdateFilter[DEFAULT_LANGUAGE]}
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
+                    </div>
+                    <div style={{paddingLeft: '10px'}}>
+
                     </div>
 
-                </div>
-                <div style={{paddingLeft: '10px'}}>
-
-                </div>
-
-                <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-                    {/* Corbeille commentée - suppression via bouton uniquement
+                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                        {/* Corbeille commentée - suppression via bouton uniquement
                     {!isMobileLayout && (
                         <div className="trash-canvas" style={{marginRight: '100px'}}>
                             <Trash/>
@@ -386,15 +401,16 @@ export const HomePage = () => {
                     )}
                     */}
 
-                    <div className="lanes">
-                        {mode === 'board' && <Board lanes={lanes}
-                                                    cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
-                        {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
-                    </div>
-                </DragDropContext>
+                        <div className="lanes">
+                            {mode === 'board' && <Board lanes={lanes}
+                                                        cards={filteredCardsByAccount}/>} {/* Les lanes utilisent les cards filtrées */}
+                            {mode === 'statistics' && <StatisticsBoard lanes={lanes}/>} {/* Idem */}
+                        </div>
+                    </DragDropContext>
 
-            </div>
+                </div>
             </div>
         </>
-    );
+    )
+        ;
 };
