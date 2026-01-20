@@ -7,6 +7,7 @@ import {Avatar} from './Avatar';
 import {IconBurger} from './IconBurger';
 import {Translations} from "../Translations";
 import {DEFAULT_LANGUAGE} from "../Constants";
+import { ThemeToggle } from './ThemeToggle';
 
 export const NavigationMobile = () => {
     const userId = useSelector(selectUserId);
@@ -35,7 +36,10 @@ export const NavigationMobile = () => {
                         <IconBurger/>
                     </div>
                 </div>
-                <Avatar onClick={() => setIsExpanded(!isExpanded)} width={36} id={userId}/>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                    <ThemeToggle />
+                    <Avatar onClick={() => setIsExpanded(!isExpanded)} width={36} id={userId}/>
+                </div>
             </div>
 
             {isExpanded && (

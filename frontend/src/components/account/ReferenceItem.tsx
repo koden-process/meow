@@ -40,7 +40,8 @@ export const ReferenceItem = ({ reference }: ReferenceItemProps) => {
       {card && (
         <div className="reference" style={{ padding: '10px', fontSize: '1.2em' }}>
           <h4
-            style={{ margin: 0, fontWeight: '600', color: 'var(--spectrum-global-color-gray-600)' }}
+            style={{ margin: 0, fontWeight: '600' }}
+            className="reference-item-title"
           >
             <span onClick={() => openCard(card._id)} className="direct-link">
               {card.name}

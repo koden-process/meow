@@ -38,88 +38,146 @@ body {
   justify-content: center;
 }
 
+/* Thème clair : logo avec opacité adaptée */
+body.light .page .navigation .logo-spacer {
+  opacity: 0.8;
+}
+
+body.light .page .navigation .logo-spacer:hover {
+  opacity: 1;
+}
+
 .page .navigation .user-menu {
   margin-bottom: 10px;
 }
 
 /* Thème clair */
 body.light {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-}
-
-/* TOUJOURS préserver le menu de navigation */
-body.light .page .navigation,
-body.dark .page .navigation {
-  background-color: var(--navigation-bg-color, #1D1D1B) !important;
-  color: #ffffff !important;
-}
-
-body.light .page .navigation *,
-body.dark .page .navigation * {
-  color: #ffffff !important;
-}
-
-/* Forcer un fond pour les menus utilisateur */
-body.light .page .navigation .user-menu .wrapper,
-body.dark .page .navigation .user-menu .wrapper {
-  background-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-body.light .page .navigation .user-menu .wrapper .link,
-body.dark .page .navigation .user-menu .wrapper .link {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-}
-
-body.light .page .navigation .user-menu .wrapper .link:hover,
-body.dark .page .navigation .user-menu .wrapper .link:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Zone principale en clair */
-body.light .page .main {
-  background-color: #f5f5f5 !important;
-  color: #000000 !important;
-}
-
-body.light .page .main .canvas .content-box {
-  background-color: #e1e1e1 !important;
-  color: #000000 !important;
-}
-
-/* Board et lanes en clair */
-body.light .board {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-}
-
-body.light .board .lanes > div {
-  background-color: #f9f9f9 !important;
-  color: #000000 !important;
-}
-
-/* Champs de formulaire en clair */
-body.light input:not(.navigation input),
-body.light textarea:not(.navigation textarea),
-body.light select:not(.navigation select) {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border-color: #cccccc !important;
+  background-color: #ffffff;
+  color: #111111;
 }
 
 /* Thème sombre */
 body.dark {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
+  background-color: #101018;
+  color: #f5f5f5;
+}
+
+/* Navigation adaptée selon le thème */
+body.light .page .navigation {
+  background-color: #f5f5f7;
+  background-color: var(--navigation-bg-color, #f5f5f7);
+  color: #333333;
+}
+
+body.dark .page .navigation {
+  background-color: var(--navigation-bg-color, #1d1d1b);
+  color: #ffffff;
+}
+
+/* Icônes de navigation selon le thème */
+body.light .page .navigation .item a,
+body.light .page .navigation .burger {
+  color: #333333;
+  opacity: 0.8;
+}
+
+body.light .page .navigation .item a:hover,
+body.light .page .navigation .item.active a {
+  opacity: 1;
+}
+
+body.dark .page .navigation .item a,
+body.dark .page .navigation .burger {
+  color: #ffffff;
+}
+
+/* Menu utilisateur : wrapper adapté selon le thème */
+body.light .page .navigation .user-menu .wrapper {
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark .page .navigation .user-menu .wrapper {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+body.light .page .navigation .user-menu .wrapper .link {
+  background-color: transparent;
+  color: #333333;
+}
+
+body.dark .page .navigation .user-menu .wrapper .link {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+body.light .page .navigation .user-menu .wrapper .link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark .page .navigation .user-menu .wrapper .link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Zone principale */
+body.light .page .main {
+  background-color: #f5f5f7;
+  color: #111111;
 }
 
 body.dark .page .main {
-  background-color: #2a2a2a !important;
+  background-color: #181822;
+  color: #f5f5f5;
+}
+
+body.light .page .main .canvas .content-box {
+  background-color: #ffffff;
+  color: #111111;
 }
 
 body.dark .page .main .canvas .content-box {
-  background-color: #3a3a3a !important;
-  color: #ffffff !important;
+  background-color: #262636;
+  color: #f5f5f5;
+}
+
+/* Board et lanes */
+body.light .board {
+  background-color: #ffffff;
+  color: #111111;
+}
+
+body.dark .board {
+  background-color: #15151f;
+  color: #f5f5f5;
+}
+
+body.light .board .lanes > div {
+  background-color: #f7f7fa;
+  color: #111111;
+}
+
+body.dark .board .lanes > div {
+  background-color: #202031;
+  color: #f5f5f5;
+}
+
+/* Champs de formulaire */
+body.light input:not(.navigation input),
+body.light textarea:not(.navigation textarea),
+body.light select:not(.navigation select) {
+  background-color: #ffffff;
+  color: #111111;
+  border-color: #cccccc;
+}
+
+body.dark input:not(.navigation input),
+body.dark textarea:not(.navigation textarea),
+body.dark select:not(.navigation select) {
+  background-color: #252535;
+  color: #f5f5f5;
+  border-color: #555577;
 }
 
 code {

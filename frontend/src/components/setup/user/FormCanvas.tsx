@@ -35,7 +35,20 @@ export const FormCanvas = () => {
     const [initials, setInitials] = useState<string>(initialsDefault || '');
 
     const currentUser = users.find((user) => user._id === userId);
-    const [theme, setTheme] = useState<'light' | 'dark'>(currentUser?.theme || 'dark');
+    
+    // Convertir 'system' en thème effectif (light ou dark) basé sur les préférences système
+    const getInitialTheme = (): 'light' | 'dark' => {
+        if (currentUser?.theme && currentUser.theme !== 'system') {
+            return currentUser.theme as 'light' | 'dark';
+        }
+        // Si pas de thème ou 'system', utiliser les préférences système
+        if (typeof window !== 'undefined' && window.matchMedia) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return 'dark'; // Par défaut
+    };
+    
+    const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme());
     const defaultInitials = currentUser?.name ? UserHelper.generateDefaultInitials(currentUser.name) : '';
     
     const handleInitialsChange = (value: string) => {

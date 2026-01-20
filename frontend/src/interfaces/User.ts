@@ -11,7 +11,13 @@ export interface User {
   animal?: string;
   color?: string;
   initials?: string;
-  theme?: 'light' | 'dark';
+  /**
+   * Préférence de thème de l'utilisateur :
+   * - 'system' : suivre le thème de l'OS/navigateur (valeur par défaut si absent)
+   * - 'light'  : forcer le thème clair
+   * - 'dark'   : forcer le thème sombre
+   */
+  theme?: 'system' | 'light' | 'dark';
 }
 
 export enum UserStatus {
