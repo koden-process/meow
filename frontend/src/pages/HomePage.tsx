@@ -12,6 +12,8 @@ import {
     selectToken,
     selectAccounts,
     selectSchemaByType,
+    selectUserId,
+    selectUser,
 } from '../store/Store';
 import {
     ActionType,
@@ -38,6 +40,7 @@ import {getErrorMessage} from '../helpers/ErrorHelper';
 import {getRequestClient} from '../helpers/RequestHelper';
 import {SchemaType, SchemaAttributeType} from '../interfaces/Schema';
 import {useMemo} from 'react';
+import {toaster} from '../components/ui/toaster';
 
 export const enum FilterMode {
     OwnedByMe = 'owned-by-me',
@@ -53,6 +56,7 @@ export const HomePage = () => {
     const filters = useSelector(selectFilters);
     const accounts = useSelector(selectAccounts);
     const schema = useSelector((store: any) => selectSchemaByType(store, SchemaType.Card));
+    const currentUserId = useSelector(selectUserId);
 
     // Création du mapping id -> nom pour les accounts
     const accountMapping = Object.fromEntries(accounts.map(acc => [acc._id, acc.name]));
@@ -202,6 +206,27 @@ export const HomePage = () => {
         const card = cards.find((card) => card._id === result.draggableId);
 
         if (card) {
+            const isLaneChange = result.source.droppableId !== result.destination.droppableId
+                                 || result.destination.droppableId === 'trash';
+
+            if (isLaneChange && currentUserId !== card.userId) {
+                const owner = selectUser(store.getState(), card.userId);
+                const ownerName = owner?.name || 'Inconnu';
+
+                toaster.create({
+                    title: "Mouvement bloqué",
+                    description: `Vous ne pouvez pas déplacer cette carte. Propriétaire : ${ownerName}`,
+                    type: "error",
+                    duration: 5000,
+                });
+
+                if (trash) {
+                    trash.style.opacity = '0.3';
+                }
+
+                return;
+            }
+
             if (result.destination.droppableId === 'trash') {
                 store.dispatch({
                     type: ActionType.CARD_DELETE,
@@ -209,7 +234,6 @@ export const HomePage = () => {
                 });
             } else {
                 card!.laneId = result.destination.droppableId;
-                // TODO create action
                 store.dispatch({
                     type: ActionType.CARD_MOVE,
                     payload: {

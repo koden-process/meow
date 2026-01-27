@@ -1191,5 +1191,11 @@ export const Translations = {
   ActivityDeletedConfirmation: {
     en: '{name} has been successfully deleted',
     fr: '{name} a été supprimé avec succès'
+  },
+
+  // Card delete not allowed error
+  CardDeleteNotAllowedError: {
+    en: 'You cannot delete this opportunity because you are not the owner',
+    fr: 'Vous ne pouvez pas supprimer cette opportunité car vous n\'êtes pas le propriétaire'
   }
 };
