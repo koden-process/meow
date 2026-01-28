@@ -1197,5 +1197,11 @@ export const Translations = {
   CardDeleteNotAllowedError: {
     en: 'You cannot delete this opportunity because you are not the owner',
     fr: 'Vous ne pouvez pas supprimer cette opportunité car vous n\'êtes pas le propriétaire'
+  },
+
+  // Card move not allowed error
+  CardMoveNotAllowedError: {
+    en: 'You cannot move this opportunity because you are not the owner',
+    fr: 'Vous ne pouvez pas déplacer cette opportunité car vous n\'êtes pas le propriétaire'
   }
 };
