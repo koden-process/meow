@@ -11,7 +11,7 @@ interface BoardHeaderProps {
 }
 
 /**
- * Composant pour afficher le header du board avec titre, statistiques et bouton de changement de mode
+ * Component to display the board header with title, statistics, and a mode switch button
  */
 export const BoardHeader = ({ mode, cards, amount, onModeChange }: BoardHeaderProps) => {
     const getTitle = (cards: Card[]) => {

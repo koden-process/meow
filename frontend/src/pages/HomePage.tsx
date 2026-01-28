@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@adobe/react-spectrum';
 import { useSelector } from 'react-redux';
 import {
@@ -17,9 +17,7 @@ import { Layer as CardLayer } from '../components/card/Layer';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Layer as LaneLayer } from '../components/lane/Layer';
 import { Layer as AccountLayer } from '../components/account/Layer';
-import { useNavigate } from 'react-router-dom';
 import { DEFAULT_LANGUAGE } from '../Constants';
-import useMobileLayout from '../hooks/useMobileLayout';
 import { SchemaType } from '../interfaces/Schema';
 import { Translations } from '../Translations';
 
@@ -38,13 +36,12 @@ import { createAccountMapping, createSelectMappings } from '../services/cardServ
 import { handleDragStart, handleDragEnd } from '../services/dragDropHandlers';
 
 export const enum FilterMode {
-    OwnedByMe = 'owned-by-me',
+    // OwnedByMe = 'owned-by-me',
     RequireUpdate = 'require-update',
     RecentlyUpdated = 'recently-updated',
 }
 
 export const HomePage = () => {
-    // Redux selectors
     const cards = useSelector(selectCards);
     const lanes = useSelector(selectLanes);
     const users = useSelector(selectActiveUsers);
@@ -56,16 +53,15 @@ export const HomePage = () => {
 
     // Local state
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
-    const navigate = useNavigate();
 
     // Hooks personnalisés
     useCardEnrichment(token);
     const { text, setText, userId, setUserId, selectedAccountId, setSelectedAccountId, handleFilterToggle } =
         useFilterState(filters);
 
-    // Création des mappings
-    const accountMapping = createAccountMapping(accounts);
-    const selectMappings = createSelectMappings(schema, accountMapping);
+    // Création des mappings (mémorisés pour éviter les recréations inutiles)
+    const accountMapping = useMemo(() => createAccountMapping(accounts), [accounts]);
+    const selectMappings = useMemo(() => createSelectMappings(schema, accountMapping), [schema, accountMapping]);
 
     // Filtrage et calcul du montant
     const { filteredCardsByAccount, amount } = useCardFiltering(
@@ -76,7 +72,6 @@ export const HomePage = () => {
         selectMappings
     );
 
-    // Handlers
     const openCard = (id?: string) => {
         store.dispatch(showCardLayer(id));
     };

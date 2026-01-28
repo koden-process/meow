@@ -3,18 +3,18 @@ import { Account } from '../interfaces/Account';
 import { Schema, SchemaAttributeType } from '../interfaces/Schema';
 
 /**
- * Service pour la logique métier liée aux cards
+ * Service for business logic related to cards
  */
 
 /**
- * Crée un mapping des IDs d'accounts vers leurs noms
+ * Creates a mapping of account IDs to their names
  */
 export const createAccountMapping = (accounts: Account[]): { [id: string]: string } => {
     return Object.fromEntries(accounts.map(acc => [acc._id, acc.name]));
 };
 
 /**
- * Crée un mapping global pour les attributs de type référence
+ * Creates a global mapping for reference type attributes
  */
 export const createSelectMappings = (
     schema: Schema | undefined,
@@ -30,7 +30,6 @@ export const createSelectMappings = (
             ) {
                 selectMappings[attr.key] = accountMapping;
             }
-            // Ici tu pourras ajouter architect/moe si tu as les mappings
         });
     }
 
@@ -38,7 +37,7 @@ export const createSelectMappings = (
 };
 
 /**
- * Enrichit une card avec attributesReadable
+ * Enriches a card with attributesReadable
  */
 export const enrichCard = (
     card: Card,
@@ -68,7 +67,7 @@ export const enrichCard = (
 };
 
 /**
- * Enrichit une liste de cards avec attributesReadable
+ * Enriches a list of cards with attributesReadable
  */
 export const enrichCards = (
     cards: Card[],

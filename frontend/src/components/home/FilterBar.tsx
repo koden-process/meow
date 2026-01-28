@@ -19,7 +19,7 @@ interface FilterBarProps {
 }
 
 /**
- * Composant pour la barre de filtres (recherche, sélecteurs, boutons)
+ * Component for the filter bar (search, selectors, buttons)
  */
 export const FilterBar = ({
     text,
@@ -63,19 +63,15 @@ export const FilterBar = ({
                         type="text"
                         value={text}
                     />
-
-                    {/* Picker pour filtrer par account/contact */}
                     <Picker
-                        aria-label="Filtrer par contact"
+                        aria-label={Translations.FilterByContact[DEFAULT_LANGUAGE]}
                         selectedKey={selectedAccountId}
                         onSelectionChange={(key) => onAccountChange(key ? key.toString() : '')}
                     >
                         {getAccountOptions()}
                     </Picker>
-
-                    {/* Picker pour filtrer par utilisateur */}
                     <Picker
-                        aria-label="Filtrer par utilisateur"
+                        aria-label={Translations.FilterByUser[DEFAULT_LANGUAGE]}
                         selectedKey={userId}
                         onSelectionChange={(key) => {
                             if (key === null) return;
@@ -88,7 +84,7 @@ export const FilterBar = ({
 
                 {/* Right side: filter buttons */}
                 <div>
-                    {false && (
+                    {/*
                         <button
                             className={`filter ${
                                 filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
@@ -97,8 +93,8 @@ export const FilterBar = ({
                         >
                             {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
                         </button>
-                    )}
-                    <button
+                    */}
+                    {/*<button
                         className={`filter ${
                             filters.mode.has(FilterMode.RecentlyUpdated)
                                 ? 'recently-updated-active'
@@ -108,7 +104,7 @@ export const FilterBar = ({
                         style={{ display: 'none' }}
                     >
                         {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                    </button>
+                    </button>*/}
                     <button
                         className={`filter ${
                             filters.mode.has(FilterMode.RequireUpdate) ? 'require-update-active' : 'require-update'

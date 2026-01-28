@@ -10,7 +10,7 @@ interface BoardViewSwitcherProps {
 }
 
 /**
- * Composant pour switcher entre la vue Board et la vue Statistics
+ * Component to switch between the Board view and the Statistics view
  */
 export const BoardViewSwitcher = ({ mode, lanes, cards }: BoardViewSwitcherProps) => {
     return (

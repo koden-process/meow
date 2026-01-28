@@ -4,27 +4,25 @@ import { store } from '../store/Store';
 import { ActionType } from '../actions/Actions';
 
 /**
- * Gère le début du drag (affichage de la corbeille)
+ * Controls the start of the drag (display of the trash can)
  */
 export const handleDragStart = () => {
-    const trash = document.getElementById('trash');
-    if (trash) {
-        trash.style.opacity = '1';
-    }
+    // Trash feature disabled for now
+    // const trash = document.getElementById('trash');
+    // if (trash) {
+    //     trash.style.opacity = '1';
+    // }
 };
 
 /**
- * Gère la fin du drag (déplacement de la card ou suppression)
+ * Handles the end of the drag (moving or deleting the card)
  */
 export const handleDragEnd = (result: DropResult, cards: Card[]) => {
-    const trash = document.getElementById('trash');
-    if (trash) {
-        trash.style.opacity = '0.3';
-    }
-
-    console.log(
-        `move card ${result.draggableId} from lane ${result.source.droppableId} to lane ${result.destination?.droppableId}`
-    );
+    // Trash feature disabled for now
+    // const trash = document.getElementById('trash');
+    // if (trash) {
+    //     trash.style.opacity = '0.3';
+    // }
 
     if (!result.destination?.droppableId) {
         return;
@@ -34,30 +32,29 @@ export const handleDragEnd = (result: DropResult, cards: Card[]) => {
         result.source?.droppableId === result.destination?.droppableId &&
         result.source.index === result.destination.index
     ) {
-        console.log('guard: lane and index did not change, exit');
         return;
     }
 
     const card = cards.find((card) => card._id === result.draggableId);
 
     if (card) {
-        if (result.destination.droppableId === 'trash') {
-            store.dispatch({
-                type: ActionType.CARD_DELETE,
-                payload: card,
-            });
-        } else {
-            card!.laneId = result.destination.droppableId;
-            // TODO create action
+        // Trash feature disabled for now
+        // if (result.destination.droppableId === 'trash') {
+        //     store.dispatch({
+        //         type: ActionType.CARD_DELETE,
+        //         payload: card,
+        //     });
+        // } else {
+            card.laneId = result.destination.droppableId;
             store.dispatch({
                 type: ActionType.CARD_MOVE,
                 payload: {
                     card: card,
                     to: result.destination.droppableId,
                     from: result.source.droppableId,
-                    index: result.destination!.index,
+                    index: result.destination.index,
                 },
             });
-        }
+        // }
     }
 };

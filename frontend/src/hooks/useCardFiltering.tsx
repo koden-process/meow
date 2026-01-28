@@ -5,7 +5,7 @@ import { CardHelper } from '../helpers/CardHelper';
 import { FilterMode } from '../pages/HomePage';
 
 /**
- * Hook pour filtrer les cards et calculer le montant total du forecast
+ * Hook to filter cards and calculate the total forecast amount
  */
 export const useCardFiltering = (
     cards: Card[],
@@ -16,7 +16,6 @@ export const useCardFiltering = (
 ) => {
     const [amount, setAmount] = useState(0);
 
-    // Filtrage par account sélectionné
     const filteredCardsByAccount = useMemo(() => {
         if (!selectedAccountId) return cards;
         return cards.filter(card => {
@@ -25,14 +24,19 @@ export const useCardFiltering = (
         });
     }, [cards, selectedAccountId]);
 
-    // Calcul du montant total du forecast
+    // Extraction des propriétés primitives pour éviter les fausses dépendances
+    // Le Set filters.mode est sérialisé en string stable pour la comparaison
+    const filterMode = useMemo(() => Array.from(filters.mode).sort().join(','), [filters.mode]);
+    const filterUserId = filters.userId;
+    const filterText = filters.text;
+
     useEffect(() => {
         if (!lanes || !filteredCardsByAccount) {
             setAmount(0);
             return;
         }
 
-        const lanesWithForecast = lanes.filter((lane) => lane.inForecast === true);
+        const lanesWithForecast = lanes.filter((lane) => lane.inForecast);
 
         setAmount(
             CardHelper.filterAll(lanesWithForecast, filteredCardsByAccount, filters, selectMappings).reduce(
@@ -42,7 +46,7 @@ export const useCardFiltering = (
                 0
             )
         );
-    }, [filteredCardsByAccount, lanes, filters, selectMappings]);
+    }, [filteredCardsByAccount, lanes, filterMode, filterUserId, filterText, selectMappings, filters]);
 
     return {
         filteredCardsByAccount,
