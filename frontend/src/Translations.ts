@@ -858,6 +858,17 @@ export const Translations = {
     fr: 'Envoyer',
   },
 
+  // Link component translations
+  LinkLabelSuffix: {
+    en: '(link)',
+    fr: '(lien)',
+  },
+
+  OpenButton: {
+    en: 'Open',
+    fr: 'Ouvrir',
+  },
+
   // Reference component translations
   NoneOption: {
     en: 'none',
@@ -878,6 +889,11 @@ export const Translations = {
   EmailAttributeLabel: {
     en: 'Email',
     fr: 'Email',
+  },
+
+  LinkAttributeLabel: {
+    en: 'Link',
+    fr: 'Lien',
   },
 
   TextAreaAttributeLabel: {

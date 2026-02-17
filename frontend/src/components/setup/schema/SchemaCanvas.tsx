@@ -18,6 +18,7 @@ import {TextAttribute} from './TextAttribute';
 import {ReferenceAttribute} from './ReferenceAttribute';
 import {BooleanAttribute} from './BooleanAttribute';
 import {EmailAttribute} from './EmailAttribute';
+import {LinkAttribute} from './LinkAttribute';
 
 function moveAttribute<T>(items: T[], from: number, to: number): T[] {
     const lane = items[from];
@@ -40,6 +41,7 @@ const getOptions = (schema: Schema) => {
     const list = [
         <Item key="text">{Translations.TextAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
         <Item key="email">{Translations.EmailAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
+        <Item key="link">{Translations.LinkAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
         <Item key="textarea">{Translations.TextAreaAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
         <Item key="select">{Translations.DropdownAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
         <Item key="boolean">{Translations.CheckboxAttributeLabel[DEFAULT_LANGUAGE]}</Item>,
@@ -60,7 +62,7 @@ export interface SchemaCanvasProps {
 export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasProps) => {
     const [items, setItems] = useState<Array<SchemaAttribute>>([]);
     const [type, setType] = useState<SchemaAttributeType>(SchemaAttributeType.Text);
-    const [schema, setSchema] = useState(schemaImported);
+    const [schema] = useState(schemaImported);
 
     useEffect(() => {
         const list: SchemaAttribute[] = [];
@@ -143,6 +145,8 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                 return <TextAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
             case SchemaAttributeType.Email:
                 return <EmailAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+            case SchemaAttributeType.Link:
+                return <LinkAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
             case SchemaAttributeType.TextArea:
                 return (
                     <TextAreaAttribute update={update} remove={remove} attributeKey={item.key} {...item} />
@@ -178,7 +182,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
         <div className="setup-card">
             <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                 <Droppable droppableId="attributes">
-                    {(provided, snaphot) => {
+                    {(provided) => {
                         return (
                             <div ref={provided.innerRef} {...provided.droppableProps}>
                                 {items.map((item) => {
