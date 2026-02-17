@@ -12,6 +12,7 @@ import {
     selectToken,
     selectAccounts,
     selectSchemaByType,
+    selectUserId,
 } from '../store/Store';
 import {
     ActionType,
@@ -53,6 +54,7 @@ export const HomePage = () => {
     const filters = useSelector(selectFilters);
     const accounts = useSelector(selectAccounts);
     const schema = useSelector((store: any) => selectSchemaByType(store, SchemaType.Card));
+    const currentUserId = useSelector(selectUserId);
 
     // Création du mapping id -> nom pour les accounts
     const accountMapping = Object.fromEntries(accounts.map(acc => [acc._id, acc.name]));
@@ -202,6 +204,13 @@ export const HomePage = () => {
         const card = cards.find((card) => card._id === result.draggableId);
 
         if (card) {
+            const isLaneChange = result.source.droppableId !== result.destination.droppableId;
+
+            if (isLaneChange && currentUserId !== card.userId) {
+                store.dispatch(showModalError(Translations.CardMoveNotAllowedError[DEFAULT_LANGUAGE]));
+                return;
+            }
+
             if (result.destination.droppableId === 'trash') {
                 store.dispatch({
                     type: ActionType.CARD_DELETE,
@@ -209,7 +218,6 @@ export const HomePage = () => {
                 });
             } else {
                 card!.laneId = result.destination.droppableId;
-                // TODO create action
                 store.dispatch({
                     type: ActionType.CARD_MOVE,
                     payload: {

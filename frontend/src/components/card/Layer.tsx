@@ -115,9 +115,15 @@ export const Layer = () => {
     };
 
     const handleDeleteCard = async () => {
+        // Vérifier si l'utilisateur connecté est le propriétaire de la card
+        if (card?.userId !== userId) {
+            store.dispatch(showModalError(Translations.CardDeleteNotAllowedError[DEFAULT_LANGUAGE]));
+            return;
+        }
+
         // Supprimer immédiatement de l'affichage (comme addCard pour la création)
         store.dispatch(deleteCard(card!));
-        
+
         // Fermer la vue détaillée
         hideCardDetail();
     };
