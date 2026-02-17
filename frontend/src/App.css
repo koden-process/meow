@@ -383,6 +383,13 @@ body.light .page .navigation .item-mobile.active {
   position: relative;
 }
 
+.page .navigation .user-menu .theme-toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
 .page .navigation .user-menu .wrapper {
   position: absolute;
   padding: 4px;

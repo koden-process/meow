@@ -112,7 +112,7 @@ export const Navigation = () => {
                         </div>
                     </div>
                 )}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div className="theme-toggle-container">
                     <ThemeToggle />
                     <Avatar onClick={() => setUserMenu(!userMenue)} width={36} id={userId}/>
                 </div>

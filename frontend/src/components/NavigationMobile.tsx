@@ -36,7 +36,7 @@ export const NavigationMobile = () => {
                         <IconBurger/>
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                <div className="theme-toggle-container">
                     <ThemeToggle />
                     <Avatar onClick={() => setIsExpanded(!isExpanded)} width={36} id={userId}/>
                 </div>

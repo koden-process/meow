@@ -496,6 +496,26 @@ export const Translations = {
     fr: 'Vos initiales apparaîtront dans votre avatar. Laissez vide pour utiliser la première lettre de votre nom.',
   },
 
+  ThemeLabel: {
+    en: 'Theme',
+    fr: 'Thème',
+  },
+
+  ThemeLightOption: {
+    en: 'Light',
+    fr: 'Clair',
+  },
+
+  ThemeDarkOption: {
+    en: 'Dark',
+    fr: 'Sombre',
+  },
+
+  ThemeSystemOption: {
+    en: 'System',
+    fr: 'Système',
+  },
+
   // Currency
   CurrencyTitle: {
     en: 'Currency',
