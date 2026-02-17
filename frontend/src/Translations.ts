@@ -1193,6 +1193,22 @@ export const Translations = {
     fr: '{name} a été supprimé avec succès'
   },
 
+  // Custom labels
+  CustomLabelsTitle: {
+    en: 'Custom Labels',
+    fr: 'Libellés personnalisés'
+  },
+
+  CustomLabelsDescription: {
+    en: 'Customize the terminology used in the application to match your business needs',
+    fr: 'Personnalisez la terminologie utilisée dans l\'application pour correspondre à vos besoins métier'
+  },
+
+  OpportunityAmountCustomLabel: {
+    en: 'Amount Label',
+    fr: 'Libellé du montant'
+  },
+  
   // Card delete not allowed error
   CardDeleteNotAllowedError: {
     en: 'You cannot delete this opportunity because you are not the owner',
