@@ -1191,5 +1191,21 @@ export const Translations = {
   ActivityDeletedConfirmation: {
     en: '{name} has been successfully deleted',
     fr: '{name} a été supprimé avec succès'
+  },
+
+  // Custom labels
+  CustomLabelsTitle: {
+    en: 'Custom Labels',
+    fr: 'Libellés personnalisés'
+  },
+
+  CustomLabelsDescription: {
+    en: 'Customize the terminology used in the application to match your business needs',
+    fr: 'Personnalisez la terminologie utilisée dans l\'application pour correspondre à vos besoins métier'
+  },
+
+  OpportunityAmountCustomLabel: {
+    en: 'Amount Label',
+    fr: 'Libellé du montant'
   }
 };
