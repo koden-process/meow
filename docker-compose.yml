@@ -9,6 +9,13 @@ services:
       - PORT=9000
       - LOG_LEVEL=info
       - NODE_ENV=production
+      # Customization variables (optional)
+      # - VITE_CUSTOM_APP_NAME=My Sales CRM
+      # - VITE_CUSTOM_FAVICON_URL=https://example.com/favicon.svg
+      # - VITE_CUSTOM_LOGO_URL=https://example.com/logo.svg
+      # - VITE_CUSTOM_LOGO_ALT=My Company
+      # - VITE_CUSTOM_THEME_COLOR=#1D1D1B
+      # - VITE_CUSTOM_NAVIGATION_COLOR=#067BC2
     ports:
       - '3117:80'
     restart: always

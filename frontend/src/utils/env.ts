@@ -7,6 +7,7 @@ interface EnvConfig {
   VITE_CUSTOM_FAVICON_URL?: string;
   VITE_CUSTOM_LOGO_ALT?: string;
   VITE_CUSTOM_NAVIGATION_COLOR?: string;
+  VITE_CUSTOM_APP_NAME?: string;
 }
 
 declare global {
@@ -25,8 +26,9 @@ export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
   // First try to get from runtime config (Kubernetes)
   if (window.ENV && window.ENV[key]) {
     const runtimeValue = window.ENV[key];
-    // Check if the value is not the variable name itself
-    if (runtimeValue && runtimeValue !== key && runtimeValue.trim() !== '') {
+    // Check if the value is not the variable name itself and not an unsubstituted placeholder
+    const isUnsubstitutedPlaceholder = runtimeValue?.startsWith('${') && runtimeValue?.endsWith('}');
+    if (runtimeValue && runtimeValue !== key && runtimeValue.trim() !== '' && !isUnsubstitutedPlaceholder) {
       console.log(`  ✅ Using runtime value for ${key}:`, runtimeValue);
       return runtimeValue;
     }
@@ -57,6 +59,8 @@ const getImportMetaEnv = (key: keyof EnvConfig): string | undefined => {
       return import.meta.env.VITE_CUSTOM_LOGO_ALT;
     case 'VITE_CUSTOM_NAVIGATION_COLOR':
       return import.meta.env.VITE_CUSTOM_NAVIGATION_COLOR;
+    case 'VITE_CUSTOM_APP_NAME':
+      return import.meta.env.VITE_CUSTOM_APP_NAME;
     default:
       return undefined;
   }
@@ -68,3 +72,4 @@ export const getCustomLogoUrl = () => getEnvVar('VITE_CUSTOM_LOGO_URL');
 export const getCustomFaviconUrl = () => getEnvVar('VITE_CUSTOM_FAVICON_URL');
 export const getCustomLogoAlt = () => getEnvVar('VITE_CUSTOM_LOGO_ALT');
 export const getCustomNavigationColor = () => getEnvVar('VITE_CUSTOM_NAVIGATION_COLOR');
+export const getCustomAppName = () => getEnvVar('VITE_CUSTOM_APP_NAME');

@@ -9,12 +9,14 @@ import { getBrowserLocale } from './helpers/Helper';
 import { setDynamicFavicon } from './helpers/FaviconHelper';
 import { setDynamicThemeColor } from './helpers/ThemeHelper';
 import { setDynamicNavigationColor } from './helpers/NavigationHelper';
+import { setDynamicAppName } from './helpers/AppNameHelper';
 import ErrorBoundary from './ErrorBoundary';
 
-// Set the favicon, theme color and navigation color based on environment variables
+// Set the favicon, theme color, navigation color and app name based on environment variables
 setDynamicFavicon();
 setDynamicThemeColor();
 setDynamicNavigationColor();
+setDynamicAppName();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
