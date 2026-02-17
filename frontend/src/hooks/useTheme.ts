@@ -3,17 +3,17 @@ import { selectSessionUser } from '../store/Store';
 import { useEffect, useState } from 'react';
 import { updateThemeColor } from '../helpers/ThemeHelper';
 
+const getSystemTheme = (): 'light' | 'dark' => {
+  if (typeof window === 'undefined' || typeof window.matchMedia === 'undefined') {
+    return 'dark';
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
 export function useTheme() {
   const user = useSelector(selectSessionUser);
   // Si l'utilisateur n'a rien choisi, on suit le thème système
   const userTheme = user?.theme ?? 'system';
-
-  const getSystemTheme = () => {
-    if (typeof window === 'undefined' || typeof window.matchMedia === 'undefined') {
-      return 'dark';
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  };
 
   // Thème effectif appliqué à l'UI
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(
@@ -63,7 +63,7 @@ export function useTheme() {
     document.documentElement.classList.add(themeClass);
 
     // Met à jour la meta theme-color pour le navigateur / PWA
-    updateThemeColor(themeClass === 'dark' ? '#101018' : '#ffffff');
+    updateThemeColor(themeClass === 'dark' ? '#1D1D1B' : '#ffffff');
   }, [resolvedTheme]);
 
   return resolvedTheme;

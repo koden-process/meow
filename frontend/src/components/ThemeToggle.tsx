@@ -2,6 +2,8 @@ import { MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSessionUser, store } from '../store/Store';
 import { ActionType } from '../actions/Actions';
+import { Translations } from '../Translations';
+import { DEFAULT_LANGUAGE } from '../Constants';
 
 type ThemePreference = 'system' | 'light' | 'dark';
 
@@ -43,12 +45,12 @@ export const ThemeToggle = () => {
 
   const getLabel = () => {
     if (preference === 'system') {
-      return 'Thème : système';
+      return Translations.ThemeToggleSystem[DEFAULT_LANGUAGE];
     }
     if (preference === 'light') {
-      return 'Thème : clair';
+      return Translations.ThemeToggleLight[DEFAULT_LANGUAGE];
     }
-    return 'Thème : sombre';
+    return Translations.ThemeToggleDark[DEFAULT_LANGUAGE];
   };
 
   const getSymbol = () => {
@@ -69,7 +71,7 @@ export const ThemeToggle = () => {
       title={getLabel()}
       aria-label={getLabel()}
     >
-      <span className="theme-toggle-symbol">{getSymbol()}</span>
+      <span className="theme-toggle-symbol" aria-hidden="true">{getSymbol()}</span>
     </button>
   );
 };

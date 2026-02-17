@@ -12,8 +12,14 @@ import { SpectrumProvider } from './components/SpectrumProvider';
 
 // Set the favicon, theme color and navigation color based on environment variables
 setDynamicFavicon();
-// Valeur initiale : on suppose un fond sombre avant que React n'applique le bon thème
-setDynamicThemeColor('dark');
+// Valeur initiale : on se base sur la préférence système avant que React n'applique le bon thème
+const initialTheme =
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
+setDynamicThemeColor(initialTheme);
 setDynamicNavigationColor();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

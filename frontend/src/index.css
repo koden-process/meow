@@ -38,15 +38,6 @@ body {
   justify-content: center;
 }
 
-/* Thème clair : logo avec opacité adaptée */
-body.light .page .navigation .logo-spacer {
-  opacity: 0.8;
-}
-
-body.light .page .navigation .logo-spacer:hover {
-  opacity: 1;
-}
-
 .page .navigation .user-menu {
   margin-bottom: 10px;
 }
@@ -65,7 +56,6 @@ body.dark {
 
 /* Navigation adaptée selon le thème */
 body.light .page .navigation {
-  background-color: #f5f5f7;
   background-color: var(--navigation-bg-color, #f5f5f7);
   color: #333333;
 }

@@ -516,6 +516,21 @@ export const Translations = {
     fr: 'Système',
   },
 
+  ThemeToggleSystem: {
+    en: 'Theme: System',
+    fr: 'Thème : système',
+  },
+
+  ThemeToggleLight: {
+    en: 'Theme: Light',
+    fr: 'Thème : clair',
+  },
+
+  ThemeToggleDark: {
+    en: 'Theme: Dark',
+    fr: 'Thème : sombre',
+  },
+
   // Currency
   CurrencyTitle: {
     en: 'Currency',
