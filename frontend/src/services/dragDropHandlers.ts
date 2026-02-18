@@ -1,7 +1,9 @@
 import { DropResult } from 'react-beautiful-dnd';
 import { Card } from '../interfaces/Card';
-import { store } from '../store/Store';
-import { ActionType } from '../actions/Actions';
+import { store, selectUserId } from '../store/Store';
+import { ActionType, showModalError } from '../actions/Actions';
+import { Translations } from '../Translations';
+import { DEFAULT_LANGUAGE } from '../Constants';
 
 /**
  * Controls the start of the drag (display of the trash can)
@@ -38,6 +40,19 @@ export const handleDragEnd = (result: DropResult, cards: Card[]) => {
     const card = cards.find((card) => card._id === result.draggableId);
 
     if (card) {
+        // Vérifier si l'utilisateur connecté est le propriétaire de la card
+        const userId = selectUserId(store.getState());
+
+        if (!userId) {
+            console.error('User ID is undefined - cannot verify ownership');
+            return;
+        }
+
+        if (card.userId !== userId) {
+            store.dispatch(showModalError(Translations.CardMoveNotAllowedError[DEFAULT_LANGUAGE]));
+            return;
+        }
+
         // Trash feature disabled for now
         // if (result.destination.droppableId === 'trash') {
         //     store.dispatch({
