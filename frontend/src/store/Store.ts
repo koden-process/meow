@@ -64,13 +64,8 @@ export const selectDate = (store: ApplicationStore) => store.ui.date;
 export const selectModalText = (store: ApplicationStore) => store.ui.text;
 export const selectCard = (store: ApplicationStore, id: string | undefined) =>
   store.cards.find((card) => card._id === id);
-export const selectFilters = (store: ApplicationStore) => {
-  return {
-    mode: new Set(store.ui.filters.mode),
-    text: store.ui.filters.text,
-    userId: store.ui.filters.userId,
-  };
-};
+// Utilisation du sélecteur mémorisé depuis selectors.ts
+export { selectFilters } from './selectors';
 export const selectAccountListView = (store: ApplicationStore) => store.ui.accounts;
 export const selectUserListView = (store: ApplicationStore) => store.ui.users;
 export const selectView = (store: ApplicationStore, name: ListName) => store.ui[name];
