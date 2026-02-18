@@ -7,6 +7,7 @@ import { ReferenceAttribute } from './ReferenceAttribute';
 import { BooleanAttribute } from './BooleanAttribute';
 import { Attribute } from '../../interfaces/Attribute';
 import { EmailAttribute } from './EmailAttribute';
+import { LinkAttribute } from './LinkAttribute';
 
 const toStringOrNull = (value: unknown) => {
   if (typeof value === 'undefined' || value === null) {
@@ -71,6 +72,16 @@ export const SchemaCanvas = ({
       case 'email':
         return (
           <EmailAttribute
+            update={updateAttribute}
+            attributeKey={attribute.key}
+            value={toStringOrNull(value)}
+            isDisabled={isDisabled}
+            {...attribute}
+          />
+        );
+      case 'link':
+        return (
+          <LinkAttribute
             update={updateAttribute}
             attributeKey={attribute.key}
             value={toStringOrNull(value)}

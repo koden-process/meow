@@ -44,7 +44,7 @@ export const CurrencyCanvas = () => {
         setCurrency(c);
 
         try {
-            const payload = await client.updateTeam(team!._id, c);
+            const payload = await client.updateTeam(team!._id, { currency: c });
 
             store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
 

@@ -35,5 +35,7 @@ yarn-error.log*
 debug
 _mongo_data
 .ai
+mcp.json
 
 /scripts
+.dev/

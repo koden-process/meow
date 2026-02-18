@@ -18,6 +18,7 @@ export enum SchemaAttributeType {
   Reference = 'reference',
   Boolean = 'boolean',
   Email = 'email',
+  Link = 'link',
 }
 
 export interface BaseSchemaAttribute {

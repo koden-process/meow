@@ -86,3 +86,7 @@ export const selectReferencesTo = (store: ApplicationStore, entity: string) => {
 
 export const selectIntegrationByKey = (store: ApplicationStore, key: string) =>
   store.session.team?.integrations.some((integration) => integration.key === key);
+
+export const selectCustomOpportunityAmountLabel = (store: ApplicationStore) =>
+  store.session.team?.customLabels?.opportunityAmount;
+

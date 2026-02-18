@@ -11,6 +11,7 @@ import {
     selectToken,
     selectAccounts,
     selectSchemaByType,
+    selectUserId,
 } from '../store/Store';
 import { showCardLayer } from '../actions/Actions';
 import { Layer as CardLayer } from '../components/card/Layer';
@@ -50,6 +51,7 @@ export const HomePage = () => {
     const accounts = useSelector(selectAccounts);
     const token = useSelector(selectToken);
     const schema = useSelector((store: any) => selectSchemaByType(store, SchemaType.Card));
+    const currentUserId = useSelector(selectUserId);
 
     // Local state
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
@@ -74,6 +76,124 @@ export const HomePage = () => {
 
     const openCard = (id?: string) => {
         store.dispatch(showCardLayer(id));
+    };
+
+    const [amount, setAmount] = useState(0);
+
+    const getTitle = (cards: Card[]) => {
+        const count = cards.length;
+
+        return count <= 1
+            ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
+            : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
+    };
+
+    // Nouveau filtrage par account sélectionné
+    const filteredCardsByAccount = useMemo(() => {
+        if (!selectedAccountId) return cards;
+        // On cherche les cards qui ont l'ID de l'account dans leurs attributs (clé de type référence)
+        return cards.filter(card => {
+            if (!card.attributes) return false;
+            return Object.values(card.attributes).includes(selectedAccountId);
+        });
+    }, [cards, selectedAccountId]);
+
+    useEffect(() => {
+        if (!lanes || !filteredCardsByAccount) {
+            setAmount(0);
+            return;
+        }
+
+        const lanesWithForecast = lanes.filter((lane) => lane.inForecast === true);
+
+        setAmount(
+            CardHelper.filterAll(lanesWithForecast, filteredCardsByAccount, filters, selectMappings).reduce((acc, card) => {
+                return card.amount ? acc + card.amount : acc;
+            }, 0)
+        );
+    }, [filteredCardsByAccount, lanes, filters, accounts, schema]);
+
+    const onDragEnd = async (result: DropResult) => {
+        const trash = document.getElementById('trash');
+
+        if (trash) {
+            trash.style.opacity = '0.3';
+        }
+
+        console.log(
+            `move card ${result.draggableId} from lane ${result.source.droppableId} to lane ${result.destination?.droppableId}`
+        );
+
+        if (!result.destination?.droppableId) {
+            return;
+        }
+
+        if (
+            result.source?.droppableId === result.destination?.droppableId &&
+            result.source.index === result.destination.index
+        ) {
+            console.log('guard: lane and index did not change, exit');
+            return;
+        }
+
+        const card = cards.find((card) => card._id === result.draggableId);
+
+        if (card) {
+            const isLaneChange = result.source.droppableId !== result.destination.droppableId;
+
+            if (isLaneChange && currentUserId !== card.userId) {
+                store.dispatch(showModalError(Translations.CardMoveNotAllowedError[DEFAULT_LANGUAGE]));
+                return;
+            }
+
+            if (result.destination.droppableId === 'trash') {
+                store.dispatch({
+                    type: ActionType.CARD_DELETE,
+                    payload: card,
+                });
+            } else {
+                card!.laneId = result.destination.droppableId;
+                store.dispatch({
+                    type: ActionType.CARD_MOVE,
+                    payload: {
+                        card: card,
+                        to: result.destination.droppableId,
+                        from: result.source.droppableId,
+                        index: result.destination!.index,
+                    },
+                });
+            }
+        }
+    };
+
+    const onDragStart = () => {
+        const trash = document.getElementById('trash');
+
+        if (trash) {
+            trash.style.opacity = '1';
+        }
+    };
+
+    if (window.location.pathname !== '/') {
+        navigate('/');
+        return null;
+    }
+
+    const getAccountOptions = () => {
+        const list: JSX.Element[] = [];
+        list.push(<Item key="">Filtrer par contact</Item>);
+        accounts.forEach(acc => {
+            list.push(<Item key={acc._id}>{acc.name}</Item>);
+        });
+        return list;
+    };
+
+    const getUserOptions = () => {
+        const list: JSX.Element[] = [];
+        [{_id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name}, ...users].forEach(user => {
+            list.push(<Item key={user._id}>{user.name}</Item>);
+        });
+        return list;
     };
 
     return (
