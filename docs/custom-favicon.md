@@ -1,9 +1,10 @@
-# Configuration du Favicon et Logo Personnalisés
+# Configuration de l'Apparence Personnalisée
 
 ## Vue d'ensemble
 
-Cette application permet de personnaliser le favicon et le logo de navigation via des variables d'environnement. Si aucune variable n'est définie, les éléments par défaut seront utilisés.
+Cette application permet de personnaliser l'apparence (nom, favicon et logo) via des variables d'environnement. Si aucune variable n'est définie, les éléments par défaut seront utilisés.
 
+- **Nom de l'application** : Par défaut "Meow Sales Pipeline"
 - **Favicon** : Par défaut `/meow-logo-reduced.svg`
 - **Logo de navigation** : Aucun logo par défaut (zone libre dans le menu)
 
@@ -12,6 +13,12 @@ Cette application permet de personnaliser le favicon et le logo de navigation vi
 ### Variables d'environnement
 
 Créez un fichier `.env.local` dans le dossier `frontend/` et ajoutez :
+
+#### Nom de l'application personnalisé
+
+```bash
+VITE_CUSTOM_APP_NAME=Mon Application CRM
+```
 
 #### Favicon personnalisé
 
@@ -42,6 +49,12 @@ VITE_CUSTOM_LOGO_MAX_HEIGHT=60
 
 ### Exemples d'utilisation
 
+#### Nom d'application personnalisé
+
+```bash
+VITE_CUSTOM_APP_NAME=Sales CRM Pro
+```
+
 #### Favicon à partir d'une URL externe
 
 ```bash
@@ -65,6 +78,13 @@ VITE_CUSTOM_LOGO_MAX_HEIGHT=50
 
 ## Fonctionnement
 
+### Nom de l'application
+
+1. Au démarrage de l'application, la fonction `setDynamicAppName()` est appelée
+2. Elle vérifie si `VITE_CUSTOM_APP_NAME` est définie
+3. Si oui, elle utilise ce nom pour le titre de la page
+4. Si non, elle utilise le nom par défaut "Meow Sales Pipeline"
+
 ### Favicon
 
 1. Au démarrage de l'application, la fonction `setDynamicFavicon()` est appelée
@@ -85,6 +105,7 @@ VITE_CUSTOM_LOGO_MAX_HEIGHT=50
 
 1. Copiez `.env.example` vers `.env.local`
 2. Décommentez et modifiez les variables selon vos besoins :
+   - `VITE_CUSTOM_APP_NAME` pour le nom de l'application
    - `VITE_CUSTOM_FAVICON_URL` pour le favicon
    - `VITE_CUSTOM_LOGO_URL` pour le logo de navigation
 3. Redémarrez le serveur de développement
@@ -111,6 +132,7 @@ updateFavicon('https://example.com/nouveau-favicon.svg');
 
 En production, définissez les variables d'environnement dans votre système de déploiement (Vercel, Netlify, Docker, etc.) :
 
+- `VITE_CUSTOM_APP_NAME` : Nom personnalisé de l'application (optionnel)
 - `VITE_CUSTOM_FAVICON_URL` : URL du favicon personnalisé
 - `VITE_CUSTOM_LOGO_URL` : URL du logo de navigation
 - `VITE_CUSTOM_LOGO_ALT` : Texte alternatif du logo (optionnel)

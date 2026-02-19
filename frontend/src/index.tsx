@@ -7,10 +7,11 @@ import { store } from './store/Store';
 import { setDynamicFavicon } from './helpers/FaviconHelper';
 import { setDynamicThemeColor } from './helpers/ThemeHelper';
 import { setDynamicNavigationColor } from './helpers/NavigationHelper';
+import { setDynamicAppName } from './helpers/AppNameHelper';
 import ErrorBoundary from './ErrorBoundary';
 import { SpectrumProvider } from './components/SpectrumProvider';
 
-// Set the favicon, theme color and navigation color based on environment variables
+// Set the favicon, theme color, navigation color and app name based on environment variables
 setDynamicFavicon();
 // Valeur initiale : on se base sur la préférence système avant que React n'applique le bon thème
 const initialTheme =
@@ -21,6 +22,7 @@ const initialTheme =
     : 'light';
 setDynamicThemeColor(initialTheme);
 setDynamicNavigationColor();
+setDynamicAppName();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
