@@ -496,11 +496,46 @@ export const Translations = {
         fr: 'Vos initiales apparaîtront dans votre avatar. Laissez vide pour utiliser la première lettre de votre nom.',
     },
 
-    // Currency
-    CurrencyTitle: {
-        en: 'Currency',
-        fr: 'Devise',
-    },
+  ThemeLabel: {
+    en: 'Theme',
+    fr: 'Thème',
+  },
+
+  ThemeLightOption: {
+    en: 'Light',
+    fr: 'Clair',
+  },
+
+  ThemeDarkOption: {
+    en: 'Dark',
+    fr: 'Sombre',
+  },
+
+  ThemeSystemOption: {
+    en: 'System',
+    fr: 'Système',
+  },
+
+  ThemeToggleSystem: {
+    en: 'Theme: System',
+    fr: 'Thème : système',
+  },
+
+  ThemeToggleLight: {
+    en: 'Theme: Light',
+    fr: 'Thème : clair',
+  },
+
+  ThemeToggleDark: {
+    en: 'Theme: Dark',
+    fr: 'Thème : sombre',
+  },
+
+  // Currency
+  CurrencyTitle: {
+    en: 'Currency',
+    fr: 'Devise',
+  },
 
     USDollarOption: {
         en: 'US Dollar',

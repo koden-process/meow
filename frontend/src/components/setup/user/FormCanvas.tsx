@@ -35,7 +35,12 @@ export const FormCanvas = () => {
     const [initials, setInitials] = useState<string>(initialsDefault || '');
 
     const currentUser = users.find((user) => user._id === userId);
-    const [theme, setTheme] = useState<'light' | 'dark'>(currentUser?.theme || 'dark');
+    
+    const getInitialTheme = (): 'system' | 'light' | 'dark' => {
+        return currentUser?.theme || 'system';
+    };
+    
+    const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(getInitialTheme());
     const defaultInitials = currentUser?.name ? UserHelper.generateDefaultInitials(currentUser.name) : '';
     
     const handleInitialsChange = (value: string) => {
@@ -133,18 +138,19 @@ export const FormCanvas = () => {
                 />
             </div>
 
-            <h2>Thème</h2>
+            <h2>{Translations.ThemeLabel[DEFAULT_LANGUAGE]}</h2>
             <div style={{marginBottom: '20px'}}>
                 <Picker
                     selectedKey={theme}
-                    aria-label="Sélecteur de thème"
+                    aria-label={Translations.ThemeLabel[DEFAULT_LANGUAGE]}
                     onSelectionChange={(key) => {
                         if (key === null) return;
-                        setTheme(key as 'light' | 'dark');
+                        setTheme(key as 'system' | 'light' | 'dark');
                     }}
                 >
-                    <Item key="light">Clair</Item>
-                    <Item key="dark">Sombre</Item>
+                    <Item key="system">{Translations.ThemeSystemOption[DEFAULT_LANGUAGE]}</Item>
+                    <Item key="light">{Translations.ThemeLightOption[DEFAULT_LANGUAGE]}</Item>
+                    <Item key="dark">{Translations.ThemeDarkOption[DEFAULT_LANGUAGE]}</Item>
                 </Picker>
             </div>
 
