@@ -1,14 +1,14 @@
 {
-  "short_name": "Meow Sales Pipeline",
-  "name": "Meow Sales Pipeline",
+  "short_name": "Preskription",
+  "name": "Preskription",
   "icons": [
     {
-      "src": "logo192.png",
+      "src": "https://storage.googleapis.com/koden-public/unikalo/logo_preskription_256.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "https://storage.googleapis.com/koden-public/unikalo/logo_preskription_256.png",
       "type": "image/png",
       "sizes": "512x512"
     }
