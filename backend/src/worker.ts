@@ -61,6 +61,7 @@ import { DatabaseHelper } from './helpers/DatabaseHelper.js';
 import { SchemaController } from './controllers/SchemaController.js';
 import { SchemaRequestSchema } from './middlewares/schema-validation/SchemaRequestSchema.js';
 import { BoardRequestSchema } from './middlewares/schema-validation/BoardRequestSchema.js';
+import { FavoriteRequestSchema } from './middlewares/schema-validation/FavoriteRequestSchema.js';
 import { UserUpdateRequestSchema } from './middlewares/schema-validation/UserUpdateRequestSchema.js';
 import { PasswordRequestSchema } from './middlewares/schema-validation/PasswordRequestSchema.js';
 import { TeamController } from './controllers/TeamController.js';
@@ -299,6 +300,13 @@ try {
       UserController.board
     );
   user.route('/:id/flags').get(UserController.flags);
+  user
+    .route('/:id/favorites')
+    .post(
+      rejectIfContentTypeIsNot('application/json'),
+      validateAgainst(FavoriteRequestSchema),
+      UserController.toggleFavorite
+    );
   user
     .route('/:id/password')
     .post(

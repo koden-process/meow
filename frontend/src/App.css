@@ -2015,3 +2015,25 @@ body.light [class*="spectrum-Heading"] {
 body.light [class*="spectrum-Text"] {
   color: #111111;
 }
+
+/* ── Favorite star button ────────────────────────────────────── */
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.1em;
+  line-height: 1;
+  color: #cccccc;
+  transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.2);
+  color: #f5a623;
+}
+
+.favorite-btn.is-favorite {
+  color: #f5a623;
+}
+

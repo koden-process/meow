@@ -26,6 +26,8 @@ export const selectApplicationState = (store: RootState) => store.application.st
 export const selectBrowserState = (store: RootState) => store.browser.state;
 export const selectToken = (store: RootState) => store.session.token;
 export const selectSessionUser = (store: RootState) => store.session.user;
+export const selectFavoriteAccountIds = (store: RootState): string[] =>
+  store.session.user?.favoriteAccounts ?? [];
 export const selectCards = (store: RootState) => store.cards;
 export const selectCardsByLaneId = (store: ApplicationStore, id: string | undefined) =>
   store.cards.filter((card) => card.laneId === id);

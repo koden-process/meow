@@ -392,6 +392,12 @@ export class RequestHelper {
     return this.doFetch(url, 'POST', board);
   }
 
+  async toggleFavoriteAccount(userId: string, accountId: string): Promise<User> {
+    const url = this.getUrl(`/api/users/${userId}/favorites`);
+
+    return this.doFetch(url, 'POST', { accountId });
+  }
+
   async createAccount(account: AccountPreview): Promise<Account> {
     let url = this.getUrl(`/api/accounts`);
 

@@ -20,11 +20,11 @@ export class User implements ExistingEntity {
   theme?: 'light' | 'dark';
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
+  favoriteAccounts?: ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 
-  constructor(
-    _id: ObjectId,
+  constructor(_id: ObjectId,
     teamId: ObjectId,
     name: string,
     status: UserStatus,
@@ -61,6 +61,7 @@ export class NewUser implements NewEntity {
   theme?: 'light' | 'dark';
   flags?: Flags;
   board?: { [key: string]: Card['_id'][] };
+  favoriteAccounts?: ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 
