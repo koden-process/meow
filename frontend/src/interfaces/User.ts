@@ -12,10 +12,12 @@ export interface User {
   color?: string;
   initials?: string;
   /**
-   * Préférence de thème de l'utilisateur :
-   * - 'system' : suivre le thème de l'OS/navigateur (valeur par défaut si absent)
-   * - 'light'  : forcer le thème clair
-   * - 'dark'   : forcer le thème sombre
+   * 
+   * user's theme preferences :
+   * 
+   * - 'system' : follow the os browser theme / suivre le thème de l'OS/navigateur (valeur par défaut si absent)
+   * - 'light'  : force light them / forcer le thème clair
+   * - 'dark'   : force dark theme / forcer le thème sombre
    */
   theme?: 'system' | 'light' | 'dark';
 }
