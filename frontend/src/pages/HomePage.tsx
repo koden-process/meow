@@ -59,22 +59,23 @@ export const HomePage = () => {
 
     // Hooks personnalisés
     useCardEnrichment(token);
-    const { text, setText, userId, setUserId, selectedAccountId, setSelectedAccountId, handleFilterToggle } =
-        useFilterState(filters);
+    const { text, setText, userId, setUserId, selectedAccountId, setSelectedAccountId, handleFilterToggle, hasFavorites, accountsForFilter } =
+        useFilterState(filters, accounts);
 
     // Création des mappings (mémorisés pour éviter les recréations inutiles)
     const accountMapping = useMemo(() => createAccountMapping(accounts), [accounts]);
     const selectMappings = useMemo(() => createSelectMappings(schema, accountMapping), [schema, accountMapping]);
 
-    // Filtrer les comptes pour le ComboBox
+    // Filtrer les comptes pour le ComboBox (parmi les favoris ou tous selon hasFavorites)
     const accountFiltered = useMemo(() => {
+        const base = accountsForFilter;
         if (!accountSearchText) {
-            return accounts;
+            return base;
         }
-        return accounts.filter(acc =>
+        return base.filter(acc =>
             acc.name.toLowerCase().includes(accountSearchText.toLowerCase())
         );
-    }, [accounts, accountSearchText]);
+    }, [accountsForFilter, accountSearchText]);
 
     // Filtrage et calcul du montant
     const { filteredCardsByAccount, amount } = useCardFiltering(
@@ -200,6 +201,7 @@ export const HomePage = () => {
                                                 setAccountSearchText('');
                                             }
                                         }}
+                                        placeholder={hasFavorites ? '★ Contacts favoris' : Translations.FilterByContact[DEFAULT_LANGUAGE]}
                                     >
                                         {(item: any) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
                                     </ComboBox>

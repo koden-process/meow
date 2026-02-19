@@ -9,6 +9,7 @@ import { AuthenticatedRequest } from '../requests/AuthenticatedRequest.js';
 import { isValidName, isValidPassword } from './RegisterControllerValidator.js';
 import { EntityNotFoundError } from '../errors/EntityNotFoundError.js';
 import { validateAndFetchUser } from '../helpers/EntityFetchHelper.js';
+import { ObjectId } from 'mongodb';
 
 function parseUserStatus(value: unknown): UserStatus {
   switch (value) {
@@ -172,6 +173,37 @@ const password = async (req: AuthenticatedRequest, res: Response, next: NextFunc
   }
 };
 
+const toggleFavorite = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const user = await validateAndFetchUser(req.params.id, req.jwt.user);
+
+    /* only the connected user can manage their own favorites */
+    if (user._id.toString() !== req.jwt.user._id.toString()) {
+      throw new EntityNotFoundError();
+    }
+
+    const accountId = new ObjectId(req.body.accountId);
+
+    if (!user.favoriteAccounts) {
+      user.favoriteAccounts = [];
+    }
+
+    const index = user.favoriteAccounts.findIndex((id) => id.toString() === accountId.toString());
+
+    if (index === -1) {
+      user.favoriteAccounts.push(accountId);
+    } else {
+      user.favoriteAccounts.splice(index, 1);
+    }
+
+    const updated = await EntityHelper.update(user);
+
+    return res.json(updated);
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export const UserController = {
   list,
   create,
@@ -179,4 +211,5 @@ export const UserController = {
   update,
   board,
   password,
+  toggleFavorite,
 };

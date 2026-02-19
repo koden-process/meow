@@ -20,6 +20,7 @@ export interface User {
    * - 'dark'   : force dark theme / forcer le thème sombre
    */
   theme?: 'system' | 'light' | 'dark';
+  favoriteAccounts?: string[];
 }
 
 export enum UserStatus {

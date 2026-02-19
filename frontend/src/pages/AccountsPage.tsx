@@ -9,8 +9,13 @@ import {
     selectSchemaByType,
     selectView,
     selectViewColumns,
+    selectToken,
+    selectSessionUser,
+    selectFavoriteAccountIds,
     store,
 } from '../store/Store';
+import {ActionType} from '../actions/Actions';
+import {getRequestClient} from '../helpers/RequestHelper';
 import {ListViewHelper} from '../helpers/ListViewHelper';
 import {ApplicationStore} from '../store/ApplicationStore';
 import {Schema, SchemaType} from '../interfaces/Schema';
@@ -30,6 +35,11 @@ import {DEFAULT_LANGUAGE} from '../Constants';
 
 const createListViewItemsFromSchema = (schema: Schema | undefined): ListViewItem[] => {
     const list = [
+        {
+            name: '',
+            column: 'favorite',
+            isHidden: false,
+        },
         {
             name: Translations.AccountNameLabel[DEFAULT_LANGUAGE],
             column: 'name',
@@ -60,6 +70,11 @@ export const AccountsPage = () => {
     const view = useSelector((store: ApplicationStore) => selectView(store, 'accounts'));
     const columns = useSelector((store: ApplicationStore) => selectViewColumns(store, 'accounts'));
     const isMobileLayout = useMobileLayout();
+    const token = useSelector(selectToken);
+    const sessionUser = useSelector(selectSessionUser);
+    const favoriteAccountIds = useSelector(selectFavoriteAccountIds);
+
+    const client = getRequestClient(token);
 
     const schema = useSelector((store: ApplicationStore) =>
         selectSchemaByType(store, SchemaType.Account)
@@ -73,6 +88,17 @@ export const AccountsPage = () => {
 
     const openAccount = (id?: string) => {
         store.dispatch(showAccountLayer(id));
+    };
+
+    const handleToggleFavorite = async (e: React.MouseEvent, accountId: string) => {
+        e.stopPropagation();
+        if (!sessionUser) return;
+        try {
+            const updated = await client.toggleFavoriteAccount(sessionUser._id, accountId);
+            store.dispatch({ type: ActionType.USER_SETTINGS_UPDATE, payload: updated });
+        } catch (error) {
+            console.error('Erreur lors du toggle favori:', error);
+        }
     };
 
     const toDataRows = (list: Account[]) => {
@@ -100,6 +126,18 @@ export const AccountsPage = () => {
 
     const getCell = (row: DataRow, item: ListViewItem) => {
         switch (item.column) {
+            case 'favorite':
+                return (
+                    <td key="favorite" style={{width: 36, textAlign: 'center'}}>
+                        <button
+                            className={`favorite-btn${favoriteAccountIds.includes(row.id!.toString()) ? ' is-favorite' : ''}`}
+                            onClick={(e) => handleToggleFavorite(e, row.id!.toString())}
+                            title={favoriteAccountIds.includes(row.id!.toString()) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                        >
+                            {favoriteAccountIds.includes(row.id!.toString()) ? '★' : '☆'}
+                        </button>
+                    </td>
+                );
             case 'name':
                 return (
                     <td>
@@ -117,6 +155,18 @@ export const AccountsPage = () => {
 
     const getListItem = (row: DataRow, item: ListViewItem) => {
         switch (item.column) {
+            case 'favorite':
+                return (
+                    <div key="favorite" style={{display: 'inline-block'}}>
+                        <button
+                            className={`favorite-btn${favoriteAccountIds.includes(row.id!.toString()) ? ' is-favorite' : ''}`}
+                            onClick={(e) => handleToggleFavorite(e, row.id!.toString())}
+                            title={favoriteAccountIds.includes(row.id!.toString()) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                        >
+                            {favoriteAccountIds.includes(row.id!.toString()) ? '★' : '☆'}
+                        </button>
+                    </div>
+                );
             case 'name':
                 return (
                     <div key={item.column}>

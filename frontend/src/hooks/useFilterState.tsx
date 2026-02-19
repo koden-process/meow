@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { store } from '../store/Store';
+import { store, selectFavoriteAccountIds } from '../store/Store';
 import { updateFilter } from '../actions/Actions';
 import { FILTER_BY_NONE } from '../Constants';
 import { FilterMode } from '../pages/HomePage';
+import { useSelector } from 'react-redux';
+import { Account } from '../interfaces/Account';
 
 /**
  * Hook to manage filter state (text, userId, mode)
  */
-export const useFilterState = (filters: { mode: Set<FilterMode> }) => {
+export const useFilterState = (filters: { mode: Set<FilterMode> }, accounts: Account[] = []) => {
+    const favoriteAccountIds = useSelector(selectFavoriteAccountIds);
+
     const [text, setText] = useState<string>('');
     const [userId, setUserId] = useState(FILTER_BY_NONE.key);
     const [selectedAccountId, setSelectedAccountId] = useState<string>('');
@@ -26,6 +30,13 @@ export const useFilterState = (filters: { mode: Set<FilterMode> }) => {
         store.dispatch(updateFilter(updated, userId, text));
     };
 
+    // Liste des comptes à afficher dans le filtre :
+    // si l'utilisateur a des favoris → seulement les favoris, sinon tous
+    const hasFavorites = favoriteAccountIds.length > 0;
+    const accountsForFilter = hasFavorites
+        ? accounts.filter((a) => favoriteAccountIds.includes(a._id))
+        : accounts;
+
     return {
         text,
         setText,
@@ -34,5 +45,7 @@ export const useFilterState = (filters: { mode: Set<FilterMode> }) => {
         selectedAccountId,
         setSelectedAccountId,
         handleFilterToggle,
+        hasFavorites,
+        accountsForFilter,
     };
 };
