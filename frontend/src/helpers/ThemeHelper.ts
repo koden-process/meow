@@ -5,16 +5,19 @@
 
 import { getCustomThemeColor } from '../utils/env';
 
-export const setDynamicThemeColor = (): void => {
+export const setDynamicThemeColor = (mode: 'light' | 'dark' = 'dark'): void => {
   const customThemeColor = getCustomThemeColor();
-  const defaultThemeColor = '#1D1D1B';
+  const defaultDarkThemeColor = '#1D1D1B';
+  const defaultLightThemeColor = '#ffffff';
   
   // Use custom theme color if available, otherwise use default
-  const themeColor = customThemeColor && 
+  const baseThemeColor = customThemeColor && 
     customThemeColor.trim() !== '' && 
     customThemeColor !== 'VITE_CUSTOM_THEME_COLOR'
     ? customThemeColor 
-    : defaultThemeColor;
+    : mode === 'light'
+      ? defaultLightThemeColor
+      : defaultDarkThemeColor;
     
   // Update the meta theme-color tag
   let themeColorMeta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement;
@@ -25,9 +28,9 @@ export const setDynamicThemeColor = (): void => {
     document.head.appendChild(themeColorMeta);
   }
   
-  themeColorMeta.content = themeColor;
+  themeColorMeta.content = baseThemeColor;
   
-  console.log(`PWA theme color set to: ${themeColor}`);
+  console.log(`PWA theme color set to: ${baseThemeColor}`);
 };
 
 /**

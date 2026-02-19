@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { TableHeader } from '../view/table/TableHeader';
 import { ApplicationStore } from '../../store/ApplicationStore';
 import { useSelector } from 'react-redux';
-import { selectToken, selectUsers, selectView, selectViewColumns, store } from '../../store/Store';
+import { selectToken, selectUsers, selectView, selectViewColumns, selectCustomOpportunityAmountLabel, store } from '../../store/Store';
 import { DateTime } from 'luxon';
 import {
   ActionType,
@@ -33,7 +33,7 @@ interface CardListProps {
   end: string | null;
 }
 
-const createListViewItems = (): ListViewItem[] => {
+const createListViewItems = (amountLabel: string): ListViewItem[] => {
   return [
     {
       name: Translations.OpportunityNameLabel[DEFAULT_LANGUAGE],
@@ -41,7 +41,7 @@ const createListViewItems = (): ListViewItem[] => {
       isHidden: false,
     },
     {
-      name: Translations.OpportunityAmount[DEFAULT_LANGUAGE],
+      name: amountLabel,
       column: 'amount',
       isHidden: false,
     },
@@ -74,6 +74,8 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
   const client = getRequestClient(token);
 
   const users = useSelector(selectUsers);
+  const customAmountLabel = useSelector(selectCustomOpportunityAmountLabel);
+  const amountLabel = customAmountLabel || Translations.OpportunityAmount[DEFAULT_LANGUAGE];
   const [mode, setMode] = useState<'achieved' | 'predicted'>('achieved');
   const [list, setList] = useState<Array<any>>([]); // TODO remove any
   const columns = useSelector((store: ApplicationStore) => selectViewColumns(store, 'forecast'));
@@ -90,7 +92,7 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
 
   useEffect(() => {
     if (columns.length === 0) {
-      store.dispatch(setListViewColumn('forecast', createListViewItems()));
+      store.dispatch(setListViewColumn('forecast', createListViewItems(amountLabel)));
     }
   }, []);
 

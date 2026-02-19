@@ -8,6 +8,7 @@ import { Avatar } from './Avatar';
 import { Logo } from './Logo';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
+import { ThemeToggle } from './ThemeToggle';
 
 export const Navigation = () => {
   const userId = useSelector(selectUserId);
@@ -95,11 +96,15 @@ export const Navigation = () => {
                 <Logo />
             </div>
 
-            {/* Icône du bas (menu utilisateur), toujours visible */}
+            {/* Icône du bas (menu utilisateur + bascule de thème), toujours visible */}
             <div className="user-menu">
                 {userMenue && (
                     <div className={userMenue ? 'wrapper' : ''} ref={layerRef}>
-                        <Link onClick={handleLinkClick} to="/user-setup" className={`link user-settings ${isActiveRoute('/user-setup') ? 'active' : ''}`}>
+                        <Link
+                            onClick={handleLinkClick}
+                            to="/user-setup"
+                            className={`link user-settings ${isActiveRoute('/user-setup') ? 'active' : ''}`}
+                        >
                             {Translations.SettingsNavItem[DEFAULT_LANGUAGE]}
                         </Link>
                         <div onClick={logout} className="link logout">
@@ -107,7 +112,10 @@ export const Navigation = () => {
                         </div>
                     </div>
                 )}
-                <Avatar onClick={() => setUserMenu(!userMenue)} width={36} id={userId}/>
+                <div className="theme-toggle-container">
+                    <ThemeToggle />
+                    <Avatar onClick={() => setUserMenu(!userMenue)} width={36} id={userId}/>
+                </div>
             </div>
         </>
     );

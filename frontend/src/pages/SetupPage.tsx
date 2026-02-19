@@ -2,6 +2,7 @@ import { CurrencyCanvas } from '../components/setup/currency/CurrencyCanvas';
 import { LanesSchema } from '../components/setup/lane/LaneSchema';
 import { CardSchema } from '../components/setup/card/CardSchema';
 import { AccountSchema } from '../components/setup/account/AccountSchema';
+import { CustomLabelsCanvas } from '../components/setup/CustomLabelsCanvas';
 import { Switch, Button, Heading, Divider } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -195,6 +196,7 @@ export const SetupPage = () => {
       {!appliedConfigId && (
         <>
           <CurrencyCanvas />
+          <CustomLabelsCanvas />
           <LanesSchema isDeveloperMode={isDeveloperMode} />
           <CardSchema isDeveloperMode={isDeveloperMode} />
           <AccountSchema isDeveloperMode={isDeveloperMode} />

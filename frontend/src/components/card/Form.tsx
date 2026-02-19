@@ -2,7 +2,7 @@ import { Button, TextField, DatePicker } from '@adobe/react-spectrum';
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { parseDate } from '@internationalized/date';
-import { selectCard, selectLane, selectSchemaByType, selectUserId } from '../../store/Store';
+import { selectCard, selectLane, selectSchemaByType, selectUserId, selectCustomOpportunityAmountLabel } from '../../store/Store';
 import { ApplicationStore } from '../../store/ApplicationStore';
 import { Card, CardFormPreview, CardPreview } from '../../interfaces/Card';
 import { SchemaType } from '../../interfaces/Schema';
@@ -33,6 +33,8 @@ export interface FormProps {
 // TODO rename component
 export const Form = ({ update, id, onPreviewChange }: FormProps) => {
   const userId = useSelector(selectUserId);
+  const customAmountLabel = useSelector(selectCustomOpportunityAmountLabel);
+  const amountLabel = customAmountLabel || Translations.OpportunityAmount[DEFAULT_LANGUAGE];
   const [attributes, setAttributes] = useState<Attribute>({});
   const [preview, setPreview] = useState<CardFormPreview>({
     name: '',
@@ -166,12 +168,12 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
           <TextField
             onChange={(value) => handlePreviewUpdate('amount', value)}
             value={preview.amount}
-            aria-label={Translations.OpportunityAmount[DEFAULT_LANGUAGE]}
+            aria-label={amountLabel}
             width="100%"
             key="amount"
             inputMode="decimal"
             isDisabled={isDisabled}
-            label={Translations.OpportunityAmount[DEFAULT_LANGUAGE]}
+            label={amountLabel}
             validationState={isValidAmount ? 'valid' : 'invalid'}
             errorMessage={Translations.OpportunityAmountInvalid[DEFAULT_LANGUAGE]}
           />

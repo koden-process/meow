@@ -3,7 +3,7 @@ import { Reference } from '../../interfaces/Reference';
 import { Card } from '../../interfaces/Card';
 import { DateTime } from 'luxon';
 import { Currency } from '../Currency';
-import { selectToken, store } from '../../store/Store';
+import { selectToken, selectCustomOpportunityAmountLabel, store } from '../../store/Store';
 import { useSelector } from 'react-redux';
 import { getRequestClient } from '../../helpers/RequestHelper';
 import { showCardLayer } from '../../actions/Actions';
@@ -16,6 +16,8 @@ export interface ReferenceItemProps {
 
 export const ReferenceItem = ({ reference }: ReferenceItemProps) => {
   const token = useSelector(selectToken);
+  const customAmountLabel = useSelector(selectCustomOpportunityAmountLabel);
+  const amountLabel = customAmountLabel || Translations.OpportunityAmount[DEFAULT_LANGUAGE];
 
   const client = getRequestClient(token);
 
@@ -39,16 +41,14 @@ export const ReferenceItem = ({ reference }: ReferenceItemProps) => {
     <div>
       {card && (
         <div className="reference" style={{ padding: '10px', fontSize: '1.2em' }}>
-          <h4
-            style={{ margin: 0, fontWeight: '600', color: 'var(--spectrum-global-color-gray-600)' }}
-          >
+          <h4 style={{ margin: 0, fontWeight: '600' }}>
             <span onClick={() => openCard(card._id)} className="direct-link">
               {card.name}
             </span>
           </h4>
           <div>{Translations.CloseDateLabel[DEFAULT_LANGUAGE]}: {DateTime.fromISO(card.closedAt!).toRelative()}</div>
           <div>
-            {Translations.OpportunityAmount[DEFAULT_LANGUAGE]}: <Currency value={card.amount} />
+            {amountLabel}: <Currency value={card.amount} />
           </div>
         </div>
       )}

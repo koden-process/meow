@@ -93,7 +93,7 @@ const create = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     }
 
     if (!lane || !EntityHelper.isEntityOwnedBy(lane, req.jwt.user)) {
-      throw new EntityNotFoundError();
+      return next(new EntityNotFoundError());
     }
 
     const card = new NewCard(req.jwt.user, lane, body.name, parseInt(body.amount));
@@ -140,6 +140,19 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
 
     const { body } = req;
 
+    // Vérifier si l'utilisateur tente de déplacer la carte (changement de laneId)
+    // et s'il n'est pas le propriétaire, refuser l'opération
+    // Exception : si l'utilisateur change aussi l'assignation (body.userId est défini)
+    // TEMPORAIREMENT DESACTIVÉ POUR DEBUG
+    // if (body.laneId && body.laneId.toString() !== card.laneId.toString()) {
+    //   const isOwner = card.userId.toString() === req.jwt.user._id!.toString();
+    //   const isReassigning = body.userId && card.userId.toString() !== body.userId.toString();
+    //
+    //   if (!isOwner && !isReassigning) {
+    //     return next(new ForbiddenOperationError('You cannot move this opportunity because you are not the owner'));
+    //   }
+    // }
+
     card.name = body.name;
 
     let previousUserId = undefined;
@@ -169,18 +182,14 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
     }
 
     if (body.closedAt && !RequestParser.isEqualDates(body.closedAt, card.closedAt)) {
-      const closedAt = RequestParser.toJsDate(body.closedAt);
-
-      card.closedAt = closedAt;
+      card.closedAt = RequestParser.toJsDate(body.closedAt);
     }
 
     if (
       body.nextFollowUpAt &&
       !RequestParser.isEqualDates(body.nextFollowUpAt, card.nextFollowUpAt)
     ) {
-      const nextFollowUpAt = RequestParser.toJsDate(body.nextFollowUpAt);
-
-      card.nextFollowUpAt = nextFollowUpAt;
+      card.nextFollowUpAt = RequestParser.toJsDate(body.nextFollowUpAt);
     }
 
     let previousLaneId: ObjectId | undefined = undefined;
@@ -197,9 +206,7 @@ const update = async (req: AuthenticatedRequest, res: Response, next: NextFuncti
       card.laneId = lane._id!;
 
       if (lane.tags?.type && lane.tags.type !== LaneType.Normal) {
-        const closedAt = DateTime.utc().startOf('day');
-
-        card.closedAt = closedAt.toJSDate();
+        card.closedAt = DateTime.utc().startOf('day').toJSDate();
       }
     }
 

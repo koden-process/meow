@@ -15,16 +15,35 @@ const parseCurrencyCode = (value: string): CurrencyCode => {
 };
 
 const update = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    console.log('Updating team:', req.body);
+    console.log('Updating team - Full request body:', JSON.stringify(req.body, null, 2));
+    console.log('Currency received:', req.body.currency);
+    console.log('CustomLabels received:', req.body.customLabels);
     try {
         const team = await validateAndFetchTeam(req.params.id, req.jwt.user);
 
         team.currency = parseCurrencyCode(req.body.currency);
 
+        if (req.body.customLabels !== undefined) {
+            // Clean up null values - if opportunityAmount is null, remove the property
+            if (req.body.customLabels.opportunityAmount === null) {
+                if (!team.customLabels) {
+                    team.customLabels = {};
+                }
+                delete team.customLabels.opportunityAmount;
+                // If customLabels is now empty, remove it entirely
+                if (Object.keys(team.customLabels).length === 0) {
+                    delete team.customLabels;
+                }
+            } else {
+                team.customLabels = req.body.customLabels;
+            }
+        }
+
         const updated = await EntityHelper.update(team);
 
         return res.json(updated);
     } catch (error) {
+        console.error('Error updating team:', error);
         return next(error);
     }
 };

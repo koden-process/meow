@@ -5,6 +5,7 @@ export interface Team {
   readonly name: string;
   currency: CurrencyCode;
   integrations: Integration[];
+  customLabels?: CustomLabels;
   readonly isFirstTeam?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
@@ -13,6 +14,10 @@ export interface Team {
 export interface Integration {
   key: string;
   attributes: { [key: string]: string | number | null | boolean };
+}
+
+export interface CustomLabels {
+  opportunityAmount?: string;
 }
 
 export enum CurrencyCode {

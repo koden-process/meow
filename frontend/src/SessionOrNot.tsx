@@ -30,6 +30,7 @@ import {RequestHelperUrlError} from './errors/RequestHelperUrlError';
 import {deleteCookie, readValueFromCookie} from './helpers/CookieHelper';
 import {DEFAULT_LANGUAGE} from './Constants';
 import {Provider} from "./components/ui/provider";
+import {Toaster} from "./components/ui/toaster";
 
 export const SessionOrNot = () => {
     const applicationState = useSelector(selectApplicationState);
@@ -124,6 +125,7 @@ export const SessionOrNot = () => {
     return (
         <>
             <Provider>
+                <Toaster />
                 {state === 'offline' && <YouAreOffline/>}
                 {getPage(userId)}
             </Provider>
