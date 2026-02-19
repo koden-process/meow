@@ -1,7 +1,6 @@
 
 import {useState, useMemo} from 'react';
 import {Button, Item, Picker, ComboBox} from '@adobe/react-spectrum';
-import {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -20,19 +19,18 @@ import { Layer as CardLayer } from '../components/card/Layer';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Layer as LaneLayer } from '../components/lane/Layer';
 import { Layer as AccountLayer } from '../components/account/Layer';
-import { DEFAULT_LANGUAGE } from '../Constants';
+import { DEFAULT_LANGUAGE, FILTER_BY_NONE } from '../Constants';
 import { SchemaType } from '../interfaces/Schema';
 import { Translations } from '../Translations';
+import { Board } from '../components/Board';
+import { StatisticsBoard } from '../components/StatisticsBoard';
+import { Currency } from '../components/Currency';
+import { Card } from '../interfaces/Card';
 
 // Hooks personnalisés
 import { useCardEnrichment } from '../hooks/useCardEnrichment';
 import { useCardFiltering } from '../hooks/useCardFiltering';
 import { useFilterState } from '../hooks/useFilterState';
-
-// Composants
-import { BoardHeader } from '../components/home/BoardHeader';
-import { FilterBar } from '../components/home/FilterBar';
-import { BoardViewSwitcher } from '../components/home/BoardViewSwitcher';
 
 // Services
 import { createAccountMapping, createSelectMappings } from '../services/cardService';
@@ -57,6 +55,7 @@ export const HomePage = () => {
 
     // Local state
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
+    const [accountSearchText, setAccountSearchText] = useState<string>('');
 
     // Hooks personnalisés
     useCardEnrichment(token);
@@ -66,6 +65,16 @@ export const HomePage = () => {
     // Création des mappings (mémorisés pour éviter les recréations inutiles)
     const accountMapping = useMemo(() => createAccountMapping(accounts), [accounts]);
     const selectMappings = useMemo(() => createSelectMappings(schema, accountMapping), [schema, accountMapping]);
+
+    // Filtrer les comptes pour le ComboBox
+    const accountFiltered = useMemo(() => {
+        if (!accountSearchText) {
+            return accounts;
+        }
+        return accounts.filter(acc =>
+            acc.name.toLowerCase().includes(accountSearchText.toLowerCase())
+        );
+    }, [accounts, accountSearchText]);
 
     // Filtrage et calcul du montant
     const { filteredCardsByAccount, amount } = useCardFiltering(
@@ -78,6 +87,21 @@ export const HomePage = () => {
 
     const openCard = (id?: string) => {
         store.dispatch(showCardLayer(id));
+    };
+
+    const getTitle = (cards: Card[]) => {
+        const count = cards.length;
+        return count <= 1
+            ? `${count} ${Translations.BoardTitle[DEFAULT_LANGUAGE]}`
+            : `${count} ${Translations.BoardTitlePlural[DEFAULT_LANGUAGE]}`;
+    };
+
+    const onDragStart = () => {
+        handleDragStart();
+    };
+
+    const onDragEnd = (result: any) => {
+        handleDragEnd(result, cards);
     };
 
 
@@ -154,6 +178,7 @@ export const HomePage = () => {
                                 {/* Left side: input and pickers */}
                                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                                     <input className="inputSpacing"
+                                           value={text}
                                            onChange={(event) => setText(event.target.value)}
                                            placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
                                            aria-label={Translations.NameOrStage[DEFAULT_LANGUAGE]}
@@ -162,7 +187,6 @@ export const HomePage = () => {
 
                                     <ComboBox
                                         aria-label={Translations.FilterByContact[DEFAULT_LANGUAGE]}
-                                        placeholder={Translations.FilterByContact[DEFAULT_LANGUAGE]}
                                         items={accountFiltered}
                                         inputValue={accountSearchText}
                                         onInputChange={setAccountSearchText}
@@ -195,16 +219,6 @@ export const HomePage = () => {
 
                                 {/* Right side: filter buttons */}
                                 <div>
-                                    {false && (
-                                        <button
-                                            className={`filter ${
-                                                filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
-                                            }`}
-                                            onClick={() => handleFilterToggle(FilterMode.OwnedByMe)}
-                                        >
-                                            {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
-                                        </button>
-                                    )}
                                     <button
                                         className={`filter ${
                                             filters.mode.has(FilterMode.RecentlyUpdated)

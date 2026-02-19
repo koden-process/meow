@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextField, TextArea, ComboBox, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
+import { Button, TextArea, ComboBox, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
 import { useSelector } from 'react-redux';
 import { selectToken, selectCurrency } from '../../store/Store';
 import { getRequestClient } from '../../helpers/RequestHelper';
@@ -108,24 +108,20 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
 
               <ComboBox
                 aria-label={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
-                placeholder={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
-                defaultFilter={(textValue, inputValue) =>
-                  textValue.toLowerCase().startsWith(inputValue.toLowerCase())
-                }
+                items={teams}
                 selectedKey={selectedTeamId}
                 onSelectionChange={(key) => setSelectedTeamId(key as string)}
                 isRequired
               >
-                {teams.map((team) => (
+                {(team: any) => (
                   <Item key={team._id} textValue={team.name}>
                     {team.name}
                   </Item>
-                ))}
+                )}
               </ComboBox>
 
               <TextArea
                 label={Translations.MessageOptionalLabel[DEFAULT_LANGUAGE]}
-                placeholder={Translations.TransferMessagePlaceholder[DEFAULT_LANGUAGE]}
                 value={message}
                 onChange={setMessage}
                 height="120px"
