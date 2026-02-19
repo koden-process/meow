@@ -1259,16 +1259,6 @@ export const Translations = {
         fr: '{name} a été supprimé avec succès'
     },
 
-    FilterByContact: {
-        en: 'Filter by Contact',
-        fr: 'Filtrer par Contact'
-    },
-
-    FilterByUser: {
-        en: 'Filter by User',
-        fr: 'Filtrer par Utilisateur'
-    },
-
   // Custom labels
   CustomLabelsTitle: {
     en: 'Custom Labels',
