@@ -1,5 +1,5 @@
 import { Button, TextField, DatePicker } from '@adobe/react-spectrum';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { parseDate } from '@internationalized/date';
 import { selectUserId } from '../../store/Store';
@@ -64,7 +64,7 @@ export const FormMobile = ({ onSubmit }: FormMobileProps) => {
           <DatePicker
             value={
               preview.nextFollowUpAt
-                ? parseDate(preview.nextFollowUpAt.substring(0, 10))
+                ? parseDate(preview.nextFollowUpAt.substring(0, 10)) as any
                 : undefined
             }
             onChange={value => handlePreviewUpdate('nextFollowUpAt', value ? value.toString() : '')}

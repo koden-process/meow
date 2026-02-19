@@ -135,15 +135,15 @@ export const ForecastPage = () => {
               label={Translations.CloseDateLabel[DEFAULT_LANGUAGE]}
               aria-label="date"
               value={{
-                start: parseDate(date.start!),
-                end: parseDate(date.end!),
+                start: parseDate(date.start!) as any,
+                end: parseDate(date.end!) as any,
               }}
               maxVisibleMonths={2}
               hourCycle={24}
               //@ts-ignore
               onChange={setRange}
-              minValue={min}
-              maxValue={max}
+              minValue={min as any}
+              maxValue={max as any}
             />
           </div>
         </div>

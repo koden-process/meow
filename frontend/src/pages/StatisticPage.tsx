@@ -47,19 +47,11 @@ interface LaneWithSelection extends Lane {
 }
 
 const isValidTimeSeries = (entry: unknown): entry is TimeSeries => {
-  if (entry === null) {
+  if (entry === null || typeof entry !== 'object') {
     return false;
   }
 
-  if (typeof entry !== 'object') {
-    return false;
-  }
-
-  if ((entry as TimeSeries).lanes && Array.isArray((entry as TimeSeries).lanes)) {
-    return true;
-  }
-
-  return false;
+  return !!(entry as TimeSeries).lanes && Array.isArray((entry as TimeSeries).lanes);
 };
 
 const createSeriesByLane = (dates: Array<string>, lane: Lane, series: TimeSeries[]) => {
@@ -179,7 +171,7 @@ export const StatisticPage = () => {
   const toggleIsSelected = (isSelected: boolean, laneId: string) => {
     console.log(`toogle ${laneId} to ${isSelected}`);
 
-    if (lanesWithSelection.filter((lane) => lane.isSelected).length === 1 && isSelected == false) {
+    if (lanesWithSelection.filter((lane) => lane.isSelected).length === 1 && !isSelected) {
       return;
     }
 
@@ -233,15 +225,15 @@ export const StatisticPage = () => {
             <DateRangePicker
               aria-label="date"
               value={{
-                start: start,
-                end: end,
+                start: start as any,
+                end: end as any,
               }}
               maxVisibleMonths={2}
               hourCycle={24}
               //@ts-ignore
               onChange={setRange}
-              minValue={min}
-              maxValue={max}
+              minValue={min as any}
+              maxValue={max as any}
             />
           </div>
         </div>

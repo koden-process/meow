@@ -1,4 +1,4 @@
-import { Button, TextField, DatePicker } from '@adobe/react-spectrum';
+import { TextField, DatePicker } from '@adobe/react-spectrum';
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { parseDate } from '@internationalized/date';
@@ -9,20 +9,7 @@ import { SchemaType } from '../../interfaces/Schema';
 import { Translations } from '../../Translations';
 import { SchemaCanvas } from '../schema/SchemaCanvas';
 import { Attribute } from '../../interfaces/Attribute';
-import { LANE_COLOR, DEFAULT_LANGUAGE } from '../../Constants';
-import { IconLock } from './IconLock';
-
-const getBannerColorClassName = (color: string | undefined) => {
-  if (color === LANE_COLOR.NEGATIVE) {
-    return 'negative';
-  }
-
-  if (color === LANE_COLOR.POSITIVE) {
-    return 'positive';
-  }
-
-  return '';
-};
+import { DEFAULT_LANGUAGE } from '../../Constants';
 
 export interface FormProps {
   id: string | undefined;
@@ -31,11 +18,10 @@ export interface FormProps {
 }
 
 // TODO rename component
-export const Form = ({ update, id, onPreviewChange }: FormProps) => {
+export const Form = ({ id, onPreviewChange }: FormProps) => {
   const userId = useSelector(selectUserId);
   const customAmountLabel = useSelector(selectCustomOpportunityAmountLabel);
   const amountLabel = customAmountLabel || Translations.OpportunityAmount[DEFAULT_LANGUAGE];
-  const [attributes, setAttributes] = useState<Attribute>({});
   const [preview, setPreview] = useState<CardFormPreview>({
     name: '',
     amount: '',
@@ -44,9 +30,6 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
     userId: userId!,
   });
 
-  useEffect(() => {
-    setAttributes(preview.attributes || {});
-  }, [preview.attributes]);
 
   const handlePreviewUpdate = (key: string, value: string | number) => {
     const newPreview = {
@@ -70,20 +53,12 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
 
   let isValidNextFollowUp = useMemo(() => preview.nextFollowUpAt, [preview]);
 
-  let isValidForm = useMemo(() => {
-    if (preview.name && isValidAmount && isValidNextFollowUp) {
-      return true;
-    }
-
-    return false;
-  }, [preview]);
-
   const card = useSelector((store: ApplicationStore) => selectCard(store, id));
   const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
+    setIsDisabled(!!(lane && lane.tags?.type !== 'normal'));
   }, [lane]);
 
   useEffect(() => {
@@ -109,9 +84,6 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
     }
   }, [card, userId, onPreviewChange]);
 
-  const save = () => {
-    update(id, { ...preview, amount: parseInt(preview.amount) });
-  };
 
   const validate = (values: Attribute) => {
     const newPreview = {
@@ -185,7 +157,7 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
           <DatePicker
             value={
               preview.nextFollowUpAt
-                ? parseDate(preview.nextFollowUpAt.substring(0, 10))
+                ? parseDate(preview.nextFollowUpAt.substring(0, 10)) as any
                 : undefined
             }
             onChange={(value) => handlePreviewUpdate('nextFollowUpAt', value ? value.toString() : '')}
@@ -197,7 +169,7 @@ export const Form = ({ update, id, onPreviewChange }: FormProps) => {
 
         <div>
           <DatePicker
-            value={preview.closedAt ? parseDate(preview.closedAt.substring(0, 10)) : undefined}
+            value={preview.closedAt ? parseDate(preview.closedAt.substring(0, 10)) as any : undefined}
             onChange={(value) => handlePreviewUpdate('closedAt', value ? value.toString() : '')}
             label={Translations.ExpectedCloseDateLabel[DEFAULT_LANGUAGE]}
             isDisabled={isDisabled}
