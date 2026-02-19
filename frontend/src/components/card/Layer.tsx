@@ -355,33 +355,15 @@ export const Layer = () => {
             )}
             {/* Modale de confirmation de suppression */}
             {showDeleteModal && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 9999
-                }}>
-                    <div style={{
-                        backgroundColor: 'white',
-                        padding: '24px',
-                        borderRadius: '8px',
-                        maxWidth: '400px',
-                        width: '90%',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-                    }}>
-                        <h3 style={{ margin: '0 0 16px 0', color: '#dc2626' }}>
+                <div className="delete-modal-overlay">
+                    <div className="delete-modal-content">
+                        <h3 className="delete-modal-title">
                             Confirmer la suppression
                         </h3>
-                        <p style={{ margin: '0 0 24px 0', color: '#666' }}>
+                        <p className="delete-modal-text">
                             Êtes-vous sûr de vouloir supprimer cette opportunité ? Cette action est irréversible.
                         </p>
-                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                        <div className="delete-modal-buttons">
                             <Button 
                                 variant="secondary" 
                                 onPress={() => setShowDeleteModal(false)}
