@@ -8,7 +8,7 @@ import { Card, CardPreview } from '../interfaces/Card';
 import { EventType } from '../interfaces/EventType';
 import { Lane, LaneRequest } from '../interfaces/Lane';
 import { Schema } from '../interfaces/Schema';
-import { CurrencyCode, Integration, Team } from '../interfaces/Team';
+import { CurrencyCode, CustomLabels, Integration, Team } from '../interfaces/Team';
 import { User } from '../interfaces/User';
 import { FilterMode } from '../pages/HomePage';
 import { RequestHelperUrlError } from '../errors/RequestHelperUrlError';
@@ -331,10 +331,10 @@ export class RequestHelper {
     return this.doFetch(url, 'POST', lanes);
   }
 
-  async updateTeam(id: Team['_id'], currency: CurrencyCode) {
+  async updateTeam(id: Team['_id'], data: { currency: CurrencyCode; customLabels?: Partial<CustomLabels> }) {
     let url = this.getUrl(`/api/teams/${id}`);
 
-    return this.doFetch(url, 'POST', { currency: currency });
+    return this.doFetch(url, 'POST', data);
   }
 
   async updateIntegration(id: Team['_id'], integration: Integration) {

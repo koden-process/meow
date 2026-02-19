@@ -24,12 +24,18 @@ cardLaneListener.startListening({
     try {
       /* if a card is moved within the same lane there's no need to update the card model as the relevant attributes remain unchanged */
       if (casted.payload.from !== casted.payload.to) {
-        const card = await client.updateCard(casted.payload.card); // TODO update with one API call
+        const card = await client.updateCard(casted.payload.card);
 
         store.dispatch(updateCardFromServer({ ...card }));
       }
 
-      await client.updateBoard(state.session.user!._id, state.board);
+      // Try to update board layout, but don't fail if it doesn't work
+      // The board will be reconstructed on next page load anyway
+      try {
+        await client.updateBoard(state.session.user!._id, state.board);
+      } catch (boardError) {
+        console.warn('Failed to update board layout, but card was moved successfully:', boardError);
+      }
     } catch (error) {
       console.error(error);
       const message = await getErrorMessage(error);

@@ -10,6 +10,7 @@ export class Team implements ExistingEntity {
     integrations?: Integration[];
     isFirstTeam?: boolean;
     appliedConfigId?: ObjectId; // Config appliquée
+    customLabels?: CustomLabels;
     createdAt: Date;
     updatedAt: Date;
 
@@ -74,6 +75,10 @@ export class NewTeam implements NewEntity {
 export interface Integration {
     key: string;
     attributes: { [key: string]: string | number | null | boolean };
+}
+
+export interface CustomLabels {
+    opportunityAmount?: string;
 }
 
 // ISO 4217 currency code

@@ -272,7 +272,7 @@ try {
 
   const user = express.Router();
 
-  user.use(express.json({ limit: '5kb' }));
+  user.use(express.json({ limit: '50kb' })); // Increased limit for /board route with many cards
 
   user.use(verifyJwt, addEntityToHeader, setHeaders, isDatabaseConnectionEstablished);
 
@@ -416,10 +416,11 @@ server.listen(PORT, IP_ADDRESS, () => {
 });
 
 try {
-  const timelineNotification = new JobDailyScheduler(
+  const dailyScheduler = new JobDailyScheduler(
     notifyOnMissedFollowUpDatesTimeline,
     '10:00'
-  ).start();
+  );
+  dailyScheduler.start();
 } catch (error) {
   log.error(error);
 }
