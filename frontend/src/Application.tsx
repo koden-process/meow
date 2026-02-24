@@ -56,28 +56,28 @@ function Application() {
   useEffect(() => {
     const execute = async () => {
       try {
-        let users = await client.getUsers();
+        // Parallelize all API calls for faster data loading
+        const [users, schemas, accounts, lanes] = await Promise.all([
+          client.getUsers(),
+          client.fetchSchemas(),
+          client.getAccounts(),
+          client.getLanes(),
+        ]);
 
         store.dispatch({
           type: ActionType.USERS,
           payload: [...users],
         });
 
-        let schemas = await client.fetchSchemas();
-
         store.dispatch({
           type: ActionType.SCHEMAS,
           payload: [...schemas],
         });
 
-        let accounts = await client.getAccounts();
-
         store.dispatch({
           type: ActionType.ACCOUNTS,
           payload: [...accounts],
         });
-
-        let lanes = await client.getLanes();
 
         store.dispatch({
           type: ActionType.LANES,
