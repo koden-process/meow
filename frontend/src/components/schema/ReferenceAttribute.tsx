@@ -2,7 +2,6 @@ import { ComboBox, Item } from '@adobe/react-spectrum';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAccounts } from '../../store/Store';
-import { Account } from '../../interfaces/Account';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
 import { showAccountLayer } from '../../actions/Actions';
@@ -22,70 +21,79 @@ export const ReferenceAttribute = ({
   isDisabled,
   update,
 }: ReferenceAttributeProps) => {
-  const [value, setValue] = useState(valueDefault ? valueDefault : '');
+  const [value, setValue] = useState<string>(valueDefault ?? '');
   const [searchText, setSearchText] = useState<string>('');
+
   const accounts = useSelector(selectAccounts);
   const dispatch = useDispatch();
 
-  // Memoize the sorted accounts to avoid re-sorting on every render
-  const sortedAccounts = useMemo(() => {
-    return [...(accounts || [])].sort((a, b) => a.name.localeCompare(b.name));
-  }, [accounts]);
+  // Stable & performant string comparison
+  const collator = useMemo(
+    () => new Intl.Collator(undefined, { sensitivity: 'base' }),
+    []
+  );
 
-  // Memoize the filtered accounts based on search text
-  const filteredAccounts = useMemo(() => {
-    if (!searchText) {
-      return sortedAccounts;
-    }
-    return sortedAccounts.filter(acc =>
-      acc.name.toLowerCase().includes(searchText.toLowerCase())
+  // Sorted accounts (memoized)
+  const sortedAccounts = useMemo(() => {
+    return [...(accounts ?? [])].sort((a, b) =>
+      collator.compare(a.name, b.name)
     );
+  }, [accounts, collator]);
+
+  // Items for ComboBox (data-driven pattern)
+  const items = useMemo(() => {
+    const normalizedSearch = searchText.toLowerCase();
+
+    const baseItems = sortedAccounts
+      .filter(acc =>
+        acc.name.toLowerCase().includes(normalizedSearch)
+      )
+      .map(acc => ({
+        id: acc._id,
+        label: acc.name,
+      }));
+
+    // Show special options only when not searching
+    if (!searchText) {
+      return [
+        { id: '__ADD_CONTACT__', label: '+ Ajouter un contact' },
+        { id: '__NONE__', label: Translations.NoneOption[DEFAULT_LANGUAGE] },
+        ...baseItems,
+      ];
+    }
+
+    return baseItems;
   }, [sortedAccounts, searchText]);
 
-  // Memoize the options generation to avoid rebuilding JSX on every render
-  const options = useMemo(() => {
-    const list: JSX.Element[] = [];
-
-    // Add "Add a contact" as the first option
-    list.push(<Item key="__ADD_CONTACT__">+ Ajouter un contact</Item>);
-    
-    list.push(<Item key="">{Translations.NoneOption[DEFAULT_LANGUAGE]}</Item>);
-
-    // Add filtered accounts
-    filteredAccounts.forEach((account) => {
-      list.push(<Item key={account._id}>{account.name}</Item>);
-    });
-
-    return list;
-  }, [filteredAccounts]);
-
+  // Sync external value changes
   useEffect(() => {
-    setValue(valueDefault ? valueDefault : '');
+    setValue(valueDefault ?? '');
   }, [valueDefault]);
 
-  // Memoize updateValue to prevent unnecessary re-renders
-  const updateValue = useCallback((value: string) => {
-    // Handle the special "Add Contact" option
-    if (value === '__ADD_CONTACT__') {
-      handleAddAccount();
-      return; // Don't update the actual value, just trigger the add account modal
-    }
-
-    setValue(value);
-
-    if (value === '') {
-      update(attributeKey, null);
-    } else {
-      update(attributeKey, value);
-    }
-  }, [attributeKey, update]);
-
   const handleAddAccount = useCallback(() => {
-    // Only allow adding an account when the form is not disabled
     if (!isDisabled) {
       dispatch(showAccountLayer());
     }
   }, [isDisabled, dispatch]);
+
+  const updateValue = useCallback(
+    (nextValue: string) => {
+      if (nextValue === '__ADD_CONTACT__') {
+        handleAddAccount();
+        return;
+      }
+
+      if (nextValue === '__NONE__') {
+        setValue('');
+        update(attributeKey, null);
+        return;
+      }
+
+      setValue(nextValue);
+      update(attributeKey, nextValue || null);
+    },
+    [attributeKey, update, handleAddAccount]
+  );
 
   return (
     <div className="attribute">
@@ -95,11 +103,14 @@ export const ReferenceAttribute = ({
         label={name}
         selectedKey={value}
         isDisabled={isDisabled}
-        onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
+        items={items}
+        onSelectionChange={(key) =>
+          updateValue(key?.toString() ?? '')
+        }
         inputValue={searchText}
         onInputChange={setSearchText}
       >
-        {options}
+        {(item) => <Item>{item.label}</Item>}
       </ComboBox>
     </div>
   );
