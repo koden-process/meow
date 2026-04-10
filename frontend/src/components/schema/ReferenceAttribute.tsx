@@ -110,7 +110,11 @@ export const ReferenceAttribute = ({
         inputValue={searchText}
         onInputChange={setSearchText}
       >
-        {(item) => <Item>{item.label}</Item>}
+        {(item) => (
+          <Item key={item.id} textValue={item.label}>
+            {item.label}
+          </Item>
+        )}
       </ComboBox>
     </div>
   );
