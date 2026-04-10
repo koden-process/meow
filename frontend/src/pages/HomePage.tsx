@@ -176,8 +176,22 @@ export const HomePage = () => {
                                 justifyContent: 'space-between',
                                 gap: '10px'
                             }}>
-                                {/* Left side: input and pickers */}
+                                {/* Left side: clear action + input and pickers */}
                                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                    {(selectedAccountId || text || accountSearchText) && (
+                                        <Button
+                                            variant="secondary"
+                                            UNSAFE_style={{ minWidth: '150px' }}
+                                            onPress={() => {
+                                                setSelectedAccountId('');
+                                                setAccountSearchText('');
+                                                setText('');
+                                            }}
+                                        >
+                                            Réinitialiser
+                                        </Button>
+                                    )}
+
                                     <input className="inputSpacing"
                                            value={text}
                                            onChange={(event) => setText(event.target.value)}
