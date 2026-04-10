@@ -57,7 +57,7 @@ export const ReferenceAttribute = ({
     if (!searchText) {
       return [
         { id: '__ADD_CONTACT__', label: '+ Ajouter un contact' },
-        { id: '__NONE__', label: Translations.NoneOption[DEFAULT_LANGUAGE] },
+        { id: '', label: Translations.NoneOption[DEFAULT_LANGUAGE] },
         ...baseItems,
       ];
     }
@@ -80,19 +80,35 @@ export const ReferenceAttribute = ({
     (nextValue: string) => {
       if (nextValue === '__ADD_CONTACT__') {
         handleAddAccount();
+        // Clear search text so the previous query does not linger
+        setSearchText('');
         return;
       }
 
-      if (nextValue === '__NONE__') {
+      // Empty string represents the "None" option
+      if (nextValue === '') {
         setValue('');
         update(attributeKey, null);
+        // Clear input to reflect the "None" selection
+        setSearchText('');
         return;
       }
 
+      // For a real account id, update both value and visible label
       setValue(nextValue);
       update(attributeKey, nextValue || null);
+
+      const selectedAccount = sortedAccounts.find(
+        acc => acc._id === nextValue
+      );
+      if (selectedAccount) {
+        setSearchText(selectedAccount.name);
+      } else {
+        // Fallback: clear if we cannot resolve a label
+        setSearchText('');
+      }
     },
-    [attributeKey, update, handleAddAccount]
+    [attributeKey, update, handleAddAccount, sortedAccounts, setSearchText]
   );
 
   return (
