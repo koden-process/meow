@@ -43,6 +43,10 @@ export interface ApplicationStore {
       text: string | undefined;
       mode: FilterMode[];
       userId: string;
+      /** Contact sélectionné pour le filtre du tableau de bord (vide = aucun) */
+      accountId: string;
+      /** Texte du champ ComboBox contact (recherche / libellé affiché) */
+      accountSearchText: string;
     };
     accounts: ListView;
     users: ListView;

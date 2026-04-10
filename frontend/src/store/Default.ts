@@ -29,7 +29,9 @@ export const Default: ApplicationStore = {
     filters: {
       text: '',
       mode: [],
-      userId: '',
+      userId: FILTER_BY_NONE.key,
+      accountId: '',
+      accountSearchText: '',
     },
     accounts: {
       sortBy: {

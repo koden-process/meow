@@ -55,12 +55,22 @@ export const HomePage = () => {
 
     // Local state
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
-    const [accountSearchText, setAccountSearchText] = useState<string>('');
 
     // Hooks personnalisés
     useCardEnrichment(token);
-    const { text, setText, userId, setUserId, selectedAccountId, setSelectedAccountId, handleFilterToggle, hasFavorites, accountsForFilter } =
-        useFilterState(filters, accounts);
+    const {
+        text,
+        setText,
+        userId,
+        setUserId,
+        selectedAccountId,
+        setSelectedAccountId,
+        accountSearchText,
+        setAccountSearchText,
+        handleFilterToggle,
+        hasFavorites,
+        accountsForFilter,
+    } = useFilterState(filters, accounts);
 
     // Création des mappings (mémorisés pour éviter les recréations inutiles)
     const accountMapping = useMemo(() => createAccountMapping(accounts), [accounts]);

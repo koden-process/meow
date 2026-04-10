@@ -88,8 +88,10 @@ export const application = (state = Default, action: ApplicationAction) => {
           text: undefined,
           filters: {
             text: '',
-            userId: 'all',
+            userId: FILTER_BY_NONE.key,
             mode: [],
+            accountId: '',
+            accountSearchText: '',
           },
           accounts: {
             sortBy: {
@@ -395,6 +397,8 @@ export const application = (state = Default, action: ApplicationAction) => {
             mode: [...action.payload.mode],
             text: action.payload.text,
             userId: action.payload.userId,
+            accountId: action.payload.accountId,
+            accountSearchText: action.payload.accountSearchText,
           },
         },
       };
