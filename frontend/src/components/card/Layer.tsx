@@ -158,7 +158,7 @@ export const Layer = () => {
     return (
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', position: 'relative' }}>
                     {/* Avatar en haut à droite */}
                     {card?.userId && (
                         <Avatar
@@ -198,8 +198,12 @@ export const Layer = () => {
                             padding: '8px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                             minWidth: '200px',
-                            maxHeight: '300px',
+                            maxHeight: '600px',
                             overflowY: 'auto',
+                            position: 'absolute',
+                            top: '44px',
+                            right: '0',
+                            zIndex: 100,
                         }}>
                             <table style={{width: '100%', borderCollapse: 'collapse'}}>
                                 <tbody>
