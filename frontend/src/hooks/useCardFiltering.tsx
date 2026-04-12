@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { Card } from '../interfaces/Card';
 import { Lane } from '../interfaces/Lane';
 import { CardHelper } from '../helpers/CardHelper';
@@ -14,8 +14,6 @@ export const useCardFiltering = (
     selectedAccountId: string,
     selectMappings: { [key: string]: { [id: string]: string } }
 ) => {
-    const [amount, setAmount] = useState(0);
-
     const filteredCardsByAccount = useMemo(() => {
         if (!selectedAccountId) return cards;
         return cards.filter(card => {
@@ -30,21 +28,14 @@ export const useCardFiltering = (
     const filterUserId = filters.userId;
     const filterText = filters.text;
 
-    useEffect(() => {
-        if (!lanes || !filteredCardsByAccount) {
-            setAmount(0);
-            return;
-        }
+    const amount = useMemo(() => {
+        if (!lanes || !filteredCardsByAccount) return 0;
 
         const lanesWithForecast = lanes.filter((lane) => lane.inForecast);
 
-        setAmount(
-            CardHelper.filterAll(lanesWithForecast, filteredCardsByAccount, filters, selectMappings).reduce(
-                (acc, card) => {
-                    return card.amount ? acc + card.amount : acc;
-                },
-                0
-            )
+        return CardHelper.filterAll(lanesWithForecast, filteredCardsByAccount, filters, selectMappings).reduce(
+            (acc, card) => card.amount ? acc + card.amount : acc,
+            0
         );
     }, [filteredCardsByAccount, lanes, filterMode, filterUserId, filterText, selectMappings]);
 

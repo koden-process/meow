@@ -82,7 +82,7 @@ export const FilterBar = ({
                             onAccountSearchTextChange(id ? accountMapping[id] || '' : '');
                         }}
                     >
-                        {(item: any) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
+                        {(item: Account) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
                     </ComboBox>
                     <Picker
                         aria-label={Translations.FilterByUser[DEFAULT_LANGUAGE]}
