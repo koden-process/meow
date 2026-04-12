@@ -64,16 +64,6 @@ export const FilterBar = ({
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
                 {/* Left side: clear action + input and pickers */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Button
-                        variant="secondary"
-                        UNSAFE_style={{
-                            minWidth: '150px',
-                            visibility: (selectedAccountId || text || accountSearchText) ? 'visible' : 'hidden',
-                        }}
-                        onPress={onReset}
-                    >
-                        Réinitialiser
-                    </Button>
                     <input
                         className="inputSpacing"
                         value={text}
@@ -106,6 +96,11 @@ export const FilterBar = ({
                     >
                         {getUserOptions()}
                     </Picker>
+                    {(selectedAccountId || text || accountSearchText) && (
+                        <Button variant="secondary" onPress={onReset}>
+                            Réinitialiser
+                        </Button>
+                    )}
                 </div>
 
                 {/* Right side: filter buttons */}
