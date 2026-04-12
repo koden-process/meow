@@ -1,4 +1,5 @@
-import { Item, Picker } from '@adobe/react-spectrum';
+import { useMemo } from 'react';
+import { Item, Picker, ComboBox } from '@adobe/react-spectrum';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE, FILTER_BY_NONE } from '../../Constants';
 import { FilterMode } from '../../pages/HomePage';
@@ -10,11 +11,15 @@ interface FilterBarProps {
     onTextChange: (text: string) => void;
     selectedAccountId: string;
     onAccountChange: (accountId: string) => void;
+    accountSearchText: string;
+    onAccountSearchTextChange: (text: string) => void;
+    hasFavorites: boolean;
+    accountsForFilter: Account[];
+    accountMapping: { [id: string]: string };
     userId: string;
     onUserChange: (userId: string) => void;
     filters: { mode: Set<FilterMode> };
     onFilterToggle: (key: FilterMode) => void;
-    accounts: Account[];
     users: User[];
 }
 
@@ -26,21 +31,23 @@ export const FilterBar = ({
     onTextChange,
     selectedAccountId,
     onAccountChange,
+    accountSearchText,
+    onAccountSearchTextChange,
+    hasFavorites,
+    accountsForFilter,
+    accountMapping,
     userId,
     onUserChange,
     filters,
     onFilterToggle,
-    accounts,
     users,
 }: FilterBarProps) => {
-    const getAccountOptions = () => {
-        const list: JSX.Element[] = [];
-        list.push(<Item key="">Filtrer par contact</Item>);
-        accounts.forEach(acc => {
-            list.push(<Item key={acc._id}>{acc.name}</Item>);
-        });
-        return list;
-    };
+    const accountFiltered = useMemo(() => {
+        if (!accountSearchText) return accountsForFilter;
+        return accountsForFilter.filter(acc =>
+            acc.name.toLowerCase().includes(accountSearchText.toLowerCase())
+        );
+    }, [accountsForFilter, accountSearchText]);
 
     const getUserOptions = () => {
         const list: JSX.Element[] = [];
@@ -57,19 +64,26 @@ export const FilterBar = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <input
                         className="inputSpacing"
+                        value={text}
                         onChange={(event) => onTextChange(event.target.value)}
                         placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                        aria-label="Name or Stage"
+                        aria-label={Translations.NameOrStage[DEFAULT_LANGUAGE]}
                         type="text"
-                        value={text}
                     />
-                    <Picker
-                        aria-label={Translations.FilterByContact[DEFAULT_LANGUAGE]}
+                    <ComboBox
+                        aria-label={hasFavorites ? '★ Contacts favoris' : Translations.FilterByContact[DEFAULT_LANGUAGE]}
+                        items={accountFiltered}
+                        inputValue={accountSearchText}
+                        onInputChange={onAccountSearchTextChange}
                         selectedKey={selectedAccountId}
-                        onSelectionChange={(key) => onAccountChange(key ? key.toString() : '')}
+                        onSelectionChange={(key) => {
+                            const id = key ? key.toString() : '';
+                            onAccountChange(id);
+                            onAccountSearchTextChange(id ? accountMapping[id] || '' : '');
+                        }}
                     >
-                        {getAccountOptions()}
-                    </Picker>
+                        {(item: any) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
+                    </ComboBox>
                     <Picker
                         aria-label={Translations.FilterByUser[DEFAULT_LANGUAGE]}
                         selectedKey={userId}
@@ -84,17 +98,7 @@ export const FilterBar = ({
 
                 {/* Right side: filter buttons */}
                 <div>
-                    {/*
-                        <button
-                            className={`filter ${
-                                filters.mode.has(FilterMode.OwnedByMe) ? 'owned-by-me-active' : 'owned-by-me'
-                            }`}
-                            onClick={() => onFilterToggle(FilterMode.OwnedByMe)}
-                        >
-                            {Translations.OnlyMyOpportunitiesFilter[DEFAULT_LANGUAGE]}
-                        </button>
-                    */}
-                    {/*<button
+                    <button
                         className={`filter ${
                             filters.mode.has(FilterMode.RecentlyUpdated)
                                 ? 'recently-updated-active'
@@ -104,7 +108,7 @@ export const FilterBar = ({
                         style={{ display: 'none' }}
                     >
                         {Translations.RecentlyUpdatedFilter[DEFAULT_LANGUAGE]}
-                    </button>*/}
+                    </button>
                     <button
                         className={`filter ${
                             filters.mode.has(FilterMode.RequireUpdate) ? 'require-update-active' : 'require-update'

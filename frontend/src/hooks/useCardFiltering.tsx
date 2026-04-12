@@ -46,7 +46,7 @@ export const useCardFiltering = (
                 0
             )
         );
-    }, [filteredCardsByAccount, lanes, filterMode, filterUserId, filterText, selectMappings, filters]);
+    }, [filteredCardsByAccount, lanes, filterMode, filterUserId, filterText, selectMappings]);
 
     return {
         filteredCardsByAccount,
