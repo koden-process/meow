@@ -188,19 +188,20 @@ export const HomePage = () => {
                             }}>
                                 {/* Left side: clear action + input and pickers */}
                                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                    {(selectedAccountId || text || accountSearchText) && (
-                                        <Button
-                                            variant="secondary"
-                                            UNSAFE_style={{ minWidth: '150px' }}
-                                            onPress={() => {
-                                                setSelectedAccountId('');
-                                                setAccountSearchText('');
-                                                setText('');
-                                            }}
-                                        >
-                                            Réinitialiser
-                                        </Button>
-                                    )}
+                                    <Button
+                                        variant="secondary"
+                                        UNSAFE_style={{
+                                            minWidth: '150px',
+                                            visibility: (selectedAccountId || text || accountSearchText) ? 'visible' : 'hidden',
+                                        }}
+                                        onPress={() => {
+                                            setSelectedAccountId('');
+                                            setAccountSearchText('');
+                                            setText('');
+                                        }}
+                                    >
+                                        Réinitialiser
+                                    </Button>
 
                                     <input className="inputSpacing"
                                            value={text}

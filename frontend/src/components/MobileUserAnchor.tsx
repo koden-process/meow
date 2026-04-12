@@ -25,6 +25,20 @@ export const MobileUserAnchor = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMenuOpen]);
+
   const logout = () => {
     store.dispatch({
       type: ActionType.LOGOUT,
@@ -34,7 +48,7 @@ export const MobileUserAnchor = () => {
   return (
     <div className="mobile-user-anchor" ref={menuRef}>
       {isMenuOpen && (
-        <div className="mobile-user-anchor-menu">
+        <div id="mobile-user-anchor-menu" className="mobile-user-anchor-menu">
           <button
             type="button"
             className="mobile-user-anchor-link logout"
@@ -44,7 +58,16 @@ export const MobileUserAnchor = () => {
           </button>
         </div>
       )}
-      <Avatar id={userId} width={40} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+      <button
+        type="button"
+        className="mobile-user-anchor-trigger"
+        aria-expanded={isMenuOpen}
+        aria-controls="mobile-user-anchor-menu"
+        aria-label="Menu utilisateur"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        <Avatar id={userId} width={40} />
+      </button>
     </div>
   );
 };

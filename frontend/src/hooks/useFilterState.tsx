@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { store, selectFavoriteAccountIds } from '../store/Store';
 import { updateFilter } from '../actions/Actions';
 import { FILTER_BY_NONE } from '../Constants';
@@ -27,11 +27,29 @@ export const useFilterState = (
     const [selectedAccountId, setSelectedAccountId] = useState(() => filters.accountId ?? '');
     const [accountSearchText, setAccountSearchText] = useState(() => filters.accountSearchText ?? '');
 
+    /**
+     * Ref miroir d'accountSearchText : toujours à jour sans être une dépendance
+     * de l'effet métier, ce qui évite de dispatcher FILTER_UPDATE à chaque frappe
+     * dans le ComboBox (état UI éphémère, non métier).
+     * La valeur est persistée dans Redux lors du prochain changement de filtre
+     * métier (text, userId, selectedAccountId) ou à la sélection d'un compte.
+     */
+    const accountSearchTextRef = useRef(accountSearchText);
+    useEffect(() => {
+        accountSearchTextRef.current = accountSearchText;
+    });
+
     useEffect(() => {
         store.dispatch(
-            updateFilter(new Set(filters.mode), userId, text, selectedAccountId, accountSearchText)
+            updateFilter(new Set(filters.mode), userId, text, selectedAccountId, accountSearchTextRef.current)
         );
-    }, [text, userId, selectedAccountId, accountSearchText]);
+    // accountSearchText est intentionnellement exclu des dépendances : c'est un
+    // état UI pur (filtre la liste déroulante du ComboBox) qui ne pilote pas le
+    // filtrage métier. Sa valeur courante est lue via accountSearchTextRef pour
+    // éviter toute stale closure, et sera persistée dans Redux lors du prochain
+    // changement d'un filtre métier (text, userId, selectedAccountId).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [text, userId, selectedAccountId]);
 
     const handleFilterToggle = (key: FilterMode) => {
         const updated = new Set(filters.mode);
