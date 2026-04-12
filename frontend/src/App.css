@@ -395,6 +395,20 @@ body.light .page .navigation .item-mobile.active {
   box-shadow: rgb(17 17 26 / 12%) 0px 2px 8px;
 }
 
+.mobile-user-anchor-trigger {
+  display: block;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.mobile-user-anchor-trigger:focus-visible {
+  outline: 2px solid var(--spectrum-global-color-blue-500, #1473e6);
+  outline-offset: 2px;
+}
+
 .mobile-user-anchor-menu {
   position: absolute;
   left: 0;

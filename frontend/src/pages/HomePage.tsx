@@ -54,11 +54,21 @@ export const HomePage = () => {
     const navigate = useNavigate();
 
     const [mode, setMode] = useState<'board' | 'statistics'>('board');
-    const [accountSearchText, setAccountSearchText] = useState<string>('');
 
     useCardEnrichment(token);
-    const { text, setText, userId, setUserId, selectedAccountId, setSelectedAccountId, handleFilterToggle, hasFavorites, accountsForFilter } =
-        useFilterState(filters, accounts);
+    const {
+        text,
+        setText,
+        userId,
+        setUserId,
+        selectedAccountId,
+        setSelectedAccountId,
+        accountSearchText,
+        setAccountSearchText,
+        handleFilterToggle,
+        hasFavorites,
+        accountsForFilter,
+    } = useFilterState(filters, accounts);
 
     const accountMapping = useMemo(() => createAccountMapping(accounts), [accounts]);
     const selectMappings = useMemo(() => createSelectMappings(schema, accountMapping), [schema, accountMapping]);
@@ -112,6 +122,11 @@ export const HomePage = () => {
                         filters={filters}
                         onFilterToggle={handleFilterToggle}
                         users={users}
+                        onReset={() => {
+                            setSelectedAccountId('');
+                            setAccountSearchText('');
+                            setText('');
+                        }}
                     />
 
                     <DragDropContext
@@ -121,7 +136,6 @@ export const HomePage = () => {
                         {/* Corbeille commentée - suppression via bouton uniquement */}
                         <BoardViewSwitcher mode={mode} lanes={lanes} cards={filteredCardsByAccount} />
                     </DragDropContext>
-
                 </div>
             </div>
         </>

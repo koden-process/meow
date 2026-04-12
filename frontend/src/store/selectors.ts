@@ -18,5 +18,7 @@ export const selectFilters = createSelector(
     mode: new Set<FilterMode>(filters.mode),
     text: filters.text,
     userId: filters.userId,
+    accountId: filters.accountId,
+    accountSearchText: filters.accountSearchText,
   })
 );

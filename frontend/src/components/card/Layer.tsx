@@ -21,14 +21,11 @@ import {
 } from '../../store/Store';
 import {Form} from './Form';
 import {Events} from './Events';
-import {TransferModal} from './TransferModal';
-import {TransferRequests} from './TransferRequests';
 import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
 import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
 import {User} from '../../interfaces/User';
-import {LaneType} from '../../interfaces/Lane';
 import {Translations} from '../../Translations';
 import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
@@ -44,7 +41,6 @@ export const Layer = () => {
     const id = useSelector(selectInterfaceStateId);
     const card = useSelector((store: ApplicationStore) => selectCard(store, id));
     const [isUserLayerVisible, setIsUserLayerVisible] = useState(false);
-    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const users = useSelector(selectActiveUsers);
     const lanes = useSelector(selectLanes);
     const isMobileLayout = useMobileLayout();
@@ -82,11 +78,6 @@ export const Layer = () => {
 
             store.dispatch(showModalSuccess(Translations.CardCreatedConfirmation[DEFAULT_LANGUAGE]));
         }
-    };
-
-    const handleTransferSuccess = () => {
-        store.dispatch(showModalSuccess('Transfer request sent successfully!'));
-        // Optionally refresh the card data or close the layer
     };
 
     const getBannerColorClassName = (color: string | undefined) => {
@@ -131,12 +122,6 @@ export const Layer = () => {
     const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-
-    // Fonction pour vérifier si l'opportunité est verrouillée (dans une lane fermée)
-    const isOpportunityLocked = useMemo(() => {
-        if (!lane || !lane.tags?.type) return false;
-        return lane.tags.type === LaneType.ClosedWon || lane.tags.type === LaneType.ClosedLost;
-    }, [lane]);
 
     useEffect(() => {
         setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
@@ -286,10 +271,6 @@ export const Layer = () => {
                             <Tabs.Trigger value="events">
                                 {Translations.HistoryTab[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
-                            {/* @ts-ignore */}
-                            <Tabs.Trigger value="transfer">
-                                {Translations.TransfersNavItem[DEFAULT_LANGUAGE]}
-                            </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
                         <Tabs.List>
@@ -307,52 +288,8 @@ export const Layer = () => {
                     <Tabs.Content value="events">
                         <Events entity="card" id={id}/>
                     </Tabs.Content>
-                    {/* @ts-ignore */}
-                    <Tabs.Content value="transfer">
-                        <div style={{ padding: '16px' }}>
-                            {card && (
-                                <>
-                                    <div style={{ marginBottom: '16px' }}>
-                                        {isOpportunityLocked ? (
-                                            <div style={{ 
-                                                padding: '12px', 
-                                                backgroundColor: '#f3f4f6', 
-                                                borderRadius: '6px',
-                                                color: '#6b7280',
-                                                fontSize: '14px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}>
-                                                <IconLock />
-                                                {Translations.LockedOpportunityTransferError[DEFAULT_LANGUAGE]}
-                                            </div>
-                                        ) : (
-                                            <Button 
-                                                variant="primary" 
-                                                onPress={() => setIsTransferModalOpen(true)}
-                                            >
-                                                {Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <TransferRequests cardId={id} />
-                                </>
-                            )}
-                        </div>
-                    </Tabs.Content>
                 </Tabs.Root>
             </div>
-
-            {/* Transfer Modal */}
-            {card && (
-                <TransferModal
-                    isOpen={isTransferModalOpen}
-                    onClose={() => setIsTransferModalOpen(false)}
-                    card={card}
-                    onTransferSuccess={handleTransferSuccess}
-                />
-            )}
             {/* Modale de confirmation de suppression */}
             {showDeleteModal && (
                 <div className="delete-modal-overlay">

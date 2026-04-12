@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Item, Picker, ComboBox } from '@adobe/react-spectrum';
+import { Button, Item, Picker, ComboBox } from '@adobe/react-spectrum';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE, FILTER_BY_NONE } from '../../Constants';
 import { FilterMode } from '../../pages/HomePage';
@@ -21,6 +21,7 @@ interface FilterBarProps {
     filters: { mode: Set<FilterMode> };
     onFilterToggle: (key: FilterMode) => void;
     users: User[];
+    onReset: () => void;
 }
 
 /**
@@ -41,6 +42,7 @@ export const FilterBar = ({
     filters,
     onFilterToggle,
     users,
+    onReset,
 }: FilterBarProps) => {
     const accountFiltered = useMemo(() => {
         if (!accountSearchText) return accountsForFilter;
@@ -60,8 +62,18 @@ export const FilterBar = ({
     return (
         <div className="filters-canvas">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-                {/* Left side: input and pickers */}
+                {/* Left side: clear action + input and pickers */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Button
+                        variant="secondary"
+                        UNSAFE_style={{
+                            minWidth: '150px',
+                            visibility: (selectedAccountId || text || accountSearchText) ? 'visible' : 'hidden',
+                        }}
+                        onPress={onReset}
+                    >
+                        Réinitialiser
+                    </Button>
                     <input
                         className="inputSpacing"
                         value={text}

@@ -75,11 +75,6 @@ export const Navigation = () => {
                     <img alt={Translations.DirectoryTitle[DEFAULT_LANGUAGE]} src="/accounts-icon.svg"/>
                 </Link>
             </div>
-            <div className={`item ${isActiveRoute('/transfers') ? 'active' : ''}`}>
-                <Link to="/transfers" title={Translations.TransfersNavItem[DEFAULT_LANGUAGE]}>
-                    <img alt={Translations.TransfersNavItem[DEFAULT_LANGUAGE]} src="/transfer-icon.svg"/>
-                </Link>
-            </div>
             <div className={`item ${isActiveRoute('/hire') ? 'active' : ''}`}>
                 <Link to="/hire" title={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]}>
                     <img alt={Translations.HireSpecialistNavItem[DEFAULT_LANGUAGE]} src="/paw-icon.svg"/>
