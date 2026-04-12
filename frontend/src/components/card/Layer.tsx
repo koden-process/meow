@@ -159,20 +159,64 @@ export const Layer = () => {
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                    {/* Avatar en haut à droite */}
+                    {/* Avatar en haut à droite – wrapper relatif pour ancrer le dropdown */}
                     {card?.userId && (
-                        <Avatar
-                            id={card?.userId}
-                            width={36}
-                            onClick={() => {
-                                setIsUserLayerVisible(!isUserLayerVisible);
-                            }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <Avatar
+                                id={card?.userId}
+                                width={36}
+                                onClick={() => {
+                                    setIsUserLayerVisible(!isUserLayerVisible);
+                                }}
+                            />
+
+                            {/* Liste des utilisateurs ancrée sous l'avatar */}
+                            {isUserLayerVisible && (
+                                <div className="user-list" style={{
+                                    backgroundColor: 'white',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    padding: '8px',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    minWidth: '200px',
+                                    maxHeight: '600px',
+                                    overflowY: 'auto',
+                                    position: 'absolute',
+                                    top: '100%',
+                                    marginTop: '4px',
+                                    right: '0',
+                                    zIndex: 100,
+                                }}>
+                                    <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                                        <tbody>
+                                        {users.map((user: User) => {
+                                            return (
+                                                <tr key={user._id} style={{width: '100%'}}>
+                                                    <td>
+                                                        <Avatar width={36} id={user._id}/>
+                                                    </td>
+                                                    <td>
+                                                        <b>{user.name}</b>
+                                                    </td>
+                                                    <td>
+                                                        <Button variant="primary" onPress={() => assign(user._id)}>
+                                                            {Translations.AssignButton[DEFAULT_LANGUAGE]}
+                                                        </Button>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            );
+                                        })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
                     )}
-                    
+
                     {/* Message de verrouillage juste en dessous de l'avatar */}
                     {isDisabled && (
-                        <div className={`lock ${getBannerColorClassName(lane?.color)}`} style={{ 
+                        <div className={`lock ${getBannerColorClassName(lane?.color)}`} style={{
                             marginTop: '8px',
                             textAlign: 'center',
                             padding: '8px 12px',
@@ -180,47 +224,12 @@ export const Layer = () => {
                             fontSize: '14px'
                         }}>
                             <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
-                            <div className="button" onClick={() => setIsDisabled(!isDisabled)} style={{ 
+                            <div className="button" onClick={() => setIsDisabled(!isDisabled)} style={{
                                 cursor: 'pointer',
                                 marginTop: '4px'
                             }}>
                                 <IconLock/>
                             </div>
-                        </div>
-                    )}
-                    
-                    {/* Liste des utilisateurs au-dessus des boutons */}
-                    {isUserLayerVisible && (
-                        <div className="user-list" style={{ 
-                            backgroundColor: 'white', 
-                            border: '1px solid #ccc', 
-                            borderRadius: '4px', 
-                            padding: '8px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            minWidth: '200px'
-                        }}>
-                            <table style={{width: '100%', borderCollapse: 'collapse'}}>
-                                <tbody>
-                                {users.map((user: User) => {
-                                    return (
-                                        <tr key={user._id} style={{width: '100%'}}>
-                                            <td>
-                                                <Avatar width={36} id={user._id}/>
-                                            </td>
-                                            <td>
-                                                <b>{user.name}</b>
-                                            </td>
-                                            <td>
-                                                <Button variant="primary" onPress={() => assign(user._id)}>
-                                                    {Translations.AssignButton[DEFAULT_LANGUAGE]}
-                                                </Button>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    );
-                                })}
-                                </tbody>
-                            </table>
                         </div>
                     )}
                     
