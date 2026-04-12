@@ -197,7 +197,9 @@ export const Layer = () => {
                             borderRadius: '4px', 
                             padding: '8px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            minWidth: '200px'
+                            minWidth: '200px',
+                            maxHeight: '300px',
+                            overflowY: 'auto',
                         }}>
                             <table style={{width: '100%', borderCollapse: 'collapse'}}>
                                 <tbody>
