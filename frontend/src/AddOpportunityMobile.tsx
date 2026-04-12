@@ -8,6 +8,7 @@ import { DEFAULT_LANGUAGE } from './Constants';
 import { FormMobile } from './components/card/FormMobile';
 import { Link, useNavigate } from 'react-router-dom';
 import './App.css';
+import { MobileUserAnchor } from './components/MobileUserAnchor';
 
 const AddCardMobile: React.FC = () => {
   const token = useSelector(selectToken);
@@ -63,6 +64,7 @@ const AddCardMobile: React.FC = () => {
           </div>
         )}
       </div>
+      <MobileUserAnchor />
     </div>
   );
 };

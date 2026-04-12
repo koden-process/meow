@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCards, selectLanes, selectToken } from './store/Store';
+import { selectCards, selectLanes, selectToken, selectUserId } from './store/Store';
 import { Lane, LaneType } from './interfaces/Lane';
 import { store } from './store/Store';
 import { getRequestClient } from './helpers/RequestHelper';
@@ -10,6 +10,7 @@ import { Translations } from './Translations';
 import { DEFAULT_LANGUAGE } from './Constants';
 import './App.css';
 import { Button } from '@adobe/react-spectrum';
+import { MobileUserAnchor } from './components/MobileUserAnchor';
 
 const AddCommentMobile: React.FC = () => {
   const [comment, setComment] = useState('');
@@ -21,6 +22,7 @@ const AddCommentMobile: React.FC = () => {
   const cards = useSelector(selectCards);
   const lanes = useSelector(selectLanes);
   const token = useSelector(selectToken);
+  const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
   const client = getRequestClient(token);
   const lang = DEFAULT_LANGUAGE;
@@ -36,6 +38,7 @@ const AddCommentMobile: React.FC = () => {
   // Cards actives = pas dans une lane fermée
   const activeCards = cards
     .filter((card) => !closedLaneIds.includes(card.laneId))
+    .filter((card) => card.userId === userId)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
@@ -126,6 +129,7 @@ const AddCommentMobile: React.FC = () => {
           </div>
         )}
       </div>
+      <MobileUserAnchor />
     </div>
   );
 };
