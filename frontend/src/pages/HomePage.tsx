@@ -107,38 +107,6 @@ export const HomePage = () => {
                         onModeChange={setMode}
                     />
 
-                        <div className="filters-canvas">
-                            {/* All elements on the same horizontal line with filter buttons on the right */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                gap: '10px'
-                            }}>
-                                {/* Left side: clear action + input and pickers */}
-                                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                                    <Button
-                                        variant="secondary"
-                                        UNSAFE_style={{
-                                            minWidth: '150px',
-                                            visibility: (selectedAccountId || text || accountSearchText) ? 'visible' : 'hidden',
-                                        }}
-                                        onPress={() => {
-                                            setSelectedAccountId('');
-                                            setAccountSearchText('');
-                                            setText('');
-                                        }}
-                                    >
-                                        Réinitialiser
-                                    </Button>
-
-                                    <input className="inputSpacing"
-                                           value={text}
-                                           onChange={(event) => setText(event.target.value)}
-                                           placeholder={Translations.SearchPlaceholder[DEFAULT_LANGUAGE]}
-                                           aria-label={Translations.NameOrStage[DEFAULT_LANGUAGE]}
-                                           type="text"
-                                    />
                     <FilterBar
                         text={text}
                         onTextChange={setText}
@@ -154,6 +122,11 @@ export const HomePage = () => {
                         filters={filters}
                         onFilterToggle={handleFilterToggle}
                         users={users}
+                        onReset={() => {
+                            setSelectedAccountId('');
+                            setAccountSearchText('');
+                            setText('');
+                        }}
                     />
 
                     <DragDropContext
@@ -163,7 +136,6 @@ export const HomePage = () => {
                         {/* Corbeille commentée - suppression via bouton uniquement */}
                         <BoardViewSwitcher mode={mode} lanes={lanes} cards={filteredCardsByAccount} />
                     </DragDropContext>
-
                 </div>
             </div>
         </>
