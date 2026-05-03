@@ -80,6 +80,13 @@ export const ReferenceAttribute = ({
       >
         {getOptions(accounts)}
       </Picker>
+      {isDisabled ? (
+        <span
+          style={{ fontSize: '0.85em', display: 'block', marginTop: 6, opacity: 0.85 }}
+        >
+          {Translations.ReferenceFieldLockedHint[DEFAULT_LANGUAGE]}
+        </span>
+      ) : null}
     </div>
   );
 };

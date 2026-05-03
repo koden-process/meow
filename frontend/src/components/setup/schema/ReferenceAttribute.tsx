@@ -27,8 +27,8 @@ export const ReferenceAttribute = ({
                                        update,
                                    }: ReferenceAttributeProps) => {
     const [name, setName] = useState(nameDefault);
-    const [reverseName, setReverseName] = useState(reverseNameDefault);
-    const [entity, setEntity] = useState(entityDefault);
+    const [reverseName, setReverseName] = useState(reverseNameDefault ?? '');
+    const [entity, setEntity] = useState<SchemaType | null>(entityDefault ?? SchemaType.Account);
     const relationship = 'many-to-one';
 
     useEffect(() => {
@@ -53,20 +53,16 @@ export const ReferenceAttribute = ({
                             <div className="reference">
                                 <Picker
                                     width="100%"
-                                    selectedKey={entity}
+                                    selectedKey={entity ?? SchemaType.Account}
                                     onSelectionChange={(key) => {
                                         if (key === null || key === undefined) {
                                             setEntity(null);
                                         } else {
-                                            setEntity(key.toString() as SchemaType)
+                                            setEntity(key.toString() as SchemaType);
                                         }
                                     }}
                                 >
-                                    {Object.entries(SchemaType)
-                                        .filter((item) => item[1] === 'account')
-                                        .map(([value, key]) => {
-                                            return <Item key={key}>{value}</Item>;
-                                        })}
+                                    <Item key={SchemaType.Account}>Account</Item>
                                 </Picker>
                             </div>
 

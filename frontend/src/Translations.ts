@@ -272,6 +272,11 @@ export const Translations = {
         fr: 'Cette opportunité est fermée, voulez-vous la déverrouiller?',
     },
 
+    ReferenceFieldLockedHint: {
+        en: 'Unlock the opportunity using the lock icon in the header to change the account or add a contact.',
+        fr: "Déverrouillez l'opportunité via l'icône cadenas dans l'en-tête pour modifier le compte ou ajouter un contact.",
+    },
+
     NumberOfContacts: {
         en: 'Number of Contacts',
         fr: 'Nombre de contacts',

@@ -54,6 +54,9 @@ const getOptions = (schema: Schema) => {
     return list;
 };
 
+const defaultAttributeName = (index: number) =>
+    ANIMALS[index % ANIMALS.length] || `Field ${index + 1}`;
+
 export interface SchemaCanvasProps {
     schema: Schema;
     validate: (schema: Schema) => void;
@@ -62,35 +65,48 @@ export interface SchemaCanvasProps {
 export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasProps) => {
     const [items, setItems] = useState<Array<SchemaAttribute>>([]);
     const [type, setType] = useState<SchemaAttributeType>(SchemaAttributeType.Text);
-    const [schema] = useState(schemaImported);
 
     useEffect(() => {
-        const list: SchemaAttribute[] = [];
-
-        schemaImported.attributes.map((item) => {
-            list[item.index] = item;
-        });
-
-        setItems([...list]);
+        const sorted = [...schemaImported.attributes]
+            .sort((a, b) => a.index - b.index)
+            .map((attr, i) => ({...attr, index: i}));
+        setItems(sorted);
     }, [schemaImported]);
 
     const add = () => {
-        const item = {
+        const index = items.length;
+        const base = {
             key: generateUUID(),
-            index: items.length,
+            index,
             type: type,
-            name: ANIMALS[items.length],
+            name: defaultAttributeName(index),
         };
+
+        let item: SchemaAttribute = base as SchemaAttribute;
 
         if (type === SchemaAttributeType.Select) {
             (item as SchemaSelectAttribute).options = [ANIMALS[0], ANIMALS[1]];
         }
 
-        setItems([...items, item]);
+        if (type === SchemaAttributeType.Reference) {
+            const ref: SchemaReferenceAttribute = {
+                ...base,
+                type: SchemaAttributeType.Reference,
+                entity: SchemaType.Account,
+                reverseName: 'Opportunities',
+                relationship: 'many-to-one',
+            };
+            item = ref;
+        }
+
+        const newList = [...items, item];
+        setItems(newList);
+        validate({...schemaImported, attributes: newList});
     };
 
     const remove = (index: number) => {
-        const list = removeAttribute(items, index).map((item, index) => {
+        const copy = [...items];
+        const list = removeAttribute(copy, index).map((item, index) => {
             return {
                 ...item,
                 index: index,
@@ -99,9 +115,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
 
         setItems([...list]);
 
-        if (schema) {
-            validate({...schema, attributes: [...list]});
-        }
+        validate({...schemaImported, attributes: [...list]});
     };
 
     const update = (key: string, updated: Partial<SchemaAttribute>) => {
@@ -115,9 +129,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
 
         setItems([...list]);
 
-        if (schema) {
-            validate({...schema, attributes: [...list]});
-        }
+        validate({...schemaImported, attributes: [...list]});
     };
 
     const onDragEnd = async (result: DropResult) => {
@@ -131,25 +143,54 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
 
         setItems([...list]);
 
-        if (schema) {
-            validate({...schema, attributes: [...list]});
-        }
+        validate({...schemaImported, attributes: [...list]});
     };
 
     const onDragStart = () => {
     };
 
-    const getAttribute = (item: SchemaAttribute) => {
+    /** Index liste pour react-beautiful-dnd et remove — doit être la position 0..length-1, pas item.index serveur */
+    const getAttribute = (item: SchemaAttribute, listIndex: number) => {
         switch (item.type) {
             case SchemaAttributeType.Text:
-                return <TextAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return (
+                    <TextAttribute
+                        update={update}
+                        remove={remove}
+                        attributeKey={item.key}
+                        {...item}
+                        index={listIndex}
+                    />
+                );
             case SchemaAttributeType.Email:
-                return <EmailAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return (
+                    <EmailAttribute
+                        update={update}
+                        remove={remove}
+                        attributeKey={item.key}
+                        {...item}
+                        index={listIndex}
+                    />
+                );
             case SchemaAttributeType.Link:
-                return <LinkAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return (
+                    <LinkAttribute
+                        update={update}
+                        remove={remove}
+                        attributeKey={item.key}
+                        {...item}
+                        index={listIndex}
+                    />
+                );
             case SchemaAttributeType.TextArea:
                 return (
-                    <TextAreaAttribute update={update} remove={remove} attributeKey={item.key} {...item} />
+                    <TextAreaAttribute
+                        update={update}
+                        remove={remove}
+                        attributeKey={item.key}
+                        {...item}
+                        index={listIndex}
+                    />
                 );
             case SchemaAttributeType.Select:
                 return (
@@ -158,6 +199,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                         remove={remove}
                         attributeKey={item.key}
                         {...(item as SchemaSelectAttribute)}
+                        index={listIndex}
                     />
                 );
             case SchemaAttributeType.Reference:
@@ -167,11 +209,18 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                         remove={remove}
                         attributeKey={item.key}
                         {...(item as SchemaReferenceAttribute)}
+                        index={listIndex}
                     />
                 );
             case SchemaAttributeType.Boolean:
                 return (
-                    <BooleanAttribute update={update} remove={remove} attributeKey={item.key} {...item} />
+                    <BooleanAttribute
+                        update={update}
+                        remove={remove}
+                        attributeKey={item.key}
+                        {...item}
+                        index={listIndex}
+                    />
                 );
             default:
                 return <div>{Translations.UnknownAttributeTypeError[DEFAULT_LANGUAGE]}</div>; // TODO should throw
@@ -185,8 +234,8 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                     {(provided) => {
                         return (
                             <div ref={provided.innerRef} {...provided.droppableProps}>
-                                {items.map((item) => {
-                                    return getAttribute(item);
+                                {items.map((item, listIndex) => {
+                                    return getAttribute(item, listIndex);
                                 })}
 
                                 {provided.placeholder}
@@ -204,7 +253,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                     }}
                 >
 
-                    {getOptions(schema)}
+                    {getOptions(schemaImported)}
                 </Picker>
 
                 <Button onPress={add} variant="secondary">

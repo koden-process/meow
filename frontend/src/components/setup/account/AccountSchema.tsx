@@ -1,5 +1,5 @@
 import { Button } from '@adobe/react-spectrum';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { showModalError, showModalSuccess } from '../../../actions/Actions';
 import { RESERVED_ATTRIBUTES } from '../../../Constants';
@@ -40,17 +40,11 @@ export const AccountSchema = ({ isDeveloperMode }: AccountSchemaProps) => {
     attributes: [],
   });
 
-  useEffect(() => {
-    if (schema) {
-      setUpdatedSchema({ ...schema, attributes: [...schema.attributes] });
-    }
-  }, [schema]);
-
   const token = useSelector(selectToken);
 
   const client = getRequestClient(token);
 
-  const validate = (schema: Schema | undefined) => {
+  const validate = useCallback((schema: Schema | undefined) => {
     if (!schema) {
       return;
     }
@@ -119,7 +113,15 @@ export const AccountSchema = ({ isDeveloperMode }: AccountSchemaProps) => {
     setIsValid(true);
 
     setUpdatedSchema({ ...schema });
-  };
+  }, []);
+
+  useEffect(() => {
+    if (schema) {
+      const next = { ...schema, attributes: [...schema.attributes] };
+      setUpdatedSchema(next);
+      validate(next);
+    }
+  }, [schema, validate]);
 
   const save = async () => {
     try {
