@@ -14,9 +14,11 @@ import {
 import {
     selectActiveUsers,
     selectCard,
-    selectInterfaceStateId, selectLane,
+    selectInterfaceStateId,
+    selectLane,
     selectLanes,
-    selectToken, selectUserId,
+    selectToken,
+    selectUserId,
     store,
 } from '../../store/Store';
 import {Form} from './Form';
@@ -144,15 +146,22 @@ export const Layer = () => {
     }, [preview]);
 
     useEffect(() => {
+        if (!id) {
+            return;
+        }
+
+        const existing = selectCard(store.getState() as ApplicationStore, id);
+        if (existing) {
+            return;
+        }
+
         const execute = async () => {
-            const updated = await client.getCard(id!);
+            const updated = await client.getCard(id);
 
             store.dispatch(updateCardFromServer(updated));
         };
 
-        if (id) {
-            execute();
-        }
+        execute();
     }, [id]);
 
     return (

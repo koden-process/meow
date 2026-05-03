@@ -277,6 +277,11 @@ export const Translations = {
         fr: "Déverrouillez l'opportunité via l'icône cadenas dans l'en-tête pour modifier le compte ou ajouter un contact.",
     },
 
+    FilterEmptyBoardHint: {
+        en: 'No opportunities match the current filters. Adjust filters or select Everyone to see all deals.',
+        fr: 'Aucune opportunité ne correspond aux filtres actuels. Modifiez les filtres ou sélectionnez Everyone pour tout afficher.',
+    },
+
     NumberOfContacts: {
         en: 'Number of Contacts',
         fr: 'Nombre de contacts',

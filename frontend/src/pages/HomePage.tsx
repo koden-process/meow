@@ -35,6 +35,7 @@ import { handleDragStart, handleDragEnd } from '../services/dragDropHandlers';
 import { BoardHeader } from '../components/home/BoardHeader';
 import { FilterBar } from '../components/home/FilterBar';
 import { BoardViewSwitcher } from '../components/home/BoardViewSwitcher';
+import { hasActiveBoardFilters } from '../helpers/boardFilterHelper';
 
 export const enum FilterMode {
     // OwnedByMe = 'owned-by-me',
@@ -80,6 +81,11 @@ export const HomePage = () => {
         selectedAccountId,
         selectMappings
     );
+
+    const boardFiltersActive = useMemo(() => hasActiveBoardFilters(filters), [filters]);
+
+    const showEmptyFilterHint =
+        mode === 'board' && cards.length > 0 && filteredCardsByAccount.length === 0;
 
     if (window.location.pathname !== '/') {
         navigate('/');
@@ -129,12 +135,32 @@ export const HomePage = () => {
                         }}
                     />
 
+                    {showEmptyFilterHint ? (
+                        <div
+                            role="status"
+                            style={{
+                                margin: '12px 0',
+                                padding: '10px 12px',
+                                fontSize: '0.95em',
+                                borderRadius: 6,
+                                background: 'var(--spectrum-global-color-gray-100, #f3f3f3)',
+                            }}
+                        >
+                            {Translations.FilterEmptyBoardHint[DEFAULT_LANGUAGE]}
+                        </div>
+                    ) : null}
+
                     <DragDropContext
                         onDragStart={handleDragStart}
                         onDragEnd={(result) => handleDragEnd(result, cards)}
                     >
                         {/* Corbeille commentée - suppression via bouton uniquement */}
-                        <BoardViewSwitcher mode={mode} lanes={lanes} cards={filteredCardsByAccount} />
+                        <BoardViewSwitcher
+                            mode={mode}
+                            lanes={lanes}
+                            cards={filteredCardsByAccount}
+                            isDragDisabled={boardFiltersActive}
+                        />
                     </DragDropContext>
                 </div>
             </div>

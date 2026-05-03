@@ -1,9 +1,10 @@
 import { DropResult } from 'react-beautiful-dnd';
 import { Card } from '../interfaces/Card';
-import { store, selectUserId } from '../store/Store';
+import { store, selectUserId, selectFilters } from '../store/Store';
 import { ActionType, showModalError } from '../actions/Actions';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
+import { hasActiveBoardFilters } from '../helpers/boardFilterHelper';
 
 /**
  * Controls the start of the drag (display of the trash can)
@@ -20,6 +21,11 @@ export const handleDragStart = () => {
  * Handles the end of the drag (moving or deleting the card)
  */
 export const handleDragEnd = (result: DropResult, cards: Card[]) => {
+    const filters = selectFilters(store.getState());
+    if (hasActiveBoardFilters(filters)) {
+        return;
+    }
+
     // Trash feature disabled for now
     // const trash = document.getElementById('trash');
     // if (trash) {

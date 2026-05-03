@@ -34,9 +34,10 @@ export interface LaneProps {
     lane: LaneInterface;
     numberOfLanes: number;
     cards?: Card[]; // cards filtrées à afficher dans cette lane
+    isDragDisabled?: boolean;
 }
 
-export const Lane = ({lane, numberOfLanes, cards: cardsProp}: LaneProps) => {
+export const Lane = ({lane, numberOfLanes, cards: cardsProp, isDragDisabled = false}: LaneProps) => {
     const cards = cardsProp ?? useSelector(selectCards);
     const filters = useSelector(selectFilters);
     const ids = useSelector((store: ApplicationStore) => selectBoardByLaneId(store, lane._id));
@@ -79,7 +80,13 @@ export const Lane = ({lane, numberOfLanes, cards: cardsProp}: LaneProps) => {
                             {ids?.map((id, index) => {
                                 const card = filtered.find((listItem) => listItem._id === id);
                                 return card ? (
-                                    <CardComponent index={index} key={card._id} card={card} lane={lane}/>
+                                    <CardComponent
+                                        index={index}
+                                        key={card._id}
+                                        card={card}
+                                        lane={lane}
+                                        isDragDisabled={isDragDisabled}
+                                    />
                                 ) : undefined;
                             })}
                             {provided.placeholder}

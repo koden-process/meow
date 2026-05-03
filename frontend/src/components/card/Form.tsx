@@ -131,7 +131,7 @@ export const Form = ({ id, onPreviewChange }: FormProps) => {
 
         <SchemaCanvas
           isDisabled={isDisabled}
-          values={card?.attributes}
+          values={preview.attributes ?? card?.attributes}
           schema={schema!}
           validate={validate}
         />

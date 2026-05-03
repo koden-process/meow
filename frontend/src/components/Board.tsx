@@ -5,9 +5,10 @@ import { Card } from '../interfaces/Card';
 export interface BoardProps {
   lanes: LaneInterface[];
   cards?: Card[]; // cards filtrées à afficher
+  isDragDisabled?: boolean;
 }
 
-export const Board = ({ lanes, cards }: BoardProps) => {
+export const Board = ({ lanes, cards, isDragDisabled = false }: BoardProps) => {
   return (
     <>
       {lanes
@@ -21,6 +22,7 @@ export const Board = ({ lanes, cards }: BoardProps) => {
               lane={lane}
               numberOfLanes={lanes.filter((lane) => lane._id !== 'trash').length}
               cards={cardsForLane}
+              isDragDisabled={isDragDisabled}
             />
           );
         })}

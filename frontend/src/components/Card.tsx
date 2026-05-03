@@ -16,9 +16,11 @@ export interface CardProps {
   card: CardEntity;
   lane: Lane;
   index: number;
+  /** Désactive le drag lorsque des filtres réduisent la vue (indices incohérents avec le board) */
+  isDragDisabled?: boolean;
 }
 
-export const Card = ({ card, lane, index }: CardProps) => {
+export const Card = ({ card, lane, index, isDragDisabled = false }: CardProps) => {
   const [ago, setAgo] = useState<string | null>(null);
   const [closedAt, setClosedAt] = useState<Date | undefined>();
 
@@ -41,7 +43,7 @@ export const Card = ({ card, lane, index }: CardProps) => {
   };
 
   return (
-    <Draggable draggableId={card._id} index={index}>
+    <Draggable draggableId={card._id} index={index} isDragDisabled={isDragDisabled}>
       {(provided, snaphot) => {
         return (
           <div

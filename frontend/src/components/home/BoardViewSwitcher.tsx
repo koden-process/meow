@@ -7,15 +7,18 @@ interface BoardViewSwitcherProps {
     mode: 'board' | 'statistics';
     lanes: Lane[];
     cards: Card[];
+    isDragDisabled?: boolean;
 }
 
 /**
  * Component to switch between the Board view and the Statistics view
  */
-export const BoardViewSwitcher = ({ mode, lanes, cards }: BoardViewSwitcherProps) => {
+export const BoardViewSwitcher = ({ mode, lanes, cards, isDragDisabled = false }: BoardViewSwitcherProps) => {
     return (
         <div className="lanes">
-            {mode === 'board' && <Board lanes={lanes} cards={cards} />}
+            {mode === 'board' && (
+                <Board lanes={lanes} cards={cards} isDragDisabled={isDragDisabled} />
+            )}
             {mode === 'statistics' && <StatisticsBoard lanes={lanes} />}
         </div>
     );

@@ -1,6 +1,15 @@
 import { Card } from '../interfaces/Card';
 import { Account } from '../interfaces/Account';
-import { Schema, SchemaAttributeType } from '../interfaces/Schema';
+import { Schema, SchemaAttributeType, SchemaType } from '../interfaces/Schema';
+
+/** Référence vers comptes / contacts (schéma par défaut : entity account) + rétrocompat 'contact' */
+const isReferenceToAccount = (attr: { type: SchemaAttributeType; entity?: SchemaType | string | null }): boolean => {
+  if (attr.type !== SchemaAttributeType.Reference) {
+    return false;
+  }
+  const e = attr.entity;
+  return e === SchemaType.Account || e === 'account' || e === 'contact';
+};
 
 /**
  * Service for business logic related to cards
@@ -24,10 +33,7 @@ export const createSelectMappings = (
 
     if (schema && schema.attributes) {
         schema.attributes.forEach(attr => {
-            if (
-                attr.type === SchemaAttributeType.Reference &&
-                (attr as any).entity === 'contact'
-            ) {
+            if (isReferenceToAccount(attr as { type: SchemaAttributeType; entity?: SchemaType | null })) {
                 selectMappings[attr.key] = accountMapping;
             }
         });
@@ -51,8 +57,7 @@ export const enrichCard = (
             if (card.attributes && attr.key in card.attributes) {
                 const value = card.attributes[attr.key];
                 if (
-                    attr.type === SchemaAttributeType.Reference &&
-                    (attr as any).entity === 'contact' &&
+                    isReferenceToAccount(attr as { type: SchemaAttributeType; entity?: SchemaType | null }) &&
                     typeof value === 'string'
                 ) {
                     attributesReadable[attr.key] = accountMapping[value] || value;
