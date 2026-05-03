@@ -1,11 +1,12 @@
 import { Picker, Item } from '@adobe/react-spectrum';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ActionType, showModalError, showModalSuccess } from '../../../actions/Actions';
+import { showModalError, showModalSuccess } from '../../../actions/Actions';
 import { CurrencyCode } from '../../../interfaces/Team';
 import { selectCurrency, selectTeam, selectToken, store } from '../../../store/Store';
 import { Translations } from '../../../Translations';
 import { getRequestClient } from '../../../helpers/RequestHelper';
+import { refreshSharedApplicationState } from '../../../helpers/RefreshApplicationState';
 import { DEFAULT_LANGUAGE } from '../../../Constants'
 
 function parseCurrencyKey(value: React.Key): CurrencyCode {
@@ -34,6 +35,12 @@ export const CurrencyCanvas = () => {
     const team = useSelector(selectTeam);
     const [currency, setCurrency] = useState<CurrencyCode>(configuredCurrency ?? CurrencyCode.USD);
 
+    useEffect(() => {
+        if (configuredCurrency !== undefined) {
+            setCurrency(configuredCurrency);
+        }
+    }, [configuredCurrency]);
+
     const updateCurrencyCode = async (key: React.Key) => {
         if (!team) {
             console.error(Translations.TeamNotSetError[DEFAULT_LANGUAGE]);
@@ -44,14 +51,11 @@ export const CurrencyCanvas = () => {
         setCurrency(c);
 
         try {
-            const payload = await client.updateTeam(team!._id, { currency: c });
+            await client.updateTeam(team!._id, { currency: c });
+
+            await refreshSharedApplicationState();
 
             store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
-
-            store.dispatch({
-                type: ActionType.TEAM_UPDATE,
-                payload: { ...team!, currency: payload.currency, integrations: payload.integrations },
-            });
         } catch (error) {
             console.error(error);
 

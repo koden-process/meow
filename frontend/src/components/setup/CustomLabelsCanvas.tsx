@@ -1,11 +1,12 @@
 import { Button, TextField } from '@adobe/react-spectrum';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ActionType, showModalError, showModalSuccess } from '../../actions/Actions';
+import { showModalError, showModalSuccess } from '../../actions/Actions';
 import { selectToken, selectTeam, selectTeamId, store } from '../../store/Store';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
 import { getRequestClient } from '../../helpers/RequestHelper';
+import { refreshSharedApplicationState } from '../../helpers/RefreshApplicationState';
 
 export const CustomLabelsCanvas = () => {
     const token = useSelector(selectToken);
@@ -17,6 +18,10 @@ export const CustomLabelsCanvas = () => {
     const [opportunityAmount, setOpportunityAmount] = useState<string>(
         team?.customLabels?.opportunityAmount || ''
     );
+
+    useEffect(() => {
+        setOpportunityAmount(team?.customLabels?.opportunityAmount || '');
+    }, [team?.customLabels?.opportunityAmount]);
 
     const save = async () => {
         if (!teamId || !team) {
@@ -35,12 +40,9 @@ export const CustomLabelsCanvas = () => {
         console.log('Saving team with data:', updatedTeam);
 
         try {
-            const updated = await client.updateTeam(teamId, updatedTeam);
+            await client.updateTeam(teamId, updatedTeam);
 
-            store.dispatch({
-                type: ActionType.TEAM_UPDATE,
-                payload: updated,
-            });
+            await refreshSharedApplicationState();
 
             store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
         } catch (error) {

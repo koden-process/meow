@@ -2,13 +2,14 @@ import { Button } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
-import { ActionType, showModalError, showModalSuccess } from '../../../actions/Actions';
+import { showModalError, showModalSuccess } from '../../../actions/Actions';
 import { ANIMALS, LANE_COLOR, DEFAULT_LANGUAGE } from '../../../Constants';
 import { LaneRequest, LaneType, Tags } from '../../../interfaces/Lane';
 import { selectLanes, selectToken, store } from '../../../store/Store';
 import { Translations } from '../../../Translations';
 import { Lane } from './Lane';
 import { getRequestClient } from '../../../helpers/RequestHelper';
+import { refreshSharedApplicationState } from '../../../helpers/RefreshApplicationState';
 
 const protocol = window.location.protocol;
 const domain = window.location.hostname;
@@ -183,12 +184,9 @@ export const LanesSchema = ({ isDeveloperMode }: LanesSchemaProps) => {
     });
 
     try {
-      const lanes = await client.updateLanes(updated);
+      await client.updateLanes(updated);
 
-      store.dispatch({
-        type: ActionType.LANES,
-        payload: [...lanes],
-      });
+      await refreshSharedApplicationState();
 
       store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Button } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ActionType, showModalError, showModalSuccess } from '../../../actions/Actions';
+import { showModalError, showModalSuccess } from '../../../actions/Actions';
 import { RESERVED_ATTRIBUTES } from '../../../Constants';
 import {
   Schema,
@@ -17,6 +17,7 @@ import { SchemaCanvas } from '../schema/SchemaCanvas';
 import { hasDuplicateEntries } from '../../../helpers/Helper';
 import { SchemaHelper } from '../../../helpers/SchemaHelper';
 import { getRequestClient } from '../../../helpers/RequestHelper';
+import { refreshSharedApplicationState } from '../../../helpers/RefreshApplicationState';
 
 const protocol = window.location.protocol;
 const domain = window.location.hostname;
@@ -128,14 +129,9 @@ export const CardSchema = ({ isDeveloperMode }: CardSchemaProps) => {
     try {
       await client.updateSchema(updatedSchema);
 
+      await refreshSharedApplicationState();
+
       store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
-
-      let schemas = await client.fetchSchemas();
-
-      store.dispatch({
-        type: ActionType.SCHEMAS,
-        payload: [...schemas],
-      });
     } catch (error) {
       console.error(error);
 

@@ -11,6 +11,7 @@ import { selectToken, selectTeam, selectTeamId } from '../store/Store';
 import { IconDownload } from '../components/setup/IconDownload';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
+import { refreshSharedApplicationState } from '../helpers/RefreshApplicationState';
 
 export const SetupPage = () => {
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
@@ -67,7 +68,7 @@ export const SetupPage = () => {
     setLoading(true);
     try {
       await TeamConfigHelper.applyConfig(configId, teamId, token);
-      setAppliedConfigId(configId);
+      await refreshSharedApplicationState();
       await fetchConfigs();
     } catch (e: any) {
       console.error('Erreur détaillée lors de l\'application:', e);

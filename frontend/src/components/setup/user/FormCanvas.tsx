@@ -1,7 +1,7 @@
 import {Button, Item, Picker, TextField} from '@adobe/react-spectrum';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {ActionType, showModalError, showModalSuccess} from '../../../actions/Actions';
+import {showModalError, showModalSuccess} from '../../../actions/Actions';
 import {
     selectAnimal,
     selectColor,
@@ -17,6 +17,7 @@ import {ColorCircleSelected} from './ColorCircleSelected';
 import {ColorCircle} from './ColorCircle';
 import {getRequestClient} from '../../../helpers/RequestHelper';
 import {UserHelper} from '../../../helpers/UserHelper';
+import {refreshSharedApplicationState} from '../../../helpers/RefreshApplicationState';
 
 
 export const FormCanvas = () => {
@@ -42,6 +43,22 @@ export const FormCanvas = () => {
     
     const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(getInitialTheme());
     const defaultInitials = currentUser?.name ? UserHelper.generateDefaultInitials(currentUser.name) : '';
+
+    useEffect(() => {
+        setAvatarColor(colorDefault);
+    }, [colorDefault]);
+
+    useEffect(() => {
+        setAnimal(animalDefault);
+    }, [animalDefault]);
+
+    useEffect(() => {
+        setInitials(initialsDefault || '');
+    }, [initialsDefault]);
+
+    useEffect(() => {
+        setTheme(currentUser?.theme || 'system');
+    }, [currentUser?.theme]);
     
     const handleInitialsChange = (value: string) => {
         // Limite à 2 caractères et conversion en majuscules
@@ -50,24 +67,22 @@ export const FormCanvas = () => {
     };
 
     const save = async () => {
-        const user = users.find((user) => user._id === userId)!;
+        const user = users.find((user) => user._id === userId);
 
         if (!user) {
             return;
         }
 
-        user.animal = animal;
-        user.color = avatarColor;
-        user.initials = initials.trim() || undefined;
-        user.theme = theme;
-
         try {
-            const updated = await client.updateUser(user);
-
-            store.dispatch({
-                type: ActionType.USER_SETTINGS_UPDATE,
-                payload: updated,
+            await client.updateUser({
+                ...user,
+                animal,
+                color: avatarColor,
+                initials: initials.trim() || undefined,
+                theme,
             });
+
+            await refreshSharedApplicationState();
 
             store.dispatch(showModalSuccess(Translations.SetupChangedConfirmation[DEFAULT_LANGUAGE]));
         } catch (error) {
