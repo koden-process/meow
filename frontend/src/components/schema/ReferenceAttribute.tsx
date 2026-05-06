@@ -15,7 +15,7 @@ const getOptions = (accounts: Account[]) => {
   
   list.push(<Item key="">{Translations.NoneOption[DEFAULT_LANGUAGE]}</Item>);
 
-  accounts?.sort((a, b) => a.name.localeCompare(b.name)).map((account) => {
+  accounts?.slice().sort((a, b) => a.name.localeCompare(b.name)).map((account) => {
     list.push(<Item key={account._id}>{account.name}</Item>);
   });
 

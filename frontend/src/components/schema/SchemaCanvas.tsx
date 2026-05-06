@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { SchemaAttribute, Schema, SchemaSelectAttribute } from '../../interfaces/Schema';
 import { SelectAttribute } from './SelectAttribute';
 import { TextAreaAttribute } from './TextAreaAttribute';
@@ -58,6 +58,8 @@ export const SchemaCanvas = ({
   };
 
   const getAttribute = (attribute: SchemaAttribute, value: string | number | boolean | null) => {
+    const { key: _key, ...attributeProps } = attribute;
+
     switch (attribute.type) {
       case 'text':
         return (
@@ -66,7 +68,7 @@ export const SchemaCanvas = ({
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
             isDisabled={isDisabled}
-            {...attribute}
+            {...attributeProps}
           />
         );
       case 'email':
@@ -76,7 +78,7 @@ export const SchemaCanvas = ({
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
             isDisabled={isDisabled}
-            {...attribute}
+            {...attributeProps}
           />
         );
       case 'link':
@@ -86,7 +88,7 @@ export const SchemaCanvas = ({
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
             isDisabled={isDisabled}
-            {...attribute}
+            {...attributeProps}
           />
         );
       case 'textarea':
@@ -96,7 +98,7 @@ export const SchemaCanvas = ({
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
             isDisabled={isDisabled}
-            {...attribute}
+            {...attributeProps}
           />
         );
       case 'select':
@@ -105,7 +107,7 @@ export const SchemaCanvas = ({
             update={updateAttribute}
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
-            {...(attribute as SchemaSelectAttribute)}
+            {...(attributeProps as Omit<SchemaSelectAttribute, 'key'>)}
             isDisabled={isDisabled}
           />
         );
@@ -115,7 +117,7 @@ export const SchemaCanvas = ({
             update={updateAttribute}
             attributeKey={attribute.key}
             value={toStringOrNull(value)}
-            {...attribute}
+            {...attributeProps}
             isDisabled={isDisabled}
           />
         );
@@ -125,7 +127,7 @@ export const SchemaCanvas = ({
             update={updateAttribute}
             attributeKey={attribute.key}
             value={toBooleanOrNull(value)}
-            {...attribute}
+            {...attributeProps}
             isDisabled={isDisabled}
           />
         );
@@ -135,7 +137,11 @@ export const SchemaCanvas = ({
   return (
     <>
       {schema?.attributes?.map((attribute) => {
-        return getAttribute(attribute!, values?.[attribute.key] ?? null);
+        return (
+          <Fragment key={attribute.key}>
+            {getAttribute(attribute!, values?.[attribute.key] ?? null)}
+          </Fragment>
+        );
       })}
     </>
   );
