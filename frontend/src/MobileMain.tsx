@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../src/App.css';
 import { Button } from '@adobe/react-spectrum';
+import { MobileUserAnchor } from './components/MobileUserAnchor';
 
 const IconOpportunity = () => (
   <span role="img" aria-label="opportunité" style={{ marginRight: 8 }}>💼</span>
@@ -30,6 +31,7 @@ const MobileMain: React.FC = () => {
       >
         <IconComment /> Ajouter un commentaire
       </Button>
+      <MobileUserAnchor />
     </div>
   );
 };

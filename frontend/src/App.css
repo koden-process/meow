@@ -383,6 +383,62 @@ body.light .page .navigation .item-mobile.active {
   position: relative;
 }
 
+.mobile-user-anchor {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 1100;
+}
+
+.mobile-user-anchor .avatar {
+  cursor: pointer;
+  box-shadow: rgb(17 17 26 / 12%) 0px 2px 8px;
+}
+
+.mobile-user-anchor-trigger {
+  display: block;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.mobile-user-anchor-trigger:focus-visible {
+  outline: 2px solid var(--spectrum-global-color-blue-500, #1473e6);
+  outline-offset: 2px;
+}
+
+.mobile-user-anchor-menu {
+  position: absolute;
+  left: 0;
+  bottom: 52px;
+  min-width: 160px;
+  padding: 6px;
+  background-color: var(--spectrum-global-color-gray-100);
+  border: 1px solid var(--spectrum-global-color-gray-400);
+  border-radius: 6px;
+  box-shadow: rgb(17 17 26 / 12%) 0px 3px 10px;
+}
+
+.mobile-user-anchor-link {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--spectrum-global-color-gray-800);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.mobile-user-anchor-link:hover {
+  background-color: var(--spectrum-global-color-gray-200);
+}
+
 .page .navigation .user-menu .theme-toggle-container {
   display: flex;
   flex-direction: column;

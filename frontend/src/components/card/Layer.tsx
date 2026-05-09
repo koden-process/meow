@@ -21,14 +21,11 @@ import {
 } from '../../store/Store';
 import {Form} from './Form';
 import {Events} from './Events';
-import {TransferModal} from './TransferModal';
-import {TransferRequests} from './TransferRequests';
 import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
 import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
 import {User} from '../../interfaces/User';
-import {LaneType} from '../../interfaces/Lane';
 import {Translations} from '../../Translations';
 import {DEFAULT_LANGUAGE, LANE_COLOR} from '../../Constants';
 import useMobileLayout from '../../hooks/useMobileLayout';
@@ -44,7 +41,6 @@ export const Layer = () => {
     const id = useSelector(selectInterfaceStateId);
     const card = useSelector((store: ApplicationStore) => selectCard(store, id));
     const [isUserLayerVisible, setIsUserLayerVisible] = useState(false);
-    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const users = useSelector(selectActiveUsers);
     const lanes = useSelector(selectLanes);
     const isMobileLayout = useMobileLayout();
@@ -82,11 +78,6 @@ export const Layer = () => {
 
             store.dispatch(showModalSuccess(Translations.CardCreatedConfirmation[DEFAULT_LANGUAGE]));
         }
-    };
-
-    const handleTransferSuccess = () => {
-        store.dispatch(showModalSuccess('Transfer request sent successfully!'));
-        // Optionally refresh the card data or close the layer
     };
 
     const getBannerColorClassName = (color: string | undefined) => {
@@ -132,12 +123,6 @@ export const Layer = () => {
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-    // Fonction pour vérifier si l'opportunité est verrouillée (dans une lane fermée)
-    const isOpportunityLocked = useMemo(() => {
-        if (!lane || !lane.tags?.type) return false;
-        return lane.tags.type === LaneType.ClosedWon || lane.tags.type === LaneType.ClosedLost;
-    }, [lane]);
-
     useEffect(() => {
         setIsDisabled(lane && lane.tags?.type !== 'normal' ? true : false);
     }, [lane]);
@@ -174,20 +159,64 @@ export const Layer = () => {
         <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
             <div className="header">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                    {/* Avatar en haut à droite */}
+                    {/* Avatar en haut à droite – wrapper relatif pour ancrer le dropdown */}
                     {card?.userId && (
-                        <Avatar
-                            id={card?.userId}
-                            width={36}
-                            onClick={() => {
-                                setIsUserLayerVisible(!isUserLayerVisible);
-                            }}
-                        />
+                        <div style={{ position: 'relative' }}>
+                            <Avatar
+                                id={card?.userId}
+                                width={36}
+                                onClick={() => {
+                                    setIsUserLayerVisible(!isUserLayerVisible);
+                                }}
+                            />
+
+                            {/* Liste des utilisateurs ancrée sous l'avatar */}
+                            {isUserLayerVisible && (
+                                <div className="user-list" style={{
+                                    backgroundColor: 'white',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '4px',
+                                    padding: '8px',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    minWidth: '200px',
+                                    maxHeight: '600px',
+                                    overflowY: 'auto',
+                                    position: 'absolute',
+                                    top: '100%',
+                                    marginTop: '4px',
+                                    right: '0',
+                                    zIndex: 100,
+                                }}>
+                                    <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                                        <tbody>
+                                        {users.map((user: User) => {
+                                            return (
+                                                <tr key={user._id} style={{width: '100%'}}>
+                                                    <td>
+                                                        <Avatar width={36} id={user._id}/>
+                                                    </td>
+                                                    <td>
+                                                        <b>{user.name}</b>
+                                                    </td>
+                                                    <td>
+                                                        <Button variant="primary" onPress={() => assign(user._id)}>
+                                                            {Translations.AssignButton[DEFAULT_LANGUAGE]}
+                                                        </Button>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            );
+                                        })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
                     )}
-                    
+
                     {/* Message de verrouillage juste en dessous de l'avatar */}
                     {isDisabled && (
-                        <div className={`lock ${getBannerColorClassName(lane?.color)}`} style={{ 
+                        <div className={`lock ${getBannerColorClassName(lane?.color)}`} style={{
                             marginTop: '8px',
                             textAlign: 'center',
                             padding: '8px 12px',
@@ -195,47 +224,12 @@ export const Layer = () => {
                             fontSize: '14px'
                         }}>
                             <div>{Translations.OpportunityClosedMessage[DEFAULT_LANGUAGE]}</div>
-                            <div className="button" onClick={() => setIsDisabled(!isDisabled)} style={{ 
+                            <div className="button" onClick={() => setIsDisabled(!isDisabled)} style={{
                                 cursor: 'pointer',
                                 marginTop: '4px'
                             }}>
                                 <IconLock/>
                             </div>
-                        </div>
-                    )}
-                    
-                    {/* Liste des utilisateurs au-dessus des boutons */}
-                    {isUserLayerVisible && (
-                        <div className="user-list" style={{ 
-                            backgroundColor: 'white', 
-                            border: '1px solid #ccc', 
-                            borderRadius: '4px', 
-                            padding: '8px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            minWidth: '200px'
-                        }}>
-                            <table style={{width: '100%', borderCollapse: 'collapse'}}>
-                                <tbody>
-                                {users.map((user: User) => {
-                                    return (
-                                        <tr key={user._id} style={{width: '100%'}}>
-                                            <td>
-                                                <Avatar width={36} id={user._id}/>
-                                            </td>
-                                            <td>
-                                                <b>{user.name}</b>
-                                            </td>
-                                            <td>
-                                                <Button variant="primary" onPress={() => assign(user._id)}>
-                                                    {Translations.AssignButton[DEFAULT_LANGUAGE]}
-                                                </Button>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    );
-                                })}
-                                </tbody>
-                            </table>
                         </div>
                     )}
                     
@@ -286,10 +280,6 @@ export const Layer = () => {
                             <Tabs.Trigger value="events">
                                 {Translations.HistoryTab[DEFAULT_LANGUAGE]}
                             </Tabs.Trigger>
-                            {/* @ts-ignore */}
-                            <Tabs.Trigger value="transfer">
-                                {Translations.TransfersNavItem[DEFAULT_LANGUAGE]}
-                            </Tabs.Trigger>
                         </Tabs.List>
                     )) || (
                         <Tabs.List>
@@ -307,52 +297,8 @@ export const Layer = () => {
                     <Tabs.Content value="events">
                         <Events entity="card" id={id}/>
                     </Tabs.Content>
-                    {/* @ts-ignore */}
-                    <Tabs.Content value="transfer">
-                        <div style={{ padding: '16px' }}>
-                            {card && (
-                                <>
-                                    <div style={{ marginBottom: '16px' }}>
-                                        {isOpportunityLocked ? (
-                                            <div style={{ 
-                                                padding: '12px', 
-                                                backgroundColor: '#f3f4f6', 
-                                                borderRadius: '6px',
-                                                color: '#6b7280',
-                                                fontSize: '14px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '8px'
-                                            }}>
-                                                <IconLock />
-                                                {Translations.LockedOpportunityTransferError[DEFAULT_LANGUAGE]}
-                                            </div>
-                                        ) : (
-                                            <Button 
-                                                variant="primary" 
-                                                onPress={() => setIsTransferModalOpen(true)}
-                                            >
-                                                {Translations.TransferOpportunityTitle[DEFAULT_LANGUAGE]}
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <TransferRequests cardId={id} />
-                                </>
-                            )}
-                        </div>
-                    </Tabs.Content>
                 </Tabs.Root>
             </div>
-
-            {/* Transfer Modal */}
-            {card && (
-                <TransferModal
-                    isOpen={isTransferModalOpen}
-                    onClose={() => setIsTransferModalOpen(false)}
-                    card={card}
-                    onTransferSuccess={handleTransferSuccess}
-                />
-            )}
             {/* Modale de confirmation de suppression */}
             {showDeleteModal && (
                 <div className="delete-modal-overlay">

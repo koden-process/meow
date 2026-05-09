@@ -157,6 +157,8 @@ export interface ApplicationFilterAction extends Action<ActionType.FILTER_UPDATE
     mode: FilterMode[];
     text?: string;
     userId: string;
+    accountId: string;
+    accountSearchText: string;
   };
 }
 
@@ -269,10 +271,22 @@ export function pageLoadWithError(text: string, token?: string) {
   } as ApplicationPageLoadAction;
 }
 
-export function updateFilter(filter: Set<FilterMode>, userId: string, text?: string) {
+export function updateFilter(
+  filter: Set<FilterMode>,
+  userId: string,
+  text?: string,
+  accountId?: string,
+  accountSearchText?: string
+) {
   return {
     type: ActionType.FILTER_UPDATE,
-    payload: { mode: Array.from(filter.values()), text: text, userId: userId },
+    payload: {
+      mode: Array.from(filter.values()),
+      text: text,
+      userId: userId,
+      accountId: accountId ?? '',
+      accountSearchText: accountSearchText ?? '',
+    },
   } as ApplicationFilterAction;
 }
 
