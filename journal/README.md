@@ -75,4 +75,5 @@ Ce qui reste à faire. (Omettre si rien.)
 
 | Date | Titre |
 |---|---|
+| [2026-05-10](2026-05-10-script-transfert-opportunites-lanes.md) | Script de transfert des opportunités entre colonnes |
 | [2026-05-09](2026-05-09-init-docs-agent.md) | Mise en place de la documentation agent |
