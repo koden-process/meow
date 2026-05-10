@@ -67,6 +67,56 @@ export const Translations = {
         fr: 'Contact mis à jour avec succès !',
     },
 
+    AccountDeduplicationButton: {
+        en: 'Deduplicate',
+        fr: 'Dédoublonner',
+    },
+
+    AccountDeduplicationTitle: {
+        en: 'Deduplicate contacts',
+        fr: 'Dédoublonner les contacts',
+    },
+
+    AccountDuplicateCandidatesLabel: {
+        en: 'Likely duplicates',
+        fr: 'Doublons probables',
+    },
+
+    AccountMergeTargetLabel: {
+        en: 'Contact to keep',
+        fr: 'Contact à conserver',
+    },
+
+    AccountMergeSourceLabel: {
+        en: 'Duplicate to merge',
+        fr: 'Doublon à fusionner',
+    },
+
+    AccountMergeImpactNotice: {
+        en: 'Opportunities, linked contacts, favorites and contact history will be reassigned to the kept contact. The duplicate will be marked as deleted.',
+        fr: 'Les opportunités, contacts liés, favoris et historique seront rattachés au contact conservé. Le doublon sera marqué comme supprimé.',
+    },
+
+    AccountMergeInvalidSelection: {
+        en: 'Select two different contacts before merging.',
+        fr: 'Sélectionnez deux contacts différents avant de fusionner.',
+    },
+
+    AccountMergeButton: {
+        en: 'Merge contacts',
+        fr: 'Fusionner les contacts',
+    },
+
+    AccountMergeInProgress: {
+        en: 'Merging...',
+        fr: 'Fusion en cours...',
+    },
+
+    AccountMergeSuccess: {
+        en: '{source} merged into {target}.',
+        fr: '{source} fusionné dans {target}.',
+    },
+
     OpportunityAmount: {
         en: 'Amount',
         fr: 'Quotité',

@@ -418,6 +418,12 @@ export class RequestHelper {
     return this.doFetch(url, 'POST', body);
   }
 
+  async mergeAccounts(targetAccountId: Account['_id'], sourceAccountId: Account['_id']) {
+    const url = this.getUrl(`/api/accounts/${targetAccountId}/merge`);
+
+    return this.doFetch(url, 'POST', { sourceAccountId });
+  }
+
   async getAccounts(): Promise<Account[]> {
     const url = this.getUrl(`/api/accounts`);
 

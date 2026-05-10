@@ -66,6 +66,7 @@ import { UserUpdateRequestSchema } from './middlewares/schema-validation/UserUpd
 import { PasswordRequestSchema } from './middlewares/schema-validation/PasswordRequestSchema.js';
 import { TeamController } from './controllers/TeamController.js';
 import { AccountRequestSchema } from './middlewares/schema-validation/AccountRequestSchema.js';
+import { AccountMergeRequestSchema } from './middlewares/schema-validation/AccountMergeRequestSchema.js';
 import { EventRequestSchema } from './middlewares/schema-validation/EventRequestSchema.js';
 import { LaneStatisticsController } from './controllers/LaneStatisticsController.js';
 import { EventHelper } from './helpers/EventHelper.js';
@@ -233,6 +234,13 @@ try {
       rejectIfContentTypeIsNot('application/json'),
       validateAgainst(AccountRequestSchema),
       AccountController.update
+    );
+  account
+    .route('/:id/merge')
+    .post(
+      rejectIfContentTypeIsNot('application/json'),
+      validateAgainst(AccountMergeRequestSchema),
+      AccountController.merge
     );
   account.route('/:id').get(AccountController.fetch);
   account.route('/:id/events').get(AccountEventController.list);

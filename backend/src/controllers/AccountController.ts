@@ -4,6 +4,7 @@ import { EntityHelper } from '../helpers/EntityHelper.js';
 import { AuthenticatedRequest } from '../requests/AuthenticatedRequest.js';
 import { EventHelper } from '../helpers/EventHelper.js';
 import { validateAndFetchAccount } from '../helpers/EntityFetchHelper.js';
+import { AccountMergeService } from '../services/AccountMergeService.js';
 
 const create = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
@@ -76,9 +77,22 @@ const fetch = async (req: AuthenticatedRequest, res: Response, next: NextFunctio
     }
 };
 
+const merge = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+        const targetAccount = await validateAndFetchAccount(req.params.id, req.jwt.user);
+        const sourceAccount = await validateAndFetchAccount(req.body.sourceAccountId, req.jwt.user);
+        const result = await AccountMergeService.merge(req.jwt.user, targetAccount, sourceAccount);
+
+        return res.json(result);
+    } catch (error) {
+        return next(error);
+    }
+};
+
 export const AccountController = {
     update,
     create,
     list,
     fetch,
+    merge,
 };

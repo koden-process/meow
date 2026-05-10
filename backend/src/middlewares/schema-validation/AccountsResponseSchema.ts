@@ -8,7 +8,19 @@ export const AccountsResponseSchema = {
       name: { type: 'string' },
       status: { type: 'string', enum: ['enabled', 'deleted'] },
       attributes: { type: 'object' },
-      references: { type: ['object', 'null'] },
+      references: {
+        type: ['array', 'null'],
+        items: {
+          type: 'object',
+          properties: {
+            _id: { type: 'string' },
+            entity: { type: ['string', 'null'] },
+            schemaAttributeKey: { type: 'string' },
+          },
+          required: ['_id', 'schemaAttributeKey'],
+          additionalProperties: false,
+        },
+      },
       createdAt: { type: 'string' },
       updatedAt: { type: 'string' },
     },

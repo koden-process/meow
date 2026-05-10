@@ -1,5 +1,5 @@
 import {Button} from '@adobe/react-spectrum';
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {setListViewColumn, setListViewSortBy, showAccountLayer} from '../actions/Actions';
 import {Layer as AccountLayer} from '../components/account/Layer';
@@ -32,6 +32,7 @@ import {Row} from '../components/view/table/Row';
 import {Layer as CardLayer} from '../components/card/Layer';
 import {Translations} from '../Translations';
 import {DEFAULT_LANGUAGE} from '../Constants';
+import {AccountDeduplicationModal} from '../components/account/AccountDeduplicationModal';
 
 const createListViewItemsFromSchema = (schema: Schema | undefined): ListViewItem[] => {
     const list = [
@@ -73,6 +74,7 @@ export const AccountsPage = () => {
     const token = useSelector(selectToken);
     const sessionUser = useSelector(selectSessionUser);
     const favoriteAccountIds = useSelector(selectFavoriteAccountIds);
+    const [isDeduplicationModalOpen, setIsDeduplicationModalOpen] = useState(false);
 
     const client = getRequestClient(token);
 
@@ -194,11 +196,19 @@ export const AccountsPage = () => {
         <>
             {state === 'account-detail' && <AccountLayer/>}
             {state === 'card-detail' && <CardLayer/>}
+            <AccountDeduplicationModal
+                accounts={accounts}
+                isOpen={isDeduplicationModalOpen}
+                onClose={() => setIsDeduplicationModalOpen(false)}
+            />
 
             <div className="canvas">
                 <div className="list-view-header" style={{display: 'flex', alignItems: 'center'}}>
                     <h2><b>{Translations.DirectoryTitle[DEFAULT_LANGUAGE]}</b> - {rows.length} Contact{rows.length > 1 ? 's' : ''}</h2>
-                    <div style={{marginLeft: 'auto'}}>
+                    <div style={{marginLeft: 'auto', display: 'flex', gap: 8}}>
+                        <Button variant="secondary" onPress={() => setIsDeduplicationModalOpen(true)}>
+                            {Translations.AccountDeduplicationButton[DEFAULT_LANGUAGE]}
+                        </Button>
                         <Button variant="primary" onPress={() => openAccount()}>
                             {Translations.AddButton[DEFAULT_LANGUAGE]}
                         </Button>
