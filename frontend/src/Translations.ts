@@ -182,6 +182,11 @@ export const Translations = {
         fr: 'Assigner',
     },
 
+    DownloadOpportunitySheetButton: {
+        en: 'Download PDF sheet',
+        fr: 'Télécharger la fiche PDF',
+    },
+
     // Filter buttons
     RecentlyUpdatedFilter: {
         en: 'Recently Updated',
@@ -264,6 +269,56 @@ export const Translations = {
     ExpectedCloseDateLabel: {
         en: 'Expected Close Date',
         fr: 'Date de clôture prévue',
+    },
+
+    StageLabel: {
+        en: 'Stage',
+        fr: 'Étape',
+    },
+
+    OpportunitySheetTitle: {
+        en: 'Opportunity sheet',
+        fr: 'Fiche opportunité',
+    },
+
+    OpportunitySheetSummaryTitle: {
+        en: 'Summary',
+        fr: 'Synthèse',
+    },
+
+    OpportunitySheetDetailsTitle: {
+        en: 'Sheet information',
+        fr: 'Informations de la fiche',
+    },
+
+    OpportunitySheetGeneratedAt: {
+        en: 'Export generated on',
+        fr: 'Export généré le',
+    },
+
+    OpportunitySheetContactsNameOnly: {
+        en: 'Referenced contacts are exported by name only.',
+        fr: 'Les contacts référencés sont exportés par nom uniquement.',
+    },
+
+    OpportunitySheetNoData: {
+        en: 'No data provided.',
+        fr: 'Aucune donnée renseignée.',
+    },
+
+    OpportunitySheetContactNotFound: {
+        en: 'Contact not found',
+        fr: 'Contact introuvable',
+    },
+
+    YesLabel: {
+        en: 'Yes',
+        fr: 'Oui',
+    },
+
+    NoLabel: {
+        en: 'No',
+        fr: 'Non',
     },
 
     // Messages

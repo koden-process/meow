@@ -13,15 +13,23 @@ import {
 } from '../../actions/Actions';
 import {
     selectActiveUsers,
+    selectAccounts,
     selectCard,
+    selectCurrency,
+    selectCustomOpportunityAmountLabel,
     selectInterfaceStateId, selectLane,
     selectLanes,
-    selectToken, selectUserId,
+    selectSchemaByType,
+    selectTeam,
+    selectToken,
+    selectUser,
+    selectUserId,
     store,
 } from '../../store/Store';
 import {Form} from './Form';
 import {Events} from './Events';
 import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
+import {SchemaType} from '../../interfaces/Schema';
 import {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
@@ -32,6 +40,7 @@ import useMobileLayout from '../../hooks/useMobileLayout';
 import {getRequestClient} from '../../helpers/RequestHelper';
 import {IconLock} from "./IconLock";
 import {getErrorMessage} from '../../helpers/ErrorHelper';
+import {downloadOpportunitySheet} from '../../helpers/OpportunitySheetExportHelper';
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -40,6 +49,15 @@ export const Layer = () => {
 
     const id = useSelector(selectInterfaceStateId);
     const card = useSelector((store: ApplicationStore) => selectCard(store, id));
+    const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
+    const accounts = useSelector(selectAccounts);
+    const currency = useSelector(selectCurrency);
+    const customAmountLabel = useSelector(selectCustomOpportunityAmountLabel);
+    const team = useSelector(selectTeam);
+    const schema = useSelector((store: ApplicationStore) =>
+        selectSchemaByType(store, SchemaType.Card)
+    );
+    const owner = useSelector((store: ApplicationStore) => selectUser(store, card?.userId));
     const [isUserLayerVisible, setIsUserLayerVisible] = useState(false);
     const users = useSelector(selectActiveUsers);
     const lanes = useSelector(selectLanes);
@@ -105,6 +123,23 @@ export const Layer = () => {
         update(id, {...preview, amount: parseInt(preview.amount, 10)});
     };
 
+    const downloadSheet = () => {
+        if (!card) {
+            return;
+        }
+
+        void downloadOpportunitySheet({
+            card,
+            schema,
+            accounts,
+            lane,
+            owner,
+            team,
+            amountLabel: customAmountLabel || Translations.OpportunityAmount[DEFAULT_LANGUAGE],
+            currency,
+        });
+    };
+
     const handleDeleteCard = async () => {
         // Vérifier si l'utilisateur connecté est le propriétaire de la card
         if (card?.userId !== userId) {
@@ -119,7 +154,6 @@ export const Layer = () => {
         hideCardDetail();
     };
 
-    const lane = useSelector((store: ApplicationStore) => selectLane(store, card?.laneId));
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
@@ -236,7 +270,15 @@ export const Layer = () => {
                     {/* Boutons sur la ligne d'en dessous */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                         {/* Bouton Supprimer tout à gauche */}
-                        <div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            {id && card && (
+                                <Button
+                                    variant="secondary"
+                                    onPress={downloadSheet}
+                                >
+                                    {Translations.DownloadOpportunitySheetButton[DEFAULT_LANGUAGE]}
+                                </Button>
+                            )}
                             {id && (
                                 <Button 
                                     variant="secondary" 
