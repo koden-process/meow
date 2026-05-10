@@ -1,5 +1,5 @@
 import {Button, Item, Picker} from '@adobe/react-spectrum';
-import {Key, useEffect, useState} from 'react';
+import {Fragment, Key, useEffect, useState} from 'react';
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd';
 import {ANIMALS, DEFAULT_LANGUAGE} from '../../../Constants';
 import {generateUUID} from '../../../helpers/Helper';
@@ -140,16 +140,18 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
     };
 
     const getAttribute = (item: SchemaAttribute) => {
+        const {key: _key, ...itemProps} = item;
+
         switch (item.type) {
             case SchemaAttributeType.Text:
-                return <TextAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return <TextAttribute update={update} remove={remove} attributeKey={item.key} {...itemProps} />;
             case SchemaAttributeType.Email:
-                return <EmailAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return <EmailAttribute update={update} remove={remove} attributeKey={item.key} {...itemProps} />;
             case SchemaAttributeType.Link:
-                return <LinkAttribute update={update} remove={remove} attributeKey={item.key} {...item} />;
+                return <LinkAttribute update={update} remove={remove} attributeKey={item.key} {...itemProps} />;
             case SchemaAttributeType.TextArea:
                 return (
-                    <TextAreaAttribute update={update} remove={remove} attributeKey={item.key} {...item} />
+                    <TextAreaAttribute update={update} remove={remove} attributeKey={item.key} {...itemProps} />
                 );
             case SchemaAttributeType.Select:
                 return (
@@ -157,7 +159,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                         update={update}
                         remove={remove}
                         attributeKey={item.key}
-                        {...(item as SchemaSelectAttribute)}
+                        {...(itemProps as Omit<SchemaSelectAttribute, 'key'>)}
                     />
                 );
             case SchemaAttributeType.Reference:
@@ -166,12 +168,12 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                         update={update}
                         remove={remove}
                         attributeKey={item.key}
-                        {...(item as SchemaReferenceAttribute)}
+                        {...(itemProps as Omit<SchemaReferenceAttribute, 'key'>)}
                     />
                 );
             case SchemaAttributeType.Boolean:
                 return (
-                    <BooleanAttribute update={update} remove={remove} attributeKey={item.key} {...item} />
+                    <BooleanAttribute update={update} remove={remove} attributeKey={item.key} {...itemProps} />
                 );
             default:
                 return <div>{Translations.UnknownAttributeTypeError[DEFAULT_LANGUAGE]}</div>; // TODO should throw
@@ -186,7 +188,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                         return (
                             <div ref={provided.innerRef} {...provided.droppableProps}>
                                 {items.map((item) => {
-                                    return getAttribute(item);
+                                    return <Fragment key={item.key}>{getAttribute(item)}</Fragment>;
                                 })}
 
                                 {provided.placeholder}
