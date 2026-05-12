@@ -1,4 +1,4 @@
-import { Checkbox, Item, Picker, TextField } from '@adobe/react-spectrum';
+import { Checkbox, Item, TextField } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { LaneListItem } from './LaneSchema';
@@ -6,6 +6,7 @@ import { LaneType, Tags } from '../../../interfaces/Lane';
 import { IconDrag } from '../IconDrag';
 import { Translations } from '../../../Translations';
 import { DEFAULT_LANGUAGE } from '../../../Constants';
+import { SafePicker } from '../../common/SafeSpectrumFields';
 
 export interface LaneProps {
   id: string;
@@ -125,7 +126,7 @@ export const Lane = (props: LaneProps) => {
                 />
               </div>
               <div className="attribute">
-                <Picker
+                <SafePicker
                   aria-label={Translations.LaneTypeLabel[DEFAULT_LANGUAGE]}
                   selectedKey={laneData.type}
                   onSelectionChange={(value) => handleTypeChange(value as LaneType)}
@@ -133,7 +134,7 @@ export const Lane = (props: LaneProps) => {
                   <Item key="normal">{Translations.NormalLaneType[DEFAULT_LANGUAGE]}</Item>
                   <Item key="closed-won">{Translations.ClosedWonLaneType[DEFAULT_LANGUAGE]}</Item>
                   <Item key="closed-lost">{Translations.ClosedLostLaneType[DEFAULT_LANGUAGE]}</Item>
-                </Picker>
+                </SafePicker>
               </div>
               <div className="attribute" style={{ width: '185px' }}>
                 {laneData.type === LaneType.Normal ? (
@@ -149,7 +150,7 @@ export const Lane = (props: LaneProps) => {
               <div className="attribute" style={{ width: '220px' }}>
                 {laneData.type !== LaneType.Normal ? (
                   <>
-                    <Picker
+                    <SafePicker
                       width={100}
                       aria-label={Translations.HideAfterDaysLabel[DEFAULT_LANGUAGE]}
                       onSelectionChange={(value) => updateTags(value ? value.toString() : '')}
@@ -163,7 +164,7 @@ export const Lane = (props: LaneProps) => {
                       <Item key="30">30</Item>
                       <Item key="60">60</Item>
                       <Item key="90">90</Item>
-                    </Picker>
+                    </SafePicker>
                     <span style={{ whiteSpace: 'nowrap', paddingLeft: '10px' }}>
                       {Translations.HideAfterDaysLabel[DEFAULT_LANGUAGE]}
                     </span>

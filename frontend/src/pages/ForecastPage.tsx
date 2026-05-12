@@ -1,5 +1,5 @@
 import { today, parseDate, getLocalTimeZone, CalendarDate } from '@internationalized/date';
-import { DateRangePicker, Item, Picker } from '@adobe/react-spectrum';
+import { Item } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { selectActiveUsers, selectDate, selectInterfaceState, store } from '../store/Store';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { TrendView } from '../components/forecast/TrendView';
 import { PipelineView } from '../components/forecast/PipelineView';
 import { Translations } from '../Translations';
+import { SafeDateRangePicker, SafePicker } from '../components/common/SafeSpectrumFields';
 
 const max = today(getLocalTimeZone()).add({
   years: 1,
@@ -98,7 +99,7 @@ export const ForecastPage = () => {
       <div className="forecast">
         <div className="filter">
           <div>
-            <Picker
+            <SafePicker
               width={240}
               label={Translations.ReportLabel[DEFAULT_LANGUAGE]}
               defaultSelectedKey={view}
@@ -110,10 +111,10 @@ export const ForecastPage = () => {
               <Item key="">{Translations.ForecastOption[DEFAULT_LANGUAGE]}</Item>
               <Item key="pipeline-trend">{Translations.SalesPipelineTrendOption[DEFAULT_LANGUAGE]}</Item>
               <Item key="pipeline-generated">{Translations.SalesPipelineGeneratedOption[DEFAULT_LANGUAGE]}</Item>
-            </Picker>
+            </SafePicker>
           </div>
           <div className="users">
-            <Picker
+            <SafePicker
               width={240}
               label={Translations.UserLabel[DEFAULT_LANGUAGE]}
               isDisabled={!userSelect}
@@ -127,11 +128,11 @@ export const ForecastPage = () => {
               {[{ _id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name }, ...users].map((user) => {
                 return <Item key={user._id}>{user.name}</Item>;
               })}
-            </Picker>
+            </SafePicker>
           </div>
           <div className="spacer"></div>
           <div>
-            <DateRangePicker
+            <SafeDateRangePicker
               label={Translations.CloseDateLabel[DEFAULT_LANGUAGE]}
               aria-label="date"
               value={{

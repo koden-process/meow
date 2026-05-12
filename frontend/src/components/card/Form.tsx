@@ -1,4 +1,4 @@
-import { TextField, DatePicker } from '@adobe/react-spectrum';
+import { TextField } from '@adobe/react-spectrum';
 import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { parseDate } from '@internationalized/date';
@@ -10,6 +10,7 @@ import { Translations } from '../../Translations';
 import { SchemaCanvas } from '../schema/SchemaCanvas';
 import { Attribute } from '../../interfaces/Attribute';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { SafeDatePicker } from '../common/SafeSpectrumFields';
 
 export interface FormProps {
   id: string | undefined;
@@ -154,7 +155,7 @@ export const Form = ({ id, onPreviewChange }: FormProps) => {
 
       <div className="card-dates">
         <div>
-          <DatePicker
+          <SafeDatePicker
             value={
               preview.nextFollowUpAt
                 ? parseDate(preview.nextFollowUpAt.substring(0, 10)) as any
@@ -168,7 +169,7 @@ export const Form = ({ id, onPreviewChange }: FormProps) => {
         </div>
 
         <div>
-          <DatePicker
+          <SafeDatePicker
             value={preview.closedAt ? parseDate(preview.closedAt.substring(0, 10)) as any : undefined}
             onChange={(value) => handlePreviewUpdate('closedAt', value ? value.toString() : '')}
             label={Translations.ExpectedCloseDateLabel[DEFAULT_LANGUAGE]}

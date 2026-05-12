@@ -1,4 +1,4 @@
-import {Button, Item, Picker, TextField} from '@adobe/react-spectrum';
+import {Button, Item, TextField} from '@adobe/react-spectrum';
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ActionType, showModalError, showModalSuccess} from '../../../actions/Actions';
@@ -17,6 +17,7 @@ import {ColorCircleSelected} from './ColorCircleSelected';
 import {ColorCircle} from './ColorCircle';
 import {getRequestClient} from '../../../helpers/RequestHelper';
 import {UserHelper} from '../../../helpers/UserHelper';
+import { SafePicker } from '../../common/SafeSpectrumFields';
 
 
 export const FormCanvas = () => {
@@ -86,7 +87,7 @@ export const FormCanvas = () => {
 
             <div style={{marginBottom: '20px'}}>
                 <div>
-                    <Picker
+                    <SafePicker
                         selectedKey={animal}
                         aria-label={Translations.AnimalLabel[DEFAULT_LANGUAGE]}
                         defaultSelectedKey={animal}
@@ -101,7 +102,7 @@ export const FormCanvas = () => {
                         <Item key="dog">{Translations.DogOption[DEFAULT_LANGUAGE]}</Item>
                         <Item key="bird">{Translations.BirdOption[DEFAULT_LANGUAGE]}</Item>
                         <Item key="no-answer">{Translations.NoAnswerOption[DEFAULT_LANGUAGE]}</Item>
-                    </Picker>
+                    </SafePicker>
                 </div>
                 {animal === 'no-answer' && (
                     <div style={{color: 'red'}}>
@@ -140,7 +141,7 @@ export const FormCanvas = () => {
 
             <h2>{Translations.ThemeLabel[DEFAULT_LANGUAGE]}</h2>
             <div style={{marginBottom: '20px'}}>
-                <Picker
+                <SafePicker
                     selectedKey={theme}
                     aria-label={Translations.ThemeLabel[DEFAULT_LANGUAGE]}
                     onSelectionChange={(key) => {
@@ -151,7 +152,7 @@ export const FormCanvas = () => {
                     <Item key="system">{Translations.ThemeSystemOption[DEFAULT_LANGUAGE]}</Item>
                     <Item key="light">{Translations.ThemeLightOption[DEFAULT_LANGUAGE]}</Item>
                     <Item key="dark">{Translations.ThemeDarkOption[DEFAULT_LANGUAGE]}</Item>
-                </Picker>
+                </SafePicker>
             </div>
 
             <div style={{marginTop: '20px'}}>

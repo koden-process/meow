@@ -58,6 +58,34 @@ h3 {
   min-height: 100vh;
 }
 
+.safe-spectrum-field {
+  display: contents;
+}
+
+.react-spectrum-Popover {
+  z-index: 100000;
+}
+
+.spectrum-Dropdown-popover,
+.spectrum-InputGroup-popover {
+  max-height: min(360px, calc(100vh - 48px));
+}
+
+.spectrum-Dropdown-popover [role="listbox"],
+.spectrum-InputGroup-popover [role="listbox"] {
+  max-height: inherit;
+  overflow-y: auto;
+}
+
+.react-spectrum-Datepicker-dialog {
+  max-height: min(420px, calc(100vh - 48px));
+  overflow: auto;
+}
+
+.react-spectrum-Datepicker-dialogContent {
+  max-height: inherit;
+}
+
 .welcome-page {
   margin: auto;
   max-width: 550px;

@@ -4,7 +4,7 @@ import { selectInterfaceState, selectToken, store } from '../store/Store';
 import { useEffect, useState } from 'react';
 import { showCardLayer, showModalError } from '../actions/Actions';
 import { getErrorMessage } from '../helpers/ErrorHelper';
-import { Item, Picker } from '@adobe/react-spectrum';
+import { Item } from '@adobe/react-spectrum';
 import { DateTime } from 'luxon';
 import { ActivityItem } from '../components/activity/ActivityItem';
 import { CardEvent } from '../interfaces/CardEvent';
@@ -13,6 +13,7 @@ import { Layer as CardLayer } from '../components/card/Layer';
 import React from 'react';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
+import { SafePicker } from '../components/common/SafeSpectrumFields';
 
 export const ActivityPage = () => {
   const state = useSelector(selectInterfaceState);
@@ -100,7 +101,7 @@ export const ActivityPage = () => {
     <>
       {state === 'card-detail' && <CardLayer />}
       <div className="canvas">
-        <Picker
+        <SafePicker
           aria-label={Translations.RangeLabel[DEFAULT_LANGUAGE]}
           defaultSelectedKey={range}
           onSelectionChange={(value) => setRange(value ? value.toString() : '')}
@@ -108,7 +109,7 @@ export const ActivityPage = () => {
           <Item key="today">{Translations.TodayOption[DEFAULT_LANGUAGE]}</Item>
           <Item key="week">{Translations.ThisWeekOption[DEFAULT_LANGUAGE]}</Item>
           <Item key="">{Translations.Last90DaysOption[DEFAULT_LANGUAGE]}</Item>
-        </Picker>
+        </SafePicker>
 
         <div className="spinner-canvas">{isLoading ? <div className="spinner"></div> : null}</div>
 

@@ -1,4 +1,4 @@
-import { Picker, Item } from '@adobe/react-spectrum';
+import { Item } from '@adobe/react-spectrum';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ActionType, showModalError, showModalSuccess } from '../../../actions/Actions';
@@ -7,6 +7,7 @@ import { selectCurrency, selectTeam, selectToken, store } from '../../../store/S
 import { Translations } from '../../../Translations';
 import { getRequestClient } from '../../../helpers/RequestHelper';
 import { DEFAULT_LANGUAGE } from '../../../Constants'
+import { SafePicker } from '../../common/SafeSpectrumFields';
 
 function parseCurrencyKey(value: React.Key): CurrencyCode {
     switch (value) {
@@ -62,7 +63,7 @@ export const CurrencyCanvas = () => {
     return (
         <div className="content-box">
             <h2>{Translations.CurrencyTitle[DEFAULT_LANGUAGE]}</h2>
-            <Picker
+            <SafePicker
                 selectedKey={currency}
                 aria-label={Translations.CurrencyTitle[DEFAULT_LANGUAGE]}
                 onSelectionChange={(key) => {
@@ -77,7 +78,7 @@ export const CurrencyCanvas = () => {
                 <Item key="SEK">{Translations.SwedishKronaOption[DEFAULT_LANGUAGE]}</Item>
                 <Item key="MT2">{Translations.M2Option[DEFAULT_LANGUAGE]}</Item>
                 <Item key="GBP">{Translations.GBPOption[DEFAULT_LANGUAGE]}</Item>
-            </Picker>
+            </SafePicker>
         </div>
     );
 };

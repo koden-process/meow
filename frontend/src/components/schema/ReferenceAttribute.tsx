@@ -1,4 +1,4 @@
-import { Picker, Item } from '@adobe/react-spectrum';
+import { Item } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAccounts } from '../../store/Store';
@@ -6,6 +6,7 @@ import { Account } from '../../interfaces/Account';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
 import { showAccountLayer } from '../../actions/Actions';
+import { SafePicker } from '../common/SafeSpectrumFields';
 
 const getOptions = (accounts: Account[]) => {
   const list: JSX.Element[] = [];
@@ -70,7 +71,7 @@ export const ReferenceAttribute = ({
 
   return (
     <div className="attribute">
-      <Picker
+      <SafePicker
         width="100%"
         aria-label={name}
         label={name}
@@ -79,7 +80,7 @@ export const ReferenceAttribute = ({
         onSelectionChange={(key) => updateValue(key ? key.toString() : '')}
       >
         {getOptions(accounts)}
-      </Picker>
+      </SafePicker>
     </div>
   );
 };

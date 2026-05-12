@@ -5,7 +5,7 @@ import {
   getLocalTimeZone,
   CalendarDate,
 } from '@internationalized/date';
-import { Checkbox, DateRangePicker, Item, Picker } from '@adobe/react-spectrum';
+import { Checkbox, Item } from '@adobe/react-spectrum';
 import { useEffect, useState, useRef } from 'react';
 import { selectActiveUsers, selectLanes, selectToken, store } from '../store/Store';
 import { showModalError } from '../actions/Actions';
@@ -18,6 +18,7 @@ import { FILTER_BY_NONE, DEFAULT_LANGUAGE } from '../Constants';
 import { Chart } from '../components/forecast/Chart';
 import { getRequestClient } from '../helpers/RequestHelper';
 import { Translations } from '../Translations';
+import { SafeDateRangePicker, SafePicker } from '../components/common/SafeSpectrumFields';
 
 const colors = [
   '#e60049',
@@ -208,7 +209,7 @@ export const StatisticPage = () => {
       <div className="forecast">
         <div className="filter">
           <div>
-            <Picker
+            <SafePicker
               defaultSelectedKey={userId}
               onSelectionChange={(key) => {
                 if (key === null) return;
@@ -218,11 +219,11 @@ export const StatisticPage = () => {
               {[{ _id: FILTER_BY_NONE.key, name: FILTER_BY_NONE.name }, ...users].map((user) => {
                 return <Item key={user._id}>{user.name}</Item>;
               })}
-            </Picker>
+            </SafePicker>
           </div>
           <div>
             <b>{Translations.CloseDateLabel[DEFAULT_LANGUAGE]}</b>&nbsp;
-            <DateRangePicker
+            <SafeDateRangePicker
               aria-label="date"
               value={{
                 start: start as any,
