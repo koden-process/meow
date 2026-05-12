@@ -1995,6 +1995,23 @@ body.dark .activity-list td:nth-child(n + 2) {
   background-color: var(--spectrum-global-color-gray-200) !important;
 }
 
+.opportunity-action-button {
+  min-width: 36px !important;
+  width: 36px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap;
+}
+
+.opportunity-action-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
 /* Team config cards */
 .team-config-card {
   border: 1px solid var(--spectrum-global-color-gray-300);
@@ -2092,4 +2109,3 @@ body.light [class*="spectrum-Text"] {
 .favorite-btn.is-favorite {
   color: #f5a623;
 }
-
