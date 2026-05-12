@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextArea, ComboBox, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
+import { Button, TextArea, Item, DialogContainer, Dialog, Heading, Content, ButtonGroup } from '@adobe/react-spectrum';
 import { useSelector } from 'react-redux';
 import { selectToken, selectCurrency } from '../../store/Store';
 import { getRequestClient } from '../../helpers/RequestHelper';
@@ -8,6 +8,7 @@ import { Card } from '../../interfaces/Card';
 import { TransferRequest } from '../../interfaces/OpportunityTransfer';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { SafeComboBox } from '../common/SafeSpectrumFields';
 
 export interface TransferModalProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
                 <strong>{Translations.OpportunityLabel[DEFAULT_LANGUAGE]}</strong> {card.name}
               </div>
 
-              <ComboBox
+              <SafeComboBox
                 aria-label={Translations.TransferToTeamLabel[DEFAULT_LANGUAGE]}
                 items={teams}
                 selectedKey={selectedTeamId}
@@ -118,7 +119,7 @@ export const TransferModal = ({ isOpen, onClose, card, onTransferSuccess }: Tran
                     {team.name}
                   </Item>
                 )}
-              </ComboBox>
+              </SafeComboBox>
 
               <TextArea
                 label={Translations.MessageOptionalLabel[DEFAULT_LANGUAGE]}

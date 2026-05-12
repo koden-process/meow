@@ -1,4 +1,4 @@
-import { Button, TextField, DatePicker } from '@adobe/react-spectrum';
+import { Button, TextField } from '@adobe/react-spectrum';
 import { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { parseDate } from '@internationalized/date';
@@ -6,6 +6,7 @@ import { selectUserId } from '../../store/Store';
 import { CardFormPreview } from '../../interfaces/Card';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { SafeDatePicker } from '../common/SafeSpectrumFields';
 import { useNavigate } from 'react-router-dom';
 
 export interface FormMobileProps {
@@ -61,7 +62,7 @@ export const FormMobile = ({ onSubmit }: FormMobileProps) => {
           width="100%"
         />
         <div className="attribute">
-          <DatePicker
+          <SafeDatePicker
             value={
               preview.nextFollowUpAt
                 ? parseDate(preview.nextFollowUpAt.substring(0, 10)) as any

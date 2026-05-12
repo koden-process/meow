@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
-import { Button, Item, Picker, ComboBox } from '@adobe/react-spectrum';
+import { Button, Item } from '@adobe/react-spectrum';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE, FILTER_BY_NONE } from '../../Constants';
 import { FilterMode } from '../../pages/HomePage';
 import { User } from '../../interfaces/User';
 import { Account } from '../../interfaces/Account';
+import { SafeComboBox, SafePicker } from '../common/SafeSpectrumFields';
 
 interface FilterBarProps {
     text: string;
@@ -72,7 +73,7 @@ export const FilterBar = ({
                         aria-label={Translations.NameOrStage[DEFAULT_LANGUAGE]}
                         type="text"
                     />
-                    <ComboBox
+                    <SafeComboBox
                         aria-label={hasFavorites ? '★ Contacts favoris' : Translations.FilterByContact[DEFAULT_LANGUAGE]}
                         items={accountFiltered}
                         inputValue={accountSearchText}
@@ -85,8 +86,8 @@ export const FilterBar = ({
                         }}
                     >
                         {(item: Account) => <Item key={item._id} textValue={item.name}>{item.name}</Item>}
-                    </ComboBox>
-                    <Picker
+                    </SafeComboBox>
+                    <SafePicker
                         aria-label={Translations.FilterByUser[DEFAULT_LANGUAGE]}
                         selectedKey={userId}
                         onSelectionChange={(key) => {
@@ -95,7 +96,7 @@ export const FilterBar = ({
                         }}
                     >
                         {getUserOptions()}
-                    </Picker>
+                    </SafePicker>
                     {(selectedAccountId || text || accountSearchText) && (
                         <Button variant="secondary" onPress={onReset}>
                             Réinitialiser

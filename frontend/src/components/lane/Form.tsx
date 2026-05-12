@@ -1,4 +1,4 @@
-import {Button, Checkbox, Item, Picker, TextField} from '@adobe/react-spectrum';
+import {Button, Checkbox, Item, TextField} from '@adobe/react-spectrum';
 import {useState, useMemo, useEffect, Key} from 'react';
 import {useSelector} from 'react-redux';
 import {ActionType} from '../../actions/Actions';
@@ -86,7 +86,7 @@ export const Form = ({id}: FormProps) => {
                     <div style={{paddingTop: '10px'}}>
                         <span
                             style={{lineHeight: '2em'}}>{Translations.HideOpportunitiesMessage[DEFAULT_LANGUAGE]}</span>
-{/*                        <Picker
+{/*                        <SafePicker
                             onSelectionChange={setHideAfterDays}
                             defaultSelectedKey={hideAfterDays.toString()}
                         >
@@ -94,7 +94,7 @@ export const Form = ({id}: FormProps) => {
                             <Item key="30">30</Item>
                             <Item key="60">60</Item>
                             <Item key="90">90</Item>
-                        </Picker>{' '}*/}
+                        </SafePicker>{' '}*/}
                         {Translations.DaysLabel[DEFAULT_LANGUAGE]}
                     </div>
                 ) : null}

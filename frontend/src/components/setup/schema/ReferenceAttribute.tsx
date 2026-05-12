@@ -1,4 +1,4 @@
-import {Item, Picker, TextField} from '@adobe/react-spectrum';
+import {Item, TextField} from '@adobe/react-spectrum';
 import {useEffect, useState} from 'react';
 import {Draggable} from 'react-beautiful-dnd';
 import {SchemaReferenceAttribute, SchemaType} from '../../../interfaces/Schema';
@@ -6,6 +6,7 @@ import {IconReverseNameArrow} from '../IconReverseNameArrow';
 import {IconDrag} from '../IconDrag';
 import {Translations} from '../../../Translations';
 import {DEFAULT_LANGUAGE} from '../../../Constants';
+import { SafePicker } from '../../common/SafeSpectrumFields';
 
 export interface ReferenceAttributeProps {
     attributeKey: string;
@@ -51,7 +52,7 @@ export const ReferenceAttribute = ({
                                 <TextField value={name} onChange={setName} onBlur={() => setName(name.trim())}/>
                             </div>
                             <div className="reference">
-                                <Picker
+                                <SafePicker
                                     width="100%"
                                     selectedKey={entity}
                                     onSelectionChange={(key) => {
@@ -67,7 +68,7 @@ export const ReferenceAttribute = ({
                                         .map(([value, key]) => {
                                             return <Item key={key}>{value}</Item>;
                                         })}
-                                </Picker>
+                                </SafePicker>
                             </div>
 
                             <div onClick={() => remove(index)} className="button">

@@ -1,5 +1,6 @@
-import {Item, Picker} from '@adobe/react-spectrum';
+import {Item} from '@adobe/react-spectrum';
 import {useEffect, useState} from 'react';
+import { SafePicker } from '../common/SafeSpectrumFields';
 
 export interface SelectAttributeProps {
     attributeKey: string;
@@ -32,7 +33,7 @@ export const SelectAttribute = ({
     return (
         <div className="attribute">
             {Array.isArray(options) && (
-                <Picker
+                <SafePicker
                     width="100%"
                     aria-label={name}
                     label={name}
@@ -43,7 +44,7 @@ export const SelectAttribute = ({
                     {options?.sort((a, b) => a.localeCompare(b)).map((option) => {
                         return <Item key={option}>{option}</Item>;
                     })}
-                </Picker>
+                </SafePicker>
             )}
         </div>
     );

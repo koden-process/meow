@@ -1,4 +1,4 @@
-import { Item, Picker } from '@adobe/react-spectrum';
+import { Item } from '@adobe/react-spectrum';
 import { useEffect, useMemo, useState } from 'react';
 import { TableHeader } from '../view/table/TableHeader';
 import { ApplicationStore } from '../../store/ApplicationStore';
@@ -25,6 +25,7 @@ import { TableCanvas } from '../view/table/TableCanvas';
 import useMobileLayout from '../../hooks/useMobileLayout';
 import { getRequestClient } from '../../helpers/RequestHelper';
 import { SelectMappingContext } from '../../helpers/SelectMappingContext';
+import { SafePicker } from '../common/SafeSpectrumFields';
 import { useContext } from 'react';
 
 interface CardListProps {
@@ -217,7 +218,7 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
   return (
     <>
       <section className="content-box" style={{ overflow: 'auto' }}>
-        <Picker
+        <SafePicker
           defaultSelectedKey={mode}
           onSelectionChange={(key) => {
             if (key === null) {
@@ -228,7 +229,7 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
         >
           <Item key="achieved">{Translations.ClosedWonOption[DEFAULT_LANGUAGE]}</Item>
           <Item key="predicted">{Translations.AllOpenOption[DEFAULT_LANGUAGE]}</Item>
-        </Picker>
+        </SafePicker>
       </section>
 
       {isMobileLayout ? (

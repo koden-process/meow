@@ -1,4 +1,4 @@
-import {Button, Item, Picker} from '@adobe/react-spectrum';
+import {Button, Item} from '@adobe/react-spectrum';
 import {Fragment, Key, useEffect, useState} from 'react';
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd';
 import {ANIMALS, DEFAULT_LANGUAGE} from '../../../Constants';
@@ -19,6 +19,7 @@ import {ReferenceAttribute} from './ReferenceAttribute';
 import {BooleanAttribute} from './BooleanAttribute';
 import {EmailAttribute} from './EmailAttribute';
 import {LinkAttribute} from './LinkAttribute';
+import { SafePicker } from '../../common/SafeSpectrumFields';
 
 function moveAttribute<T>(items: T[], from: number, to: number): T[] {
     const lane = items[from];
@@ -198,7 +199,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                 </Droppable>
             </DragDropContext>
             <div className="add-attribute">
-                <Picker
+                <SafePicker
                     defaultSelectedKey="text"
                     onSelectionChange={(key: Key | null) => {
                         if (key === null) return;
@@ -207,7 +208,7 @@ export const SchemaCanvas = ({schema: schemaImported, validate}: SchemaCanvasPro
                 >
 
                     {getOptions(schema)}
-                </Picker>
+                </SafePicker>
 
                 <Button onPress={add} variant="secondary">
                     {Translations.AddAttributeButton[DEFAULT_LANGUAGE]}

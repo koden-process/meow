@@ -1,7 +1,6 @@
 import {
   Button,
   ButtonGroup,
-  ComboBox,
   Content,
   Dialog,
   DialogContainer,
@@ -17,6 +16,7 @@ import { Account } from '../../interfaces/Account';
 import { DEFAULT_LANGUAGE } from '../../Constants';
 import { selectToken, store } from '../../store/Store';
 import { Translations } from '../../Translations';
+import { SafeComboBox } from '../common/SafeSpectrumFields';
 
 export interface AccountDeduplicationModalProps {
   accounts: Account[];
@@ -163,7 +163,7 @@ export const AccountDeduplicationModal = ({
                 </div>
               )}
 
-              <ComboBox
+              <SafeComboBox
                 aria-label={Translations.AccountMergeTargetLabel[DEFAULT_LANGUAGE]}
                 items={activeAccounts}
                 label={Translations.AccountMergeTargetLabel[DEFAULT_LANGUAGE]}
@@ -175,9 +175,9 @@ export const AccountDeduplicationModal = ({
                     {account.name}
                   </Item>
                 )}
-              </ComboBox>
+              </SafeComboBox>
 
-              <ComboBox
+              <SafeComboBox
                 aria-label={Translations.AccountMergeSourceLabel[DEFAULT_LANGUAGE]}
                 items={activeAccounts}
                 label={Translations.AccountMergeSourceLabel[DEFAULT_LANGUAGE]}
@@ -189,7 +189,7 @@ export const AccountDeduplicationModal = ({
                     {account.name}
                   </Item>
                 )}
-              </ComboBox>
+              </SafeComboBox>
 
               <div style={{ color: '#555', fontSize: 13 }}>
                 {Translations.AccountMergeImpactNotice[DEFAULT_LANGUAGE]}
