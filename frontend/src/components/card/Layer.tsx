@@ -30,7 +30,7 @@ import {Form} from './Form';
 import {Events} from './Events';
 import {Card, CardFormPreview, CardPreview} from '../../interfaces/Card';
 import {SchemaType} from '../../interfaces/Schema';
-import {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ApplicationStore} from '../../store/ApplicationStore';
 import {Avatar} from '../Avatar';
 import {User} from '../../interfaces/User';
@@ -41,6 +41,13 @@ import {getRequestClient} from '../../helpers/RequestHelper';
 import {IconLock} from "./IconLock";
 import {getErrorMessage} from '../../helpers/ErrorHelper';
 import {downloadOpportunitySheet} from '../../helpers/OpportunitySheetExportHelper';
+import {LuFileDown, LuSave, LuTrash2, LuX} from 'react-icons/lu';
+import type {IconType} from 'react-icons';
+
+const icon = (Icon: IconType) => React.createElement(Icon as React.ElementType, {
+    'aria-hidden': 'true',
+    focusable: 'false',
+});
 
 export const Layer = () => {
     const token = useSelector(selectToken);
@@ -269,43 +276,65 @@ export const Layer = () => {
                     
                     {/* Boutons sur la ligne d'en dessous */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                        {/* Bouton Supprimer tout à gauche */}
+                        {/* Action destructive isolée à gauche */}
                         <div style={{ display: 'flex', gap: '8px' }}>
-                            {id && card && (
-                                <Button
-                                    variant="secondary"
-                                    onPress={downloadSheet}
-                                >
-                                    {Translations.DownloadOpportunitySheetButton[DEFAULT_LANGUAGE]}
-                                </Button>
-                            )}
                             {id && (
-                                <Button 
-                                    variant="secondary" 
-                                    onPress={() => setShowDeleteModal(true)}
-                                    UNSAFE_style={{
-                                        border: '1px solid #dc2626',
-                                        color: '#dc2626',
-                                        backgroundColor: 'transparent'
-                                    }}
-                                    UNSAFE_className="btn-delete"
-                                >
-                                    Supprimer
-                                </Button>
+                                <span title="Supprimer">
+                                    <Button
+                                        variant="secondary"
+                                        onPress={() => setShowDeleteModal(true)}
+                                        aria-label="Supprimer"
+                                        UNSAFE_style={{
+                                            border: '1px solid #dc2626',
+                                            color: '#dc2626',
+                                            backgroundColor: 'transparent'
+                                        }}
+                                        UNSAFE_className="btn-delete opportunity-action-button"
+                                    >
+                                        {icon(LuTrash2)}
+                                    </Button>
+                                </span>
                             )}
                         </div>
 
-                        {/* Boutons Enregistrer et Fermer à droite */}
+                        {/* Actions secondaires et principales à droite */}
                         <div style={{ display: 'flex', gap: '8px' }}>
+                            {id && card && (
+                                <span title={Translations.DownloadOpportunitySheetButton[DEFAULT_LANGUAGE]}>
+                                    <Button
+                                        variant="secondary"
+                                        onPress={downloadSheet}
+                                        aria-label={Translations.DownloadOpportunitySheetButton[DEFAULT_LANGUAGE]}
+                                        UNSAFE_className="opportunity-action-button"
+                                    >
+                                        {icon(LuFileDown)}
+                                    </Button>
+                                </span>
+                            )}
                             {!isDisabled ? (
-                                <Button variant="primary" onPress={save} isDisabled={!isValidForm || isDisabled}>
-                                    {Translations.SaveButton[DEFAULT_LANGUAGE]}
-                                </Button>
+                                <span title={Translations.SaveButton[DEFAULT_LANGUAGE]}>
+                                    <Button
+                                        variant="primary"
+                                        onPress={save}
+                                        isDisabled={!isValidForm || isDisabled}
+                                        aria-label={Translations.SaveButton[DEFAULT_LANGUAGE]}
+                                        UNSAFE_className="opportunity-action-button"
+                                    >
+                                        {icon(LuSave)}
+                                    </Button>
+                                </span>
                             ) : null}
 
-                            <Button variant="primary" onPress={() => hideCardDetail()}>
-                                {Translations.CloseButton[DEFAULT_LANGUAGE]}
-                            </Button>
+                            <span title={Translations.CloseButton[DEFAULT_LANGUAGE]}>
+                                <Button
+                                    variant="primary"
+                                    onPress={() => hideCardDetail()}
+                                    aria-label={Translations.CloseButton[DEFAULT_LANGUAGE]}
+                                    UNSAFE_className="opportunity-action-button"
+                                >
+                                    {icon(LuX)}
+                                </Button>
+                            </span>
                         </div>
                     </div>
                 </div>
