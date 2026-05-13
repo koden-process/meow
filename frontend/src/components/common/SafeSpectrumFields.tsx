@@ -5,7 +5,6 @@ import React, {
   ReactElement,
   ReactNode,
   useCallback,
-  useRef,
 } from 'react';
 import {
   ComboBox as SpectrumComboBox,
@@ -25,7 +24,7 @@ const FIELD_SELECTOR = '.spectrum-Field, .spectrum-Dropdown, .spectrum-InputGrou
 
 type SafeOverlayKind = 'list' | 'calendar';
 type SafeWrapperProps = {
-  children: ReactNode | ((ensureRootSpace: () => void) => ReactNode);
+  children: ReactNode;
   kind: SafeOverlayKind;
 };
 
@@ -107,8 +106,6 @@ const ensureOverlaySpace = (target: EventTarget | null, kind: SafeOverlayKind) =
 };
 
 const SafeSpectrumField = ({ children, kind }: SafeWrapperProps) => {
-  const rootRef = useRef<HTMLSpanElement>(null);
-
   const ensureFromEvent = useCallback(
     (target: EventTarget | null) => ensureOverlaySpace(target, kind),
     [kind]
@@ -128,20 +125,14 @@ const SafeSpectrumField = ({ children, kind }: SafeWrapperProps) => {
     ensureFromEvent(event.target);
   };
 
-  const ensureRootSpace = useCallback(() => {
-    const field = rootRef.current?.querySelector(FIELD_SELECTOR);
-    ensureFromEvent(field ?? rootRef.current);
-  }, [ensureFromEvent]);
-
   return (
     <span
-      ref={rootRef}
       className="safe-spectrum-field"
       onPointerDownCapture={handlePointerDownCapture}
       onKeyDownCapture={handleKeyDownCapture}
       onFocusCapture={handleFocusCapture}
     >
-      {typeof children === 'function' ? children(ensureRootSpace) : children}
+      {children}
     </span>
   );
 };
@@ -149,19 +140,7 @@ const SafeSpectrumField = ({ children, kind }: SafeWrapperProps) => {
 export const SafePicker = <T extends object>(props: SpectrumPickerProps<T>): ReactElement => {
   return (
     <SafeSpectrumField kind="list">
-      {(ensureRootSpace) => (
-        <SpectrumPicker
-          {...props}
-          shouldFlip={props.shouldFlip ?? true}
-          onOpenChange={(isOpen) => {
-            if (isOpen) {
-              ensureRootSpace();
-            }
-
-            props.onOpenChange?.(isOpen);
-          }}
-        />
-      )}
+      <SpectrumPicker {...props} shouldFlip={props.shouldFlip ?? true} />
     </SafeSpectrumField>
   );
 };
@@ -169,19 +148,7 @@ export const SafePicker = <T extends object>(props: SpectrumPickerProps<T>): Rea
 export const SafeComboBox = <T extends object>(props: SpectrumComboBoxProps<T>): ReactElement => {
   return (
     <SafeSpectrumField kind="list">
-      {(ensureRootSpace) => (
-        <SpectrumComboBox
-          {...props}
-          shouldFlip={props.shouldFlip ?? true}
-          onOpenChange={(isOpen) => {
-            if (isOpen) {
-              ensureRootSpace();
-            }
-
-            props.onOpenChange?.(isOpen);
-          }}
-        />
-      )}
+      <SpectrumComboBox {...props} shouldFlip={props.shouldFlip ?? true} />
     </SafeSpectrumField>
   );
 };
@@ -189,19 +156,7 @@ export const SafeComboBox = <T extends object>(props: SpectrumComboBoxProps<T>):
 export const SafeDatePicker = <T extends DateValue>(props: SpectrumDatePickerProps<T>): ReactElement => {
   return (
     <SafeSpectrumField kind="calendar">
-      {(ensureRootSpace) => (
-        <SpectrumDatePicker
-          {...props}
-          shouldFlip={props.shouldFlip ?? true}
-          onOpenChange={(isOpen) => {
-            if (isOpen) {
-              ensureRootSpace();
-            }
-
-            props.onOpenChange?.(isOpen);
-          }}
-        />
-      )}
+      <SpectrumDatePicker {...props} shouldFlip={props.shouldFlip ?? true} />
     </SafeSpectrumField>
   );
 };
@@ -209,19 +164,7 @@ export const SafeDatePicker = <T extends DateValue>(props: SpectrumDatePickerPro
 export const SafeDateRangePicker = <T extends DateValue>(props: SpectrumDateRangePickerProps<T>): ReactElement => {
   return (
     <SafeSpectrumField kind="calendar">
-      {(ensureRootSpace) => (
-        <SpectrumDateRangePicker
-          {...props}
-          shouldFlip={props.shouldFlip ?? true}
-          onOpenChange={(isOpen) => {
-            if (isOpen) {
-              ensureRootSpace();
-            }
-
-            props.onOpenChange?.(isOpen);
-          }}
-        />
-      )}
+      <SpectrumDateRangePicker {...props} shouldFlip={props.shouldFlip ?? true} />
     </SafeSpectrumField>
   );
 };
