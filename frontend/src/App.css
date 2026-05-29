@@ -59,7 +59,9 @@ h3 {
 }
 
 .safe-spectrum-field {
-  display: contents;
+  display: block;
+  position: relative;
+  max-width: 100%;
 }
 
 .react-spectrum-Popover {
