@@ -75,6 +75,7 @@ Ce qui reste à faire. (Omettre si rien.)
 
 | Date | Titre |
 |---|---|
+| [2026-05-29](2026-05-29-ajustement-pdf-fiche-opportunite.md) | Ajustement esthétique du PDF fiche opportunité |
 | [2026-05-29](2026-05-29-refonte-pdf-fiche-opportunite.md) | Refonte du PDF de la fiche opportunité |
 | [2026-05-29](2026-05-29-bug-select-bas-de-fiche-v3.md) | Correction v3 des menus en bas de fiche opportunité |
 | [2026-05-29](2026-05-29-refonte-documentation.md) | Refonte de la documentation projet |
