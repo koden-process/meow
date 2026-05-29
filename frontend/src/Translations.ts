@@ -237,6 +237,11 @@ export const Translations = {
         fr: 'Télécharger la fiche PDF',
     },
 
+    OpportunityAlreadyOpenMessage: {
+        en: 'An opportunity is already open. Please close or save it before opening another one.',
+        fr: "Une opportunité est déjà ouverte. Veuillez la fermer ou l'enregistrer avant d'en ouvrir une autre.",
+    },
+
     // Filter buttons
     RecentlyUpdatedFilter: {
         en: 'Recently Updated',

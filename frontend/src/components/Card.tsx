@@ -3,14 +3,13 @@ import { useEffect } from 'react';
 import { DateTime } from 'luxon';
 import { Card as CardEntity } from '../interfaces/Card';
 import { Lane, LaneType } from '../interfaces/Lane';
-import { store } from '../store/Store';
-import { showCardLayer } from '../actions/Actions';
 import { Draggable } from 'react-beautiful-dnd';
 import { Currency } from './Currency';
 import { Avatar } from './Avatar';
 import { CardHelper } from '../helpers/CardHelper';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
+import { openCardLayerOrWarn } from '../helpers/CardLayerHelper';
 
 export interface CardProps {
   card: CardEntity;
@@ -37,7 +36,7 @@ export const Card = ({ card, lane, index }: CardProps) => {
   }, [card]);
 
   const openCard = (id?: string) => {
-    store.dispatch(showCardLayer(id));
+    openCardLayerOrWarn(id);
   };
 
   return (

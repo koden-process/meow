@@ -29,7 +29,6 @@ import useMobileLayout from '../hooks/useMobileLayout';
 import {Account} from '../interfaces/Account';
 import {Item} from '../components/view/list/Item';
 import {Row} from '../components/view/table/Row';
-import {Layer as CardLayer} from '../components/card/Layer';
 import {Translations} from '../Translations';
 import {DEFAULT_LANGUAGE} from '../Constants';
 import {AccountDeduplicationModal} from '../components/account/AccountDeduplicationModal';
@@ -195,7 +194,6 @@ export const AccountsPage = () => {
     return (
         <>
             {state === 'account-detail' && <AccountLayer/>}
-            {state === 'card-detail' && <CardLayer/>}
             <AccountDeduplicationModal
                 accounts={accounts}
                 isOpen={isDeduplicationModalOpen}

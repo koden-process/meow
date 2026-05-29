@@ -9,7 +9,6 @@ import {
   ActionType,
   setListViewColumn,
   setListViewSortBy,
-  showCardLayer,
   showModalError,
 } from '../../actions/Actions';
 import { toIntervalInDays, toRelativeDate } from '../../helpers/DateHelper';
@@ -27,6 +26,7 @@ import { getRequestClient } from '../../helpers/RequestHelper';
 import { SelectMappingContext } from '../../helpers/SelectMappingContext';
 import { SafePicker } from '../common/SafeSpectrumFields';
 import { useContext } from 'react';
+import { openCardLayerOrWarn } from '../../helpers/CardLayerHelper';
 
 interface CardListProps {
   userId: string;
@@ -88,7 +88,7 @@ export const CardList = ({ userId, start, end }: CardListProps) => {
   );
 
   const openCard = (id?: string) => {
-    store.dispatch(showCardLayer(id));
+    openCardLayerOrWarn(id);
   };
 
   useEffect(() => {

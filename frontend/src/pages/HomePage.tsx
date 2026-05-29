@@ -8,13 +8,10 @@ import {
     selectInterfaceState,
     selectLanes,
     selectActiveUsers,
-    store,
     selectToken,
     selectAccounts,
     selectSchemaByType,
 } from '../store/Store';
-import { showCardLayer } from '../actions/Actions';
-import { Layer as CardLayer } from '../components/card/Layer';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Layer as LaneLayer } from '../components/lane/Layer';
 import { Layer as AccountLayer } from '../components/account/Layer';
@@ -35,6 +32,7 @@ import { handleDragStart, handleDragEnd } from '../services/dragDropHandlers';
 import { BoardHeader } from '../components/home/BoardHeader';
 import { FilterBar } from '../components/home/FilterBar';
 import { BoardViewSwitcher } from '../components/home/BoardViewSwitcher';
+import { openCardLayerOrWarn } from '../helpers/CardLayerHelper';
 
 export const enum FilterMode {
     // OwnedByMe = 'owned-by-me',
@@ -88,13 +86,12 @@ export const HomePage = () => {
 
     return (
         <>
-            {state === 'card-detail' && <CardLayer />}
             {state === 'lane-detail' && <LaneLayer />}
             {state === 'account-detail' && <AccountLayer />}
             <div style={{ position: 'relative' }}>
                 {/* Bouton Add, collé en haut à droite */}
                 <div style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}>
-                    <Button variant="primary" onPress={() => store.dispatch(showCardLayer())}>
+                    <Button variant="primary" onPress={() => openCardLayerOrWarn()}>
                         {Translations.AddButton[DEFAULT_LANGUAGE]}
                     </Button>
                 </div>
