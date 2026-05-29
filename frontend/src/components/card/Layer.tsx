@@ -43,6 +43,7 @@ import {getErrorMessage} from '../../helpers/ErrorHelper';
 import {downloadOpportunitySheet} from '../../helpers/OpportunitySheetExportHelper';
 import {LuFileDown, LuSave, LuTrash2, LuX} from 'react-icons/lu';
 import type {IconType} from 'react-icons';
+import { UNSAFE_PortalProvider } from '@react-aria/overlays';
 
 const icon = (Icon: IconType) => React.createElement(Icon as React.ElementType, {
     'aria-hidden': 'true',
@@ -50,6 +51,7 @@ const icon = (Icon: IconType) => React.createElement(Icon as React.ElementType, 
 });
 
 export const Layer = () => {
+    const layerRef = React.useRef<HTMLDivElement | null>(null);
     const token = useSelector(selectToken);
 
     const client = getRequestClient(token);
@@ -197,7 +199,8 @@ export const Layer = () => {
     }, [id]);
 
     return (
-        <div className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
+        <div ref={layerRef} className={`layer ${isMobileLayout ? 'mobile' : 'desktop'}`}>
+            <UNSAFE_PortalProvider getContainer={() => layerRef.current}>
             <div className="header">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
                     {/* Avatar en haut à droite – wrapper relatif pour ancrer le dropdown */}
@@ -406,6 +409,7 @@ export const Layer = () => {
                     </div>
                 </div>
             )}
+            </UNSAFE_PortalProvider>
         </div>
     );
 };
