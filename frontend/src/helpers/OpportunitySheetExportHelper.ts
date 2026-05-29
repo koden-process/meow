@@ -26,6 +26,11 @@ interface ExportRow {
   value: string;
 }
 
+interface ExportSection {
+  title: string;
+  rows: ExportRow[];
+}
+
 interface PdfLayout {
   pageWidth: number;
   pageHeight: number;
@@ -40,9 +45,18 @@ const PDF_LINE_HEIGHT = 5;
 const PDF_LABEL_WIDTH = 58;
 const PDF_ROW_GAP = 6;
 const PDF_ROW_PADDING = 3;
+const PDF_COLUMN_GAP = 8;
+const PDF_HEADER_GAP = 12;
 
 const normalizePdfText = (value: string): string => {
   return value.replace(/\s+/g, ' ').trim();
+};
+
+const normalizeFieldName = (value: string): string => {
+  return normalizePdfText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 };
 
 const fileNamePart = (value: string): string => {
@@ -115,6 +129,14 @@ const formatBoolean = (value: boolean): string => {
     : Translations.NoLabel[DEFAULT_LANGUAGE];
 };
 
+const formatOwnerIdentifier = (owner?: User): string => {
+  if (!owner) {
+    return '';
+  }
+
+  return owner._id || owner.name;
+};
+
 const contactNameFor = (accounts: Account[], id: string): string => {
   return (
     accounts.find((account) => account._id === id)?.name
@@ -157,26 +179,71 @@ const buildAttributeRows = (card: Card, schema: Schema | undefined, accounts: Ac
     .filter((row) => row.value !== '');
 };
 
-const buildSummaryRows = ({
+const buildHeaderRows = ({
   card,
   lane,
   owner,
-  amountLabel,
-  currency,
 }: OpportunitySheetExportParams): ExportRow[] => {
   return [
-    { label: Translations.OpportunityNameLabel[DEFAULT_LANGUAGE], value: card.name },
+    { label: Translations.UserLabel[DEFAULT_LANGUAGE], value: formatOwnerIdentifier(owner) },
     { label: Translations.StageLabel[DEFAULT_LANGUAGE], value: lane?.name ?? '' },
-    { label: Translations.UserLabel[DEFAULT_LANGUAGE], value: owner?.name ?? '' },
-    { label: amountLabel, value: formatAmount(card.amount, currency) },
-    { label: Translations.NextFollowUpLabel[DEFAULT_LANGUAGE], value: formatDate(card.nextFollowUpAt) },
     {
-      label: Translations.ExpectedCloseDateLabel[DEFAULT_LANGUAGE],
-      value: formatDate(card.closedAt),
+      label: Translations.CreatedAtLabel[DEFAULT_LANGUAGE],
+      value: formatDateTime(card.createdAt),
     },
-    { label: Translations.CreatedAtLabel[DEFAULT_LANGUAGE], value: formatDateTime(card.createdAt) },
     { label: Translations.LastUpdateLabel[DEFAULT_LANGUAGE], value: formatDateTime(card.updatedAt) },
+    { label: Translations.NextFollowUpLabel[DEFAULT_LANGUAGE], value: formatDate(card.nextFollowUpAt) },
   ].filter((row) => row.value !== '');
+};
+
+const buildAttributeLookup = (params: OpportunitySheetExportParams): Map<string, string> => {
+  return new Map(
+    buildAttributeRows(params.card, params.schema, params.accounts)
+      .map((row) => [normalizeFieldName(row.label), row.value])
+  );
+};
+
+const getLookupValue = (lookup: Map<string, string>, label: string): string => {
+  return lookup.get(normalizeFieldName(label)) ?? '';
+};
+
+const buildOrderedRows = (lookup: Map<string, string>, labels: string[]): ExportRow[] => {
+  return labels
+    .map((label) => ({ label, value: getLookupValue(lookup, label) }))
+    .filter((row) => row.value !== '');
+};
+
+const buildSections = (params: OpportunitySheetExportParams): ExportSection[] => {
+  const lookup = buildAttributeLookup(params);
+
+  return [
+    {
+      title: Translations.OpportunitySheetWorksiteInfoTitle[DEFAULT_LANGUAGE],
+      rows: buildOrderedRows(lookup, [
+        'Description',
+        'Adresse',
+        'Code Postal',
+        'Ville',
+        'Financement',
+        'Typologie de Chantier',
+        'Marque CCTP',
+        'ITE',
+        'SEL',
+        'Autre',
+      ]),
+    },
+    {
+      title: Translations.OpportunitySheetStakeholdersTitle[DEFAULT_LANGUAGE],
+      rows: buildOrderedRows(lookup, [
+        "Maîtrise d'ouvrage",
+        "Maîtrise d'oeuvre",
+        'Architecte',
+        'Distributeur',
+        "Secteur d’activité",
+        'Entreprise adjudicatrice',
+      ]),
+    },
+  ];
 };
 
 const splitText = (doc: JsPdfDocument, text: string, maxWidth: number): string[] => {
@@ -206,86 +273,137 @@ const ensureSpace = (doc: JsPdfDocument, layout: PdfLayout, height: number): voi
   layout.y = layout.margin;
 };
 
-const drawTitle = (doc: JsPdfDocument, layout: PdfLayout, params: OpportunitySheetExportParams): void => {
+const drawTitle = (
+  doc: JsPdfDocument,
+  x: number,
+  y: number,
+  width: number,
+  params: OpportunitySheetExportParams
+): number => {
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(20);
+  doc.setFontSize(22);
   doc.setTextColor(29, 29, 27);
-  doc.text(Translations.OpportunitySheetTitle[DEFAULT_LANGUAGE], layout.margin, layout.y);
-  layout.y += 9;
+  const titleLines = splitText(doc, params.card.name, width);
+  doc.text(titleLines, x, y);
+  let currentY = y + titleLines.length * 8;
 
-  if (params.team?.name) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(85, 85, 85);
+  doc.text(formatAmount(params.card.amount, params.currency), x, currentY);
+  currentY += 8;
+
+  return currentY;
+};
+
+const drawSectionTitle = (doc: JsPdfDocument, x: number, y: number, title: string, align: 'left' | 'right' = 'left'): void => {
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(85, 85, 85);
+  doc.text(title, x, y, align === 'right' ? { align: 'right' } : undefined);
+};
+
+const drawEmptyState = (doc: JsPdfDocument, x: number, y: number, width: number): number => {
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(8);
+  doc.setTextColor(120, 120, 120);
+  doc.text(splitText(doc, Translations.OpportunitySheetNoData[DEFAULT_LANGUAGE], width), x, y);
+  return y + 6;
+};
+
+const drawGeneralInfoRows = (
+  doc: JsPdfDocument,
+  x: number,
+  y: number,
+  width: number,
+  rows: ExportRow[]
+): number => {
+  drawSectionTitle(doc, x + width, y, Translations.OpportunitySheetGeneralInfoTitle[DEFAULT_LANGUAGE], 'right');
+  let currentY = y + 6;
+
+  rows.forEach((row) => {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
     doc.setTextColor(85, 85, 85);
-    doc.text(params.team.name, layout.margin, layout.y);
-    layout.y += 7;
+    const labelWidth = Math.min(34, width * 0.42);
+    const valueX = x + labelWidth + 4;
+    const valueWidth = width - labelWidth - 4;
+    const labelLines = splitText(doc, row.label, labelWidth);
+
+    doc.text(labelLines, x, currentY);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(29, 29, 27);
+    const valueLines = splitText(doc, row.value, valueWidth);
+    doc.text(valueLines, valueX, currentY);
+
+    currentY += Math.max(labelLines.length * 4.5, valueLines.length * 4.5) + 2;
+  });
+
+  return currentY;
+};
+
+const drawSectionColumn = (
+  doc: JsPdfDocument,
+  x: number,
+  startY: number,
+  width: number,
+  section: ExportSection
+): number => {
+  let y = startY;
+  drawSectionTitle(doc, x, y, section.title);
+  y += 6;
+
+  if (section.rows.length === 0) {
+    return drawEmptyState(doc, x, y, width);
   }
 
+  section.rows.forEach((row) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(85, 85, 85);
+    const labelLines = splitText(doc, row.label, width);
+    doc.text(labelLines, x, y);
+    y += labelLines.length * 4.2;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(29, 29, 27);
+    const valueLines = splitText(doc, row.value, width);
+    doc.text(valueLines, x, y);
+    y += valueLines.length * 4.6 + 4;
+  });
+
+  return y;
+};
+
+const drawHeader = (doc: JsPdfDocument, layout: PdfLayout, params: OpportunitySheetExportParams, rows: ExportRow[]): void => {
+  const leftWidth = layout.contentWidth * 0.52;
+  const rightWidth = layout.contentWidth - leftWidth - PDF_HEADER_GAP;
+  const startY = layout.y;
+  const leftY = drawTitle(doc, layout.margin, startY, leftWidth, params);
+  const rightX = layout.margin + leftWidth + PDF_HEADER_GAP;
+  const rightY = drawGeneralInfoRows(doc, rightX, startY, rightWidth, rows);
+
+  layout.y = Math.max(leftY, rightY) + 4;
   doc.setDrawColor(29, 29, 27);
   doc.setLineWidth(0.4);
   doc.line(layout.margin, layout.y, layout.pageWidth - layout.margin, layout.y);
-  layout.y += 11;
-};
-
-const drawSectionTitle = (doc: JsPdfDocument, layout: PdfLayout, title: string): void => {
-  ensureSpace(doc, layout, 13);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(13);
-  doc.setTextColor(29, 29, 27);
-  doc.text(title, layout.margin, layout.y);
-  layout.y += 7;
-};
-
-const drawEmptyState = (doc: JsPdfDocument, layout: PdfLayout): void => {
-  ensureSpace(doc, layout, 8);
-
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(10);
-  doc.setTextColor(120, 120, 120);
-  doc.text(Translations.OpportunitySheetNoData[DEFAULT_LANGUAGE], layout.margin, layout.y);
   layout.y += 8;
 };
 
-const drawRows = (doc: JsPdfDocument, layout: PdfLayout, rows: ExportRow[]): void => {
-  if (rows.length === 0) {
-    drawEmptyState(doc, layout);
-    return;
-  }
+const drawSectionColumns = (doc: JsPdfDocument, layout: PdfLayout, sections: ExportSection[]): void => {
+  const columnWidth = (layout.contentWidth - PDF_COLUMN_GAP) / 2;
+  const startY = layout.y;
+  let maxY = startY;
 
-  const valueX = layout.margin + PDF_LABEL_WIDTH + PDF_ROW_GAP;
-  const valueWidth = layout.contentWidth - PDF_LABEL_WIDTH - PDF_ROW_GAP;
-
-  rows.forEach((row) => {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    const labelLines = splitText(doc, row.label, PDF_LABEL_WIDTH);
-    doc.setFont('helvetica', 'normal');
-    const valueLines = splitText(doc, row.value, valueWidth);
-    const lineCount = Math.max(labelLines.length, valueLines.length);
-    const rowHeight = lineCount * PDF_LINE_HEIGHT + PDF_ROW_PADDING * 2;
-
-    ensureSpace(doc, layout, rowHeight);
-
-    const rowTop = layout.y;
-    const textY = rowTop + PDF_ROW_PADDING + 3;
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(85, 85, 85);
-    doc.text(labelLines, layout.margin, textY);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(29, 29, 27);
-    doc.text(valueLines, valueX, textY);
-
-    layout.y = rowTop + rowHeight;
-    doc.setDrawColor(220, 220, 220);
-    doc.setLineWidth(0.2);
-    doc.line(layout.margin, layout.y, layout.pageWidth - layout.margin, layout.y);
+  sections.forEach((section, index) => {
+    const x = layout.margin + index * (columnWidth + PDF_COLUMN_GAP);
+    const y = drawSectionColumn(doc, x, startY, columnWidth, section);
+    maxY = Math.max(maxY, y);
   });
 
-  layout.y += 7;
+  layout.y = maxY + 4;
 };
 
 const drawFooters = (doc: JsPdfDocument, layout: PdfLayout, generatedAt: string): void => {
@@ -310,19 +428,16 @@ const drawFooters = (doc: JsPdfDocument, layout: PdfLayout, generatedAt: string)
 const buildSheetPdf = (doc: JsPdfDocument, params: OpportunitySheetExportParams): JsPdfDocument => {
   const layout = getLayout(doc);
   const generatedAt = new Date().toISOString();
-  const summaryRows = buildSummaryRows(params);
-  const attributeRows = buildAttributeRows(params.card, params.schema, params.accounts);
+  const headerRows = buildHeaderRows(params);
+  const sections = buildSections(params);
 
   doc.setProperties({
     title: `${Translations.OpportunitySheetTitle[DEFAULT_LANGUAGE]} - ${params.card.name}`,
     subject: Translations.OpportunitySheetTitle[DEFAULT_LANGUAGE],
   });
 
-  drawTitle(doc, layout, params);
-  drawSectionTitle(doc, layout, Translations.OpportunitySheetSummaryTitle[DEFAULT_LANGUAGE]);
-  drawRows(doc, layout, summaryRows);
-  drawSectionTitle(doc, layout, Translations.OpportunitySheetDetailsTitle[DEFAULT_LANGUAGE]);
-  drawRows(doc, layout, attributeRows);
+  drawHeader(doc, layout, params, headerRows);
+  drawSectionColumns(doc, layout, sections);
   drawFooters(doc, layout, generatedAt);
 
   return doc;

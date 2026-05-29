@@ -331,6 +331,21 @@ export const Translations = {
         fr: 'Fiche opportunité',
     },
 
+    OpportunitySheetGeneralInfoTitle: {
+        en: 'General information',
+        fr: 'INFORMATIONS GÉNÉRALES',
+    },
+
+    OpportunitySheetWorksiteInfoTitle: {
+        en: 'Worksite information',
+        fr: 'INFORMATIONS CHANTIER',
+    },
+
+    OpportunitySheetStakeholdersTitle: {
+        en: 'Stakeholders',
+        fr: 'PARTIES PRENANTES',
+    },
+
     OpportunitySheetSummaryTitle: {
         en: 'Summary',
         fr: 'Synthèse',
