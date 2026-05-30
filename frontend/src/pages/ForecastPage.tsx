@@ -1,11 +1,10 @@
 import { today, parseDate, getLocalTimeZone, CalendarDate } from '@internationalized/date';
 import { Item } from '@adobe/react-spectrum';
 import { useEffect, useState } from 'react';
-import { selectActiveUsers, selectDate, selectInterfaceState, store } from '../store/Store';
+import { selectActiveUsers, selectDate, store } from '../store/Store';
 import { useSelector } from 'react-redux';
 import { ActionType } from '../actions/Actions';
 import { FILTER_BY_NONE, DEFAULT_LANGUAGE } from '../Constants';
-import { Layer as CardLayer } from '../components/card/Layer';
 import { ForecastView } from '../components/forecast/ForecastView';
 import { useNavigate } from 'react-router-dom';
 import { TrendView } from '../components/forecast/TrendView';
@@ -30,7 +29,6 @@ export const ForecastPage = () => {
 
   const date = useSelector(selectDate);
   const users = useSelector(selectActiveUsers);
-  const state = useSelector(selectInterfaceState);
 
   const [userId, setUserId] = useState(date.userId);
   const [view, setView] = useState('');
@@ -95,7 +93,6 @@ export const ForecastPage = () => {
 
   return (
     <>
-      {state === 'card-detail' && <CardLayer />}
       <div className="forecast">
         <div className="filter">
           <div>

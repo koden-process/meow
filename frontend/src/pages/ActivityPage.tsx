@@ -1,22 +1,21 @@
 import { useSelector } from 'react-redux';
 import { getRequestClient } from '../helpers/RequestHelper';
-import { selectInterfaceState, selectToken, store } from '../store/Store';
+import { selectToken, store } from '../store/Store';
 import { useEffect, useState } from 'react';
-import { showCardLayer, showModalError } from '../actions/Actions';
+import { showModalError } from '../actions/Actions';
 import { getErrorMessage } from '../helpers/ErrorHelper';
 import { Item } from '@adobe/react-spectrum';
 import { DateTime } from 'luxon';
 import { ActivityItem } from '../components/activity/ActivityItem';
 import { CardEvent } from '../interfaces/CardEvent';
 import { Avatar } from '../components/Avatar';
-import { Layer as CardLayer } from '../components/card/Layer';
 import React from 'react';
 import { Translations } from '../Translations';
 import { DEFAULT_LANGUAGE } from '../Constants';
 import { SafePicker } from '../components/common/SafeSpectrumFields';
+import { openCardLayerOrWarn } from '../helpers/CardLayerHelper';
 
 export const ActivityPage = () => {
-  const state = useSelector(selectInterfaceState);
   const token = useSelector(selectToken);
   const [list, setList] = useState<(CardEvent & { userName: string; cardName: string })[]>([]);
   const [range, setRange] = useState('today');
@@ -25,7 +24,7 @@ export const ActivityPage = () => {
   const client = getRequestClient(token);
 
   const openCard = (id?: string) => {
-    store.dispatch(showCardLayer(id));
+    openCardLayerOrWarn(id);
   };
 
   useEffect(() => {
@@ -99,7 +98,6 @@ export const ActivityPage = () => {
 
   return (
     <>
-      {state === 'card-detail' && <CardLayer />}
       <div className="canvas">
         <SafePicker
           aria-label={Translations.RangeLabel[DEFAULT_LANGUAGE]}

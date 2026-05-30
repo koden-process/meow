@@ -3,12 +3,12 @@ import { Reference } from '../../interfaces/Reference';
 import { Card } from '../../interfaces/Card';
 import { DateTime } from 'luxon';
 import { Currency } from '../Currency';
-import { selectToken, selectCustomOpportunityAmountLabel, store } from '../../store/Store';
+import { selectToken, selectCustomOpportunityAmountLabel } from '../../store/Store';
 import { useSelector } from 'react-redux';
 import { getRequestClient } from '../../helpers/RequestHelper';
-import { showCardLayer } from '../../actions/Actions';
 import { Translations } from '../../Translations';
 import { DEFAULT_LANGUAGE } from '../../Constants';
+import { openCardLayerOrWarn } from '../../helpers/CardLayerHelper';
 
 export interface ReferenceItemProps {
   reference: Reference;
@@ -34,7 +34,7 @@ export const ReferenceItem = ({ reference }: ReferenceItemProps) => {
   }, [reference]);
 
   const openCard = (id?: string) => {
-    store.dispatch(showCardLayer(id));
+    openCardLayerOrWarn(id);
   };
 
   return (
