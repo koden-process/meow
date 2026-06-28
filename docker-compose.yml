@@ -16,6 +16,7 @@ services:
       # - VITE_CUSTOM_LOGO_ALT=My Company
       # - VITE_CUSTOM_THEME_COLOR=#1D1D1B
       # - VITE_CUSTOM_NAVIGATION_COLOR=#067BC2
+      # - VITE_CUSTOM_OPPORTUNITY_PDF_TEMPLATE_URL=https://example.com/opportunity-template.html
     ports:
       - '3117:80'
     restart: always

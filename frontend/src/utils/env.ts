@@ -8,6 +8,7 @@ interface EnvConfig {
   VITE_CUSTOM_LOGO_ALT?: string;
   VITE_CUSTOM_NAVIGATION_COLOR?: string;
   VITE_CUSTOM_APP_NAME?: string;
+  VITE_CUSTOM_OPPORTUNITY_PDF_TEMPLATE_URL?: string;
 }
 
 declare global {
@@ -15,6 +16,15 @@ declare global {
     ENV?: EnvConfig;
   }
 }
+
+const isValidEnvValue = (key: keyof EnvConfig, value?: string): value is string => {
+  if (!value || value === key || value.trim() === '') {
+    return false;
+  }
+
+  const trimmedValue = value.trim();
+  return !(trimmedValue.startsWith('${') && trimmedValue.endsWith('}'));
+};
 
 // Function to get environment variable value
 export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
@@ -26,9 +36,7 @@ export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
   // First try to get from runtime config (Kubernetes)
   if (window.ENV && window.ENV[key]) {
     const runtimeValue = window.ENV[key];
-    // Check if the value is not the variable name itself and not an unsubstituted placeholder
-    const isUnsubstitutedPlaceholder = runtimeValue?.startsWith('${') && runtimeValue?.endsWith('}');
-    if (runtimeValue && runtimeValue !== key && runtimeValue.trim() !== '' && !isUnsubstitutedPlaceholder) {
+    if (isValidEnvValue(key, runtimeValue)) {
       console.log(`  ✅ Using runtime value for ${key}:`, runtimeValue);
       return runtimeValue;
     }
@@ -36,8 +44,7 @@ export const getEnvVar = (key: keyof EnvConfig): string | undefined => {
   
   // Fallback to build-time environment variables (for development)
   const buildTimeValue = getImportMetaEnv(key);
-  // Check if the value is not the variable name itself and not empty
-  if (buildTimeValue && buildTimeValue !== key && buildTimeValue.trim() !== '') {
+  if (isValidEnvValue(key, buildTimeValue)) {
     console.log(`  ℹ️ Using build-time value for ${key}:`, buildTimeValue);
     return buildTimeValue;
   }
@@ -61,6 +68,8 @@ const getImportMetaEnv = (key: keyof EnvConfig): string | undefined => {
       return import.meta.env.VITE_CUSTOM_NAVIGATION_COLOR;
     case 'VITE_CUSTOM_APP_NAME':
       return import.meta.env.VITE_CUSTOM_APP_NAME;
+    case 'VITE_CUSTOM_OPPORTUNITY_PDF_TEMPLATE_URL':
+      return import.meta.env.VITE_CUSTOM_OPPORTUNITY_PDF_TEMPLATE_URL;
     default:
       return undefined;
   }
@@ -73,3 +82,5 @@ export const getCustomFaviconUrl = () => getEnvVar('VITE_CUSTOM_FAVICON_URL');
 export const getCustomLogoAlt = () => getEnvVar('VITE_CUSTOM_LOGO_ALT');
 export const getCustomNavigationColor = () => getEnvVar('VITE_CUSTOM_NAVIGATION_COLOR');
 export const getCustomAppName = () => getEnvVar('VITE_CUSTOM_APP_NAME');
+export const getCustomOpportunityPdfTemplateUrl = () =>
+  getEnvVar('VITE_CUSTOM_OPPORTUNITY_PDF_TEMPLATE_URL');

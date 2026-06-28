@@ -75,6 +75,7 @@ Ce qui reste à faire. (Omettre si rien.)
 
 | Date | Titre |
 |---|---|
+| [2026-06-28](2026-06-28-template-pdf-opportunite-configurable.md) | Template PDF d'opportunité configurable |
 | [2026-05-29](2026-05-29-affichage-fiche-opportunite-routes.md) | Stabilisation de la fiche opportunité entre pages |
 | [2026-05-29](2026-05-29-bug-select-bas-de-fiche-v3.md) | Correction v3 des menus en bas de fiche opportunité |
 | [2026-05-29](2026-05-29-refonte-documentation.md) | Refonte de la documentation projet |

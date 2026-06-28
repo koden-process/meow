@@ -21,9 +21,12 @@
     "@types/react-beautiful-dnd": "^13.1.7",
     "@types/react-dom": "^18.2.18",
     "@types/redux-logger": "^3.0.12",
+    "dompurify": "^3.4.11",
     "framer-motion": "^12.19.2",
+    "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "luxon": "^3.4.4",
+    "mustache": "^4.2.0",
     "next-themes": "^0.4.6",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -43,7 +46,8 @@
     "dev": "vite",
     "dev:unikalo": "VITE_CUSTOM_LOGO_URL=https://koden-process.github.io/meow/b.png VITE_CUSTOM_FAVICON_URL=https://koden-process.github.io/meow/b.png VITE_CUSTOM_NAVIGATION_COLOR=#1D1D1B VITE_CUSTOM_THEME_COLOR=#1D1D1B vite",
     "build": "tsc && vite build --emptyOutDir",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "vitest"
   },
   "eslintConfig": {
     "extends": [
@@ -64,9 +68,12 @@
     ]
   },
   "devDependencies": {
+    "@types/mustache": "^4.2.6",
     "@vitejs/plugin-react": "^4.2.1",
+    "jsdom": "^29.1.1",
     "vite": "^7.3.1",
     "vite-plugin-svgr": "^4.5.0",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^4.1.9"
   }
 }
