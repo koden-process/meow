@@ -27,6 +27,11 @@ yarn-error.log*
 # env vars
 .env
 
+# database backups
+*.archive
+*.archive.gz
+*.bson
+
 # misc
 .rest
 
