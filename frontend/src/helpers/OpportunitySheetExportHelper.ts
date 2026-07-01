@@ -1,25 +1,18 @@
 import type { jsPDF as JsPdfDocument } from 'jspdf';
 import { Account } from '../interfaces/Account';
 import { Card } from '../interfaces/Card';
-import { Lane } from '../interfaces/Lane';
 import { Schema, SchemaAttribute, SchemaAttributeType } from '../interfaces/Schema';
-import { CurrencyCode, Team } from '../interfaces/Team';
-import { User } from '../interfaces/User';
+import { CurrencyCode } from '../interfaces/Team';
 import { DEFAULT_CURRENCY, DEFAULT_LANGUAGE } from '../Constants';
 import { Translations } from '../Translations';
+import { getCustomOpportunityPdfTemplateUrl } from '../utils/env';
 import { getBrowserLocale } from './Helper';
+import {
+  OpportunitySheetExportParams,
+  opportunityPdfFileName,
+} from './OpportunityExportContext';
+import { downloadTemplateOpportunitySheet } from './OpportunityPdfTemplate';
 import { SchemaHelper } from './SchemaHelper';
-
-interface OpportunitySheetExportParams {
-  card: Card;
-  schema?: Schema;
-  accounts: Account[];
-  lane?: Lane;
-  owner?: User;
-  team?: Team;
-  amountLabel: string;
-  currency?: CurrencyCode;
-}
 
 interface ExportRow {
   label: string;
@@ -43,17 +36,6 @@ const PDF_ROW_PADDING = 3;
 
 const normalizePdfText = (value: string): string => {
   return value.replace(/\s+/g, ' ').trim();
-};
-
-const fileNamePart = (value: string): string => {
-  const normalized = value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  return normalized || 'opportunite';
 };
 
 const formatDate = (value?: string): string => {
@@ -307,7 +289,10 @@ const drawFooters = (doc: JsPdfDocument, layout: PdfLayout, generatedAt: string)
   }
 };
 
-const buildSheetPdf = (doc: JsPdfDocument, params: OpportunitySheetExportParams): JsPdfDocument => {
+export const buildGenericOpportunitySheetPdf = (
+  doc: JsPdfDocument,
+  params: OpportunitySheetExportParams
+): JsPdfDocument => {
   const layout = getLayout(doc);
   const generatedAt = new Date().toISOString();
   const summaryRows = buildSummaryRows(params);
@@ -328,9 +313,59 @@ const buildSheetPdf = (doc: JsPdfDocument, params: OpportunitySheetExportParams)
   return doc;
 };
 
-export const downloadOpportunitySheet = async (params: OpportunitySheetExportParams): Promise<void> => {
+export const downloadGenericOpportunitySheet = async (
+  params: OpportunitySheetExportParams
+): Promise<void> => {
   const { jsPDF } = await import('jspdf');
-  const doc = buildSheetPdf(new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' }), params);
+  const doc = buildGenericOpportunitySheetPdf(
+    new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' }),
+    params
+  );
 
-  doc.save(`fiche-opportunite-${fileNamePart(params.card.name)}.pdf`);
+  doc.save(opportunityPdfFileName(params.card.name));
+};
+
+export interface OpportunitySheetDownloadDependencies {
+  getTemplateUrl: () => string | undefined;
+  downloadGeneric: (params: OpportunitySheetExportParams) => Promise<void>;
+  downloadTemplate: (
+    params: OpportunitySheetExportParams,
+    templateUrl: string
+  ) => Promise<void>;
+  warn: (message: string, error?: unknown) => void;
+}
+
+const defaultDownloadDependencies: OpportunitySheetDownloadDependencies = {
+  getTemplateUrl: getCustomOpportunityPdfTemplateUrl,
+  downloadGeneric: downloadGenericOpportunitySheet,
+  downloadTemplate: downloadTemplateOpportunitySheet,
+  warn: (message, error) => console.warn(message, error),
+};
+
+export const downloadOpportunitySheetWithDependencies = async (
+  params: OpportunitySheetExportParams,
+  dependencies: OpportunitySheetDownloadDependencies
+): Promise<void> => {
+  const templateUrl = dependencies.getTemplateUrl()?.trim();
+
+  if (!templateUrl) {
+    await dependencies.downloadGeneric(params);
+    return;
+  }
+
+  try {
+    await dependencies.downloadTemplate(params, templateUrl);
+  } catch (error) {
+    dependencies.warn(
+      'Unable to generate the configured opportunity PDF template; using the generic PDF.',
+      error
+    );
+    await dependencies.downloadGeneric(params);
+  }
+};
+
+export const downloadOpportunitySheet = async (
+  params: OpportunitySheetExportParams
+): Promise<void> => {
+  await downloadOpportunitySheetWithDependencies(params, defaultDownloadDependencies);
 };

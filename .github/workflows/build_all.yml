@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -26,6 +26,7 @@ jobs:
         cd frontend
         npm ci
         npm run build
+        npm test -- --run
     - name: Install Dependencies and Build (Backend)
       run: |
         cd backend
