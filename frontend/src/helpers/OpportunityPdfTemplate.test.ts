@@ -167,7 +167,10 @@ describe('opportunity PDF templates', () => {
     );
     expect(image.getAttribute('crossorigin')).toBeNull();
     expect(rasterizer).toHaveBeenCalledWith(
-      expect.any(Blob),
+      expect.objectContaining({
+        size: 46,
+        type: 'image/svg+xml',
+      }),
       440,
       270,
       document
